@@ -48,3 +48,33 @@
   --color-47: #DB1B41;
   --color-48: #FFFFFF30;
 }
+
+@font-face {
+    font-family: "Inter18-Bold";
+    src: url("../assets/fonts/Inter/static/Inter_18pt-Bold.ttf");
+}
+
+@font-face {
+    font-family: "Inter24-Bold";
+    src: url("../assets/fonts/Inter/static/Inter_24pt-Bold.ttf");
+}
+
+@font-face {
+    font-family: "Inter28-Bold";
+    src: url("../assets/fonts/Inter/static/Inter_28pt-Bold.ttf");
+}
+
+@font-face {
+    font-family: "Inter18-Regular";
+    src: url("../assets/fonts/Inter/static/Inter_18pt-Regular.ttf");
+}
+
+@font-face {
+    font-family: "Inter18-SemiBold";
+    src: url("../assets/fonts/Inter/static/Inter_18pt-SemiBold.ttf");
+}
+
+@font-face {
+    font-family: "Inter24-SemiBold";
+    src: url("../assets/fonts/Inter/static/Inter_24pt-SemiBold.ttf");
+}
