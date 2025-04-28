@@ -60,7 +60,7 @@ La aplicación se construirá usando **HTML**, **JavaScript**, **Web Components*
 
 ------
 
-## 🗂️ Estructura de Datos (Ejemplos)
+## 🗂️ Estructura de Datos
 
 ```
 jsonCopiarEditar// Ejemplo de Circuito
@@ -92,7 +92,7 @@ jsonCopiarEditar// Ejemplo de Vehículo
 
 ------
 
-# 🧠 Patrón de Diseño Aplicado
+# 🧠 Patrón de Diseño 
 
 ## 🖥️ Backend: **Modelo-Vista-Controlador (MVC)**
 
