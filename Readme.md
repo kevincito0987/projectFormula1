@@ -1,4 +1,4 @@
-# 🏎️ Simulador Interactivo de Fórmula 1🏎️
+# 🏎️ Simulador Interactivo de Fórmula 1  🏎️
 
 ## 📖 Introducción
 
