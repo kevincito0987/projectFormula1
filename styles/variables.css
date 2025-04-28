@@ -78,3 +78,8 @@
     font-family: "Inter24-SemiBold";
     src: url("../assets/fonts/Inter/static/Inter_24pt-SemiBold.ttf");
 }
+
+@font-face {
+    font-family: "Segoe_UI-Regular";
+    src: url("../assets/fonts/SegoeUi/segoe-ui");
+}
