@@ -130,7 +130,8 @@ csharpCopiarEditarf1-simulator/
 │   ├── utils/         
 │   └── index.js                 
 ├── styles/
-│   ├── global.css               
+│   ├── variables.css
+|   ├── style.css
 │   └── components/              
 ├── server/
 │   ├── controllers/             
