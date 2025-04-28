@@ -173,6 +173,18 @@ Con esta arquitectura híbrida **(MVC en el backend + Pub/Sub en el frontend)** 
 
 ------
 
+# 👥 Contribuyentes
+
+
+
+| Rol                        | Nombre                                            | Perfil |
+| -------------------------- | ------------------------------------------------- | ------ |
+| 👨‍💻 Desarrollador Principal | [kevincito0987](https://github.com/kevincito0987) | 🔗      |
+
+------
+
+
+
 # ✨ Frase Estelar Final
 
 > ✨ *"En cada curva, cada estrategia y cada línea de código... construimos la velocidad del futuro."* 🏎️⚡
