@@ -148,17 +148,18 @@ csharpCopiarEditarf1-simulator/
 
 # 🚀 Diseño Base
 
-Para lograr una experiencia visual de alta calidad, el proyecto se inspira en los siguientes diseños de Figma:
+Para lograr una experiencia visual moderna, interactiva y adaptable, el proyecto se inspira en los siguientes **cuatro** diseños de Figma:
 
 
 
-| Diseño                       | Descripción                                   | Link                                                         |
-| ---------------------------- | --------------------------------------------- | ------------------------------------------------------------ |
-| 🏁 **PitStop Community**      | Gestión de paradas y estadísticas de carrera. | [Ver diseño](https://www.figma.com/design/fNyvLJeMRtGLDHtuyJhKTy/PitStop--Community-?node-id=80-1777&t=CsknuQKn5dv5eOgo-0) |
-| 🖥️ **Formula 1 Dashboard**    | Dashboard administrativo de datos de carrera. | [Ver diseño](https://www.figma.com/board/M0MOxhpPq7jbr8d8NB9p8a/Formula-1-Dashboard--Community-?node-id=0-1&p=f&t=1Szv61jBMvjpnF0m-0) |
-| 🚗 **Cars Website Community** | Cards técnicas de autos.                      | [Ver diseño](https://www.figma.com/design/RAqyaAlX20iKXNFG55vTLD/CARS-WEBSITE--Community-?node-id=1-2&p=f&t=70moSrkNC1AzkC3O-0) |
+| Diseño                          | Descripción                                                  | Link                                                         |
+| ------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| 📱 **iOS 18 Design & Prototype** | Inspiración en diseño móvil moderno para fluidez en la interfaz de usuario. | [Ver diseño](https://www.figma.com/design/wp8pjI4WtdXECwp5egiyft/Design-and-Prototype-iOS-18--Community---Community-?node-id=1204-4997&t=0QSqNKJPfjeF5N9r-0) |
+| 🏆 **Leaderboard Daily UI**      | Gestión de tablas de posiciones y resultados competitivos.   | [Ver diseño](https://www.figma.com/design/RJRrgsAYgSzdFHyij3CQl0/-78-Leaderborad-Dail-UI--Community-?node-id=0-1&p=f&t=SZPtqAjv4zUuXRKB-0) |
+| 🚗 **Car Rent Project**          | Presentación limpia y detallada de vehículos y características. | [Ver diseño](https://www.figma.com/design/5Lof0wkHQ09WfMFY2YZiaf/Car-rent-project--Community-?node-id=0-1&p=f&t=wJ8xaeuIlo9GtyYZ-0) |
+| 🏁 **PitStop Community**         | Integración de datos técnicos y dinámicos para carreras y estrategias. | [Ver diseño](https://www.figma.com/design/fNyvLJeMRtGLDHtuyJhKTy/PitStop--Community-?node-id=5-590&t=J2vpbxpwtT6BwXDp-0) |
 
-------
+
 
 # 🎯 Conclusión
 
