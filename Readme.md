@@ -34,10 +34,40 @@ La aplicación se construirá usando **HTML**, **JavaScript**, **Web Components*
 - Express.js
 - Patrón MVC (Modelo - Vista - Controlador)
 
-### 🗄️ Bases de Datos
+## 🗄️ Bases de Datos
 
-- MongoDB (Pilotos, configuraciones, noticias)
-- MySQL (Circuitos y vehículos)
+Para una gestión eficiente de la información, se utilizará una arquitectura **híbrida de bases de datos** que permite aprovechar lo mejor de cada tecnología según el tipo de dato.
+
+#### ✅ MySQL → Para datos estructurados y relaciones claras.
+
+Ideal para mantener consistencia en entidades que requieren integridad referencial y normalización.
+
+**📊 Tablas recomendadas:**
+
+- **Pilotos**: `id`, `nombre`, `equipo`, `estadísticas`, `temporadas`
+- **Vehículos**: `id`, `marca`, `modelo`, `velocidad`, `resistencia`, `neumáticos`
+- **Circuitos**: `id`, `nombre`, `longitud`, `ubicación`, `clima`, `eventos`
+- **Carreras**: `id`, `fecha`, `circuito`, `pilotos_participantes`, `resultados`
+- **Usuarios y roles**: `id`, `nombre`, `tipo_usuario`, `permisos`
+
+#### ✅ MongoDB → Para almacenamiento flexible de datos no estructurados.
+
+Ideal para datos dinámicos, anidados y que varían según el contexto.
+
+**🧾 Colecciones recomendadas:**
+
+- **Noticias**: `_id`, `titulo`, `fuente`, `fecha`, `contenido`
+- **Telemetría en vivo**: `_id`, `piloto`, `rpm`, `velocidad`, `freno`, `aceleración`
+- **Datos históricos de rendimiento**: `_id`, `piloto`, `resultados_por_temporada`
+
+#### ✅ IndexedDB / LocalStorage → Para persistencia de configuraciones de usuarios.
+
+Perfecto para almacenamiento del lado del cliente, accesible sin conexión.
+
+**⚙️ Datos sugeridos:**
+
+- **Ajustes de simulación**: `clima`, `estrategias`, `reglajes de vehículos`
+- **Preferencias guardadas**: `favoritos`, `personalización de datos`
 
 ### 💻 Almacenamiento en Navegador
 
