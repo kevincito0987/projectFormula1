@@ -19,9 +19,7 @@
   },
   "homepage": "https://github.com/kevincito0987/projectFormula1#readme",
   "dependencies": {
-    "autoprefixer": "^10.4.21",
-    "express": "^5.1.0",
-    "json-server": "^1.0.0-beta.3",
+    "@tailwindcss/postcss": "^4.1.4",
     "postcss": "^8.5.3",
     "tailwindcss": "^4.1.4"
   }
