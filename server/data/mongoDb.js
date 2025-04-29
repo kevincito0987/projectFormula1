@@ -1,8 +1,7 @@
 const { MongoClient } = require("mongodb");
-require("dotenv").config(); // Carga las variables desde el archivo .env
+require("dotenv").config();
 
 const uri = process.env.MONGO_URI;
-
 const client = new MongoClient(uri);
 
 async function connectDB() {
@@ -14,6 +13,4 @@ async function connectDB() {
     }
 }
 
-connectDB();
-
-module.exports = client;
+module.exports = { client, connectDB };

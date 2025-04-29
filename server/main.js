@@ -1,7 +1,9 @@
 const express = require("express");
-const dbClient = require("./data/mongoDb.js"); // Conexión a MongoDB
+const {connectDB} = require("./data/mongoDb.js"); // Conexión a MongoDB
+const { fetchAndSavePilotos } = require("./controllers/apiController");
 
 const app = express();
+
 app.use(express.json()); // Middleware para manejar JSON
 
 // Ruta principal
@@ -15,4 +17,5 @@ app.get("/test-indexeddb", (req, res) => {
 });
 
 // Servidor escuchando
+connectDB().then(() => fetchAndSavePilotos());
 app.listen(3000, () => console.log("Servidor escuchando en el puerto 3000"));
