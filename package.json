@@ -3,9 +3,6 @@
   "version": "1.0.0",
   "description": "La Fórmula 1 combina velocidad, estrategia y tecnología de vanguardia, generando una experiencia emocionante tanto para los espectadores como para los equipos involucrados. Este proyecto busca desarrollar una **simulación interactiva de Fórmula 1** basada en tecnologías web modernas, permitiendo a los usuarios **gestionar y personalizar su experiencia de carrera** mediante un sistema dinámico de administración de **circuitos, pilotos y vehículos**.",
   "main": "index.js",
-  "scripts": {
-  "dev": "npx tailwindcss -i ./styles.css -o ./dist/output.css --watch"
-},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kevincito0987/projectFormula1.git"
