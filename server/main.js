@@ -1,5 +1,5 @@
 const express = require("express");
-const dbClient = require("./mongoDb");
+const dbClient = require("./data/mongoDb");
 
 const app = express();
 app.use(express.json());
