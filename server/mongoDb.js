@@ -1,7 +1,6 @@
 const { MongoClient } = require("mongodb");
-require("dotenv").config();
+require("dotenv").config(); // Carga las variables desde el archivo .env
 
-const MONGO_URI = "mongodb+srv://kenpachi:Sierra11709@formula1.kswfy5u.mongodb.net/?retryWrites=true&w=majority&appName=formula1";
 const uri = process.env.MONGO_URI;
 
 const client = new MongoClient(uri);
