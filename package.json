@@ -1,11 +1,11 @@
 {
   "name": "projectformula1",
   "version": "1.0.0",
-  "description": "La Fórmula 1 combina velocidad, estrategia y tecnología de vanguardia, generando una experiencia emocionante tanto para los espectadores como para los equipos involucrados.  Este proyecto busca desarrollar una **simulación interactiva de Fórmula 1** basada en tecnologías web modernas, permitiendo a los usuarios **gestionar y personalizar su experiencia de carrera** mediante un sistema dinámico de administración de **circuitos, pilotos y vehículos**.",
+  "description": "La Fórmula 1 combina velocidad, estrategia y tecnología de vanguardia, generando una experiencia emocionante tanto para los espectadores como para los equipos involucrados. Este proyecto busca desarrollar una **simulación interactiva de Fórmula 1** basada en tecnologías web modernas, permitiendo a los usuarios **gestionar y personalizar su experiencia de carrera** mediante un sistema dinámico de administración de **circuitos, pilotos y vehículos**.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "dev": "npx tailwindcss -i ./styles.css -o ./dist/output.css --watch"
+},
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kevincito0987/projectFormula1.git"
@@ -19,8 +19,7 @@
   },
   "homepage": "https://github.com/kevincito0987/projectFormula1#readme",
   "dependencies": {
-    "@tailwindcss/postcss": "^4.1.4",
-    "postcss": "^8.5.3",
-    "tailwindcss": "^4.1.4"
+    "express": "^4.18.2",
+    "json-server": "^0.17.3"
   }
 }
