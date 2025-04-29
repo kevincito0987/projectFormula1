@@ -1,13 +1,33 @@
-<!doctype html>
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="./styles/style.css" rel="stylesheet">
+  <title>Proyecto F1</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
-<body>
-  <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+<body class="bg-gray-800 text-white">
+
+  <header class="text-center p-4 bg-gray-900">
+    <h1 class="text-2xl md:text-4xl font-bold">Bienvenido a la Fórmula 1</h1>
+  </header>
+
+  <main class="p-4 md:p-8">
+    <section class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-red-500 p-4 rounded">
+        <h2 class="text-xl font-semibold">Circuitos</h2>
+        <p>Información sobre circuitos alrededor del mundo.</p>
+      </div>
+      <div class="bg-blue-500 p-4 rounded">
+        <h2 class="text-xl font-semibold">Pilotos</h2>
+        <p>Conoce los mejores pilotos de F1.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="text-center p-4 bg-gray-900">
+    <p>© 2025 Fórmula 1 - Proyecto de Kevin 🏎️</p>
+  </footer>
+
 </body>
 </html>
