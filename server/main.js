@@ -42,7 +42,8 @@ async function fetchAndSavePilotos() {
                 nombre: pilotoBase.name || "Desconocido",
                 apellido: pilotoBase.surname || "Sin apellido",
                 nacionalidad: pilotoBase.nationality || "Sin nacionalidad",
-                fechaNacimiento: pilotoBase.birthday || "Sin fecha",
+                // Validar fecha de nacimiento: usar de la segunda API si está disponible; si no, usar la primera API
+                fechaNacimiento: pilotoImagen?.birthday || pilotoBase.birthday || "Sin fecha",
                 numero: pilotoBase.number || null,
                 nombreCorto: pilotoBase.shortName || "Sin nombre corto",
                 url: pilotoImagen ? pilotoImagen.headshot_url : null, // URL de la imagen
