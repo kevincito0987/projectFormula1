@@ -1,24 +1,23 @@
 const axios = require("axios");
-const { connectDB } = require("./data/mongoDb.js"); // Asegúrate de que la ruta es correcta
-const Piloto = require("./models/piloto"); // Modelo de Pilotos
+const { connectDB } = require("./data/mongoDb.js"); 
+const Piloto = require("./models/piloto"); 
 
 async function fetchAndSavePilotos() {
     try {
-        // Conectar a la base de datos
+        
         const db = await connectDB();
 
-        // Consumir la API de pilotos
+        
         const response = await axios.get("https://f1connectapi.vercel.app/api/drivers?limit=20&offset=20");
-        console.log("Respuesta de la API:", response.data); // Inspecciona los datos
+        console.log("Respuesta de la API:", response.data);
 
-        // Accede a la propiedad "drivers", que contiene los datos que necesitas
+        
         const pilotos = response.data.drivers;
 
         if (!Array.isArray(pilotos)) {
             throw new Error("Estructura inesperada de la API: No es un array");
         }
 
-        // Iterar y guardar cada piloto en la base de datos
         for (const piloto of pilotos) {
             const nuevoPiloto = new Piloto({
                 driverId: piloto.driverId || null,
@@ -31,7 +30,7 @@ async function fetchAndSavePilotos() {
                 url: piloto.url || "Sin URL",
             });
 
-            await nuevoPiloto.save(); // Guardar en MongoDB
+            await nuevoPiloto.save(); 
             console.log(`Piloto guardado: ${nuevoPiloto.nombre} ${nuevoPiloto.apellido}`);
         }
 
