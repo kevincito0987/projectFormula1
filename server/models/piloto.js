@@ -1,12 +1,15 @@
 const mongoose = require("mongoose");
 
 const pilotoSchema = new mongoose.Schema({
-    id: Number,
+    driverId: String,
     nombre: String,
-    equipo: String,
-    rol: String,
-    estadisticas: Object, // Puedes adaptar según los datos de la API
+    apellido: String,
+    nacionalidad: String,
+    fechaNacimiento: String,
+    numero: Number,
+    nombreCorto: String,
+    url: String,
 });
 
-const Piloto = mongoose.model("Piloto", pilotoSchema);
+const Piloto = mongoose.model("Piloto", pilotoSchema, "drivers");
 module.exports = Piloto;

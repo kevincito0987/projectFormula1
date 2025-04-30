@@ -1,16 +1,18 @@
-const { MongoClient } = require("mongodb");
+const mongoose = require("mongoose");
 require("dotenv").config();
 
-const uri = process.env.MONGO_URI;
-const client = new MongoClient(uri);
-
-async function connectDB() {
+const connectDB = async () => {
     try {
-        await client.connect();
-        console.log("¡Conexión exitosa a MongoDB!");
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+            bufferTimeoutMS: 30000, // Aumenta el tiempo límite a 30 segundos
+        });
+        console.log("¡Conexión exitosa a MongoDB Atlas!");
     } catch (error) {
         console.error("Error al conectar con MongoDB:", error);
+        process.exit(1); // Termina el proceso si no se conecta
     }
-}
+};
 
-module.exports = { client, connectDB };
+module.exports = {connectDB};
