@@ -9,6 +9,7 @@ const pilotoSchema = new mongoose.Schema({
     numero: Number,
     nombreCorto: String,
     url: String,
+    team: String,
 });
 
 const Piloto = mongoose.model("Piloto", pilotoSchema, "drivers");
