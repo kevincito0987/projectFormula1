@@ -2,6 +2,7 @@ const axios = require("axios");
 const { connectDB } = require("./data/mongoDb.js");
 const Piloto = require("./models/piloto");
 const Team = require("./models/team");
+const Circuit = require("./models/circuits");
 
 const rutasImagenesActualizadas = {
     norris: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli",
@@ -161,3 +162,53 @@ const circuitImages = {
     Circuit11: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Austria_Circuit",
     Circuit12: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Great_Britain_Circuit",
 };
+
+async function fetchAndSaveCircuits() {
+    try {
+        await connectDB(); // Conectar a MongoDB
+
+        // Consumir la API de circuitos
+        const response = await axios.get("https://f1api.dev/api/circuits");
+        const circuitos = response.data.circuits;
+
+        if (!Array.isArray(circuitos) || circuitos.length === 0) {
+            throw new Error("No se encontraron circuitos en la API.");
+        }
+
+        // Obtener los primeros 12 circuitos
+        const primeros12Circuitos = circuitos.slice(0, 12);
+
+        for (const [index, circuito] of primeros12Circuitos.entries()) {
+            const nuevoCircuito = new Circuit({
+                circuitId: circuito.circuitId,
+                nombre: circuito.circuitName,
+                pais: circuito.country,
+                ciudad: circuito.city,
+                longitud: circuito.circuitLength,
+                lapRecord: circuito.lapRecord,
+                primerAñoParticipacion: circuito.firstParticipationYear,
+                numeroCurvas: circuito.numberOfCorners,
+                pilotoVueltaRapida: circuito.fastestLapDriverId,
+                equipoVueltaRapida: circuito.fastestLapTeamId,
+                añoVueltaRapida: circuito.fastestLapYear,
+                url: circuito.url,
+                urlImagen: circuitImages[`Circuit${index + 1}`] || "Sin URL de imagen", // Asignar URL de imagen
+            });
+
+            const existingCircuit = await Circuit.findOne({ circuitId: circuito.circuitId });
+            if (existingCircuit) {
+                console.log(`El circuito ya existe: ${nuevoCircuito.nombre}`);
+            } else {
+                await nuevoCircuito.save();
+                console.log(`Circuito guardado: ${nuevoCircuito.nombre}`);
+            }
+        }
+
+        console.log("¡Se han guardado los primeros 12 circuitos en la colección 'circuits'!");
+    } catch (error) {
+        console.error("Error al obtener o guardar los circuitos:", error.message);
+    }
+}
+
+// Ejecutar la función
+fetchAndSaveCircuits();
