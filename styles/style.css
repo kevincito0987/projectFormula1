@@ -51,7 +51,7 @@ a {
     text-decoration: none;
     background: var(--color-3);
     color: var(--color-4);
-    border-radius: 10px;
+    border-radius: 30px;
     padding: 10px 20px;
     margin-bottom: 30px;
 }
