@@ -1,6 +1,7 @@
 const axios = require("axios");
 const { connectDB } = require("./data/mongoDb.js");
 const Piloto = require("./models/piloto");
+const Team = require("./models/team"); // Esquema para la colección de equipos
 
 async function fetchAndSavePilotos() {
     try {
@@ -71,4 +72,45 @@ async function fetchAndSavePilotos() {
     }
 }
 
-fetchAndSavePilotos();
+// fetchAndSavePilotos();
+async function fetchAndSaveTeams() {
+    try {
+        await connectDB(); // Conectar a MongoDB
+
+        // Consumir la API de equipos actuales
+        let teams;
+        try {
+            const response = await axios.get("https://f1api.dev/api/current/teams");
+            teams = response.data.teams;
+        } catch (error) {
+            console.error("Error al consumir la API de equipos:", error.message);
+            return; // Salir si la API falla
+        }
+
+        if (!Array.isArray(teams)) {
+            throw new Error("Estructura inesperada de la API: No es un array");
+        }
+
+        // Guardar los equipos en MongoDB
+        for (const team of teams) {
+            const nuevoTeam = new Team({
+                teamId: team.teamId || null,
+                nombre: team.teamName || "Desconocido",
+                nacionalidad: team.teamNationality || "Sin nacionalidad",
+                primeraAparicion: team.firstAppeareance || "Sin información",
+                campeonatosConstructores: team.constructorsChampionships || 0,
+                campeonatosPilotos: team.driversChampionships || 0,
+                url: team.url || "Sin URL",
+            });
+
+            await nuevoTeam.save();
+            console.log(`Equipo guardado: ${nuevoTeam.nombre}`);
+        }
+
+        console.log("¡Se han guardado los equipos actuales de F1 en MongoDB!");
+    } catch (error) {
+        console.error("Error al obtener o guardar los equipos:", error);
+    }
+}
+
+fetchAndSaveTeams();
