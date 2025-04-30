@@ -3,6 +3,16 @@ const { connectDB } = require("./data/mongoDb.js");
 const Piloto = require("./models/piloto");
 const Team = require("./models/team");
 
+const rutasImagenesActualizadas = {
+    norris: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli",
+    sainz: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/tsunoda",
+    verstappen: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/verstappen",
+    leclerc: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bearman",
+    perez: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/fom-website/drivers/2025Drivers/lawson-racing-bulls",
+    hamilton: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hadjar",
+    russell: "https://gpticketstore.vshcdn.net/uploads/images/10726/jack-doohan-alpine-big.jpg",
+};
+
 async function fetchAndValidatePilotos(teamId) {
     try {
         // Consumir la API de pilotos para un equipo específico
@@ -36,12 +46,20 @@ async function fetchAndValidatePilotos(teamId) {
                              (pImagen.first_name === driver.name && pImagen.last_name === driver.surname)
             );
 
+            // Validar si el piloto tiene una imagen en alguna de las dos APIs
+            let imagenUrl = pilotoImagen?.headshot_url || rutasImagenesActualizadas[driver.driverId] || null;
+            if (!imagenUrl || imagenUrl === "Sin URL") {
+                // Si no tiene imagen y tampoco en el mapeo, lanzar un error
+                console.error(`El piloto ${driver.name} ${driver.surname} no tiene imagen asignada ni en el mapeo.`);
+                continue; // Omitir este piloto si no tiene ninguna imagen
+            }
+
             if (existingDriver) {
                 // Validar si la información está completa o si necesita actualizar la URL
                 const fieldsToUpdate = {};
                 if (!existingDriver.fechaNacimiento) fieldsToUpdate.fechaNacimiento = pilotoImagen?.birthday || "Sin fecha";
                 if (!existingDriver.url || !existingDriver.url.startsWith("http")) {
-                    fieldsToUpdate.url = pilotoImagen?.headshot_url || "Sin URL"; // Usar la URL de la imagen
+                    fieldsToUpdate.url = imagenUrl; // Usar la URL encontrada o asignada
                 }
 
                 if (Object.keys(fieldsToUpdate).length > 0) {
@@ -60,7 +78,7 @@ async function fetchAndValidatePilotos(teamId) {
                     fechaNacimiento: pilotoImagen?.birthday || driver.birthday || "Sin fecha",
                     numero: driver.number || null,
                     nombreCorto: driver.shortName || "Sin nombre corto",
-                    url: pilotoImagen?.headshot_url || "Sin URL", // Usar URL de la imagen
+                    url: imagenUrl, // Usar la URL encontrada o asignada
                     team: teamId,
                 });
 
@@ -127,30 +145,4 @@ async function fetchAndSaveTeams() {
 }
 
 // Punto de entrada
-// fetchAndSaveTeams();
-async function logPilotosSinImagen() {
-    try {
-        await connectDB(); // Conectar a MongoDB
-
-        // Obtener todos los pilotos
-        const pilotos = await Piloto.find({});
-
-        // Filtrar los pilotos sin URL de imagen
-        const pilotosSinImagen = pilotos.filter((piloto) => !piloto.url || piloto.url === "Sin URL");
-
-        // Mostrar los pilotos sin imagen en la consola
-        if (pilotosSinImagen.length > 0) {
-            console.log("Pilotos sin URL de imagen:");
-            pilotosSinImagen.forEach((piloto, index) => {
-                console.log(`${index + 1}. ${piloto.nombre} ${piloto.apellido} (ID: ${piloto.driverId})`);
-            });
-        } else {
-            console.log("Todos los pilotos tienen URL de imagen.");
-        }
-    } catch (error) {
-        console.error("Error al buscar pilotos sin imagen:", error.message);
-    }
-}
-
-// Ejecutar la función
-logPilotosSinImagen();
+fetchAndSaveTeams();
