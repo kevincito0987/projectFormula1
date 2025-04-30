@@ -1,78 +1,82 @@
 const axios = require("axios");
 const { connectDB } = require("./data/mongoDb.js");
 const Piloto = require("./models/piloto");
-const Team = require("./models/team"); // Esquema para la colección de equipos
+const Team = require("./models/team");
 
-async function fetchAndSavePilotos() {
+async function fetchAndValidatePilotos(teamId) {
     try {
-        await connectDB(); // Conectar a MongoDB
+        // Consumir la API de pilotos para un equipo específico
+        const response = await axios.get(`https://f1api.dev/api/current/teams/${teamId}/drivers`);
+        const { drivers } = response.data;
 
-        // Consumir la primera API (info básica de pilotos)
-        const response1 = await axios.get("https://f1api.dev/api/current/drivers");
-        console.log("Primera API - Respuesta:", response1.data);
-
-        const pilotosBase = response1.data.drivers;
-
-        if (!Array.isArray(pilotosBase)) {
-            throw new Error("Estructura inesperada de la primera API: No es un array");
+        if (!drivers || !Array.isArray(drivers)) {
+            console.error(`Estructura inesperada de la respuesta de pilotos para el equipo ${teamId}`);
+            return [];
         }
 
-        // Consumir la segunda API (solo imágenes y fechas)
-        const response2 = await axios.get("https://api.openf1.org/v1/drivers");
-        console.log("Segunda API - Respuesta:", response2.data);
-
-        const pilotosImagenes = response2.data;
-
-        if (!Array.isArray(pilotosImagenes)) {
-            throw new Error("Estructura inesperada de la segunda API: No es un array");
+        // Consumir la segunda API para obtener imágenes y fechas
+        let pilotosImagenes;
+        try {
+            const response2 = await axios.get("https://api.openf1.org/v1/drivers");
+            pilotosImagenes = response2.data;
+        } catch (error) {
+            console.error("Error al consumir la segunda API para imágenes:", error.message);
+            pilotosImagenes = [];
         }
 
-        // Combinar datos de ambas APIs
-        const pilotosCombinados = [];
-        const idsProcesados = new Set(); // Evitar duplicados por driverId
+        const pilotosValidados = [];
 
-        for (const pilotoBase of pilotosBase) {
-            console.log(`Piloto: ${pilotoBase.name} - TeamID: ${pilotoBase.teamId}`); // Verificar TeamID
+        for (const driverData of drivers) {
+            const driver = driverData.driver;
+            const existingDriver = await Piloto.findOne({ driverId: driver.driverId });
 
+            // Buscar datos de la segunda API
             const pilotoImagen = pilotosImagenes.find(
-                (pImagen) =>
-                    pImagen.driver_number === pilotoBase.number || 
-                    (pImagen.first_name === pilotoBase.name && pImagen.last_name === pilotoBase.surname)
+                (pImagen) => pImagen.driver_number === driver.number || 
+                             (pImagen.first_name === driver.name && pImagen.last_name === driver.surname)
             );
 
-            // Combinar solo URL de imagen y fecha de nacimiento
-            const pilotoCombinado = {
-                driverId: pilotoBase.driverId || null,
-                nombre: pilotoBase.name || "Desconocido",
-                apellido: pilotoBase.surname || "Sin apellido",
-                nacionalidad: pilotoBase.nationality || "Sin nacionalidad",
-                fechaNacimiento: pilotoImagen?.birthday || pilotoBase.birthday || "Sin fecha", // Priorizar la fecha de la segunda API
-                numero: pilotoBase.number || null,
-                nombreCorto: pilotoBase.shortName || "Sin nombre corto",
-                url: pilotoImagen?.headshot_url || "Sin URL", // Usar URL de imagen de la segunda API si está disponible
-                team: pilotoBase.teamId || "Equipo desconocido", // Usar directamente el teamId de la primera API
-            };
+            if (existingDriver) {
+                // Validar si la información está completa o si necesita actualizar la URL
+                const fieldsToUpdate = {};
+                if (!existingDriver.fechaNacimiento) fieldsToUpdate.fechaNacimiento = pilotoImagen?.birthday || "Sin fecha";
+                if (!existingDriver.url || !existingDriver.url.startsWith("http")) {
+                    fieldsToUpdate.url = pilotoImagen?.headshot_url || "Sin URL"; // Usar la URL de la imagen
+                }
 
-            if (!idsProcesados.has(pilotoCombinado.driverId)) {
-                pilotosCombinados.push(pilotoCombinado);
-                idsProcesados.add(pilotoCombinado.driverId); // Marcar como procesado
+                if (Object.keys(fieldsToUpdate).length > 0) {
+                    await Piloto.updateOne({ driverId: driver.driverId }, { $set: fieldsToUpdate });
+                    console.log(`Piloto actualizado: ${driver.name} ${driver.surname}`);
+                }
+
+                pilotosValidados.push(existingDriver);
+            } else {
+                // Crear nuevo piloto si no existe en la base de datos
+                const nuevoPiloto = new Piloto({
+                    driverId: driver.driverId,
+                    nombre: driver.name,
+                    apellido: driver.surname,
+                    nacionalidad: driver.nationality,
+                    fechaNacimiento: pilotoImagen?.birthday || driver.birthday || "Sin fecha",
+                    numero: driver.number || null,
+                    nombreCorto: driver.shortName || "Sin nombre corto",
+                    url: pilotoImagen?.headshot_url || "Sin URL", // Usar URL de la imagen
+                    team: teamId,
+                });
+
+                await nuevoPiloto.save();
+                console.log(`Nuevo piloto agregado: ${nuevoPiloto.nombre} ${nuevoPiloto.apellido}`);
+                pilotosValidados.push(nuevoPiloto);
             }
         }
 
-        // Guardar en MongoDB
-        for (const piloto of pilotosCombinados) {
-            const nuevoPiloto = new Piloto(piloto);
-            await nuevoPiloto.save();
-            console.log(`Piloto guardado: ${nuevoPiloto.nombre} (${nuevoPiloto.team})`);
-        }
-
-        console.log("¡Se han guardado los pilotos con datos actualizados en MongoDB!");
+        return pilotosValidados;
     } catch (error) {
-        console.error("Error al obtener o guardar pilotos:", error);
+        console.error(`Error al obtener o validar los pilotos del equipo ${teamId}:`, error.message);
+        return [];
     }
 }
 
-// fetchAndSavePilotos();
 async function fetchAndSaveTeams() {
     try {
         await connectDB(); // Conectar a MongoDB
@@ -88,13 +92,12 @@ async function fetchAndSaveTeams() {
         }
 
         if (!Array.isArray(teams)) {
-            throw new Error("Estructura inesperada de la API: No es un array");
+            throw new Error("Estructura inesperada de la API de equipos: No es un array");
         }
 
-        // Guardar los equipos en MongoDB
         for (const team of teams) {
             const nuevoTeam = new Team({
-                teamId: team.teamId || null,
+                teamId: team.teamId,
                 nombre: team.teamName || "Desconocido",
                 nacionalidad: team.teamNationality || "Sin nacionalidad",
                 primeraAparicion: team.firstAppeareance || "Sin información",
@@ -103,14 +106,51 @@ async function fetchAndSaveTeams() {
                 url: team.url || "Sin URL",
             });
 
-            await nuevoTeam.save();
-            console.log(`Equipo guardado: ${nuevoTeam.nombre}`);
+            const existingTeam = await Team.findOne({ teamId: team.teamId });
+
+            if (existingTeam) {
+                console.log(`Equipo ya existente: ${team.teamName}`);
+            } else {
+                await nuevoTeam.save();
+                console.log(`Equipo guardado: ${nuevoTeam.nombre}`);
+            }
+
+            // Validar y agregar pilotos de cada equipo
+            const pilotos = await fetchAndValidatePilotos(team.teamId);
+            console.log(`Pilotos procesados para el equipo ${team.teamName}: ${pilotos.length}`);
         }
 
-        console.log("¡Se han guardado los equipos actuales de F1 en MongoDB!");
+        console.log("¡Se han procesado los equipos y pilotos en MongoDB!");
     } catch (error) {
-        console.error("Error al obtener o guardar los equipos:", error);
+        console.error("Error al obtener o guardar equipos y pilotos:", error);
     }
 }
 
-fetchAndSaveTeams();
+// Punto de entrada
+// fetchAndSaveTeams();
+async function logPilotosSinImagen() {
+    try {
+        await connectDB(); // Conectar a MongoDB
+
+        // Obtener todos los pilotos
+        const pilotos = await Piloto.find({});
+
+        // Filtrar los pilotos sin URL de imagen
+        const pilotosSinImagen = pilotos.filter((piloto) => !piloto.url || piloto.url === "Sin URL");
+
+        // Mostrar los pilotos sin imagen en la consola
+        if (pilotosSinImagen.length > 0) {
+            console.log("Pilotos sin URL de imagen:");
+            pilotosSinImagen.forEach((piloto, index) => {
+                console.log(`${index + 1}. ${piloto.nombre} ${piloto.apellido} (ID: ${piloto.driverId})`);
+            });
+        } else {
+            console.log("Todos los pilotos tienen URL de imagen.");
+        }
+    } catch (error) {
+        console.error("Error al buscar pilotos sin imagen:", error.message);
+    }
+}
+
+// Ejecutar la función
+logPilotosSinImagen();
