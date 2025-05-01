@@ -16,23 +16,22 @@ document.addEventListener("DOMContentLoaded", () => {
 });    
   
 
-window.onload = () => {
-    // 🔹 GSAP: Entrada con escala y opacidad
-    gsap.from(".card", {
-      scale: 0.5,
-      opacity: 0,
-      stagger: 0.2, // 📌 Aparición escalonada
-      duration: 1,
-      ease: "power2.out"
-    });
-  
-    // 🔹 Anime.js: Refinamiento de opacidad + escalado dinámico
+document.addEventListener("DOMContentLoaded", () => {
     anime({
-      targets: ".card",
-      opacity: [0, 1],
-      scale: [0.8, 1],
-      duration: 1200,
-      delay: anime.stagger(150), // 📌 Se mantiene el efecto secuencial
-      easing: "easeOutQuad"
+        targets: ".card", // 📌 Aplica el efecto a todas las cards
+        translateY: [
+            { value: -10, duration: 500 }, // 📌 Sube ligeramente
+            { value: 10, duration: 500 } // 📌 Baja ligeramente
+        ],
+        easing: "easeInOutSine", // 🌊 Movimiento suave y natural
+        duration: 1000, // ⏳ Tiempo total de la animación
+        direction: "alternate", // 🔁 Oscilación continua entre arriba y abajo
+        loop: true, // 🔄 Efecto infinito
+        delay: anime.stagger(150) // 🔥 Efecto escalonado para simular ondas
     });
-  };
+
+    // 🔹 Restaurar visibilidad de las cards manualmente
+    document.querySelectorAll(".card").forEach(card => {
+        card.style.opacity = "1"; // ✅ Evita que desaparezcan
+    });
+});
