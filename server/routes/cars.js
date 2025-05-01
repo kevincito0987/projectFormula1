@@ -7,7 +7,7 @@ const router = express.Router();
 // 📌 Cargar el archivo JSON de carros
 const carsFilePath = path.join(__dirname, "../data/dataCars.json");
 
-// 📌 Obtener todos los autos
+// 📌 Obtener todos los autos agrupados por equipo
 router.get("/", async (req, res) => {
     try {
         const carsData = JSON.parse(fs.readFileSync(carsFilePath, "utf-8"));
@@ -15,10 +15,13 @@ router.get("/", async (req, res) => {
         // Convertir el objeto "equipos" en un array de valores
         const equiposArray = Object.values(carsData.equipos);
 
-        // Extraer todos los autos de los equipos
-        const allCars = equiposArray.flatMap(team => team.autos);
+        // Estructurar la salida como equipos con sus autos
+        const formattedCars = equiposArray.map(team => ({
+            equipo: team.equipo,
+            autos: team.autos
+        }));
 
-        res.json(allCars);
+        res.json(formattedCars);
     } catch (error) {
         res.status(500).json({ error: "Error al cargar los datos de autos: " + error.message });
     }
@@ -58,11 +61,11 @@ router.get("/equipo/:team", async (req, res) => {
         // Buscar los autos dentro del equipo
         const teamData = equiposArray.find(e => e.equipo.toLowerCase() === team.toLowerCase());
 
-        if (!teamData || !Array.isArray(teamData.autos) || teamData.autos.length === 0) {
-            return res.status(404).json({ error: "No se encontraron autos para este equipo." });
+        if (!teamData) {
+            return res.status(404).json({ error: "Equipo no encontrado." });
         }
 
-        res.json(teamData.autos);
+        res.json({ equipo: teamData.equipo, autos: teamData.autos });
     } catch (error) {
         res.status(500).json({ error: "Error al obtener los autos por equipo: " + error.message });
     }
