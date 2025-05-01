@@ -12,13 +12,11 @@ router.get("/", async (req, res) => {
     try {
         const carsData = JSON.parse(fs.readFileSync(carsFilePath, "utf-8"));
 
-        // Verificar que carsData es un array antes de usar .flatMap()
-        if (!Array.isArray(carsData)) {
-            return res.status(500).json({ error: "Formato incorrecto en dataCars.json, se esperaba un array." });
-        }
+        // Convertir el objeto "equipos" en un array de valores
+        const equiposArray = Object.values(carsData.equipos);
 
         // Extraer todos los autos de los equipos
-        const allCars = carsData.map(team => team.autos).flat();
+        const allCars = equiposArray.flatMap(team => team.autos);
 
         res.json(allCars);
     } catch (error) {
@@ -32,12 +30,11 @@ router.get("/:modelo", async (req, res) => {
         const { modelo } = req.params;
         const carsData = JSON.parse(fs.readFileSync(carsFilePath, "utf-8"));
 
-        if (!Array.isArray(carsData)) {
-            return res.status(500).json({ error: "Formato incorrecto en dataCars.json, se esperaba un array." });
-        }
+        // Convertir el objeto "equipos" en un array de valores
+        const equiposArray = Object.values(carsData.equipos);
 
         // Buscar el auto en todos los equipos
-        const car = carsData.map(team => team.autos).flat().find(auto => auto.modelo.toLowerCase() === modelo.toLowerCase());
+        const car = equiposArray.flatMap(team => team.autos).find(auto => auto.modelo.toLowerCase() === modelo.toLowerCase());
 
         if (!car) {
             return res.status(404).json({ error: "Auto no encontrado" });
@@ -55,12 +52,11 @@ router.get("/equipo/:team", async (req, res) => {
         const { team } = req.params;
         const carsData = JSON.parse(fs.readFileSync(carsFilePath, "utf-8"));
 
-        if (!Array.isArray(carsData)) {
-            return res.status(500).json({ error: "Formato incorrecto en dataCars.json, se esperaba un array." });
-        }
+        // Convertir el objeto "equipos" en un array de valores
+        const equiposArray = Object.values(carsData.equipos);
 
         // Buscar los autos dentro del equipo
-        const teamData = carsData.find(e => e.equipo.toLowerCase() === team.toLowerCase());
+        const teamData = equiposArray.find(e => e.equipo.toLowerCase() === team.toLowerCase());
 
         if (!teamData || !Array.isArray(teamData.autos) || teamData.autos.length === 0) {
             return res.status(404).json({ error: "No se encontraron autos para este equipo." });

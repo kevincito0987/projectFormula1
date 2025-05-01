@@ -1,5 +1,4 @@
-[
-  {
+{
     "equipos": [
       {
         "equipo": "McLaren Formula 1 Team",
@@ -777,5 +776,4 @@
         ]
       }      
     ]
-  }
-]
+}
