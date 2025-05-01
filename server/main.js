@@ -1,10 +1,12 @@
+// 📦 Importar módulos esenciales para manejo de APIs y base de datos
 const axios = require("axios");
-const { connectDB } = require("./data/mongoDb.js");
-const Piloto = require("./models/piloto");
-const Team = require("./models/team");
-const Circuit = require("./models/circuits");
-const Weather = require("./models/weather");
+const { connectDB } = require("./data/mongoDb.js"); // 🔗 Conectar a MongoDB
+const Piloto = require("./models/piloto"); // 🏎️ Modelo de pilotos
+const Team = require("./models/team"); // 🏆 Modelo de equipos
+const Circuit = require("./models/circuits"); // 🏁 Modelo de circuitos
+const Weather = require("./models/weather"); // 🌦️ Modelo de datos climáticos
 
+// 📸 Mapeo de imágenes actualizadas para pilotos
 const rutasImagenesActualizadas = {
     norris: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli",
     sainz: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/tsunoda",
@@ -15,24 +17,25 @@ const rutasImagenesActualizadas = {
     russell: "https://gpticketstore.vshcdn.net/uploads/images/10726/jack-doohan-alpine-big.jpg",
 };
 
+// 🔍 Validar y obtener información de los pilotos de un equipo
 async function fetchAndValidatePilotos(teamId) {
     try {
-        // Consumir la API de pilotos para un equipo específico
+        // 🌍 Consumir API de pilotos
         const response = await axios.get(`https://f1api.dev/api/current/teams/${teamId}/drivers`);
         const { drivers } = response.data;
 
         if (!drivers || !Array.isArray(drivers)) {
-            console.error(`Estructura inesperada de la respuesta de pilotos para el equipo ${teamId}`);
+            console.error(`❌ Estructura inesperada de la respuesta para el equipo ${teamId}`);
             return [];
         }
 
-        // Consumir la segunda API para obtener imágenes y fechas
+        // 📸 Consumir API de imágenes de pilotos
         let pilotosImagenes;
         try {
             const response2 = await axios.get("https://api.openf1.org/v1/drivers");
             pilotosImagenes = response2.data;
         } catch (error) {
-            console.error("Error al consumir la segunda API para imágenes:", error.message);
+            console.error("❌ Error al consumir API de imágenes:", error.message);
             pilotosImagenes = [];
         }
 
@@ -42,36 +45,33 @@ async function fetchAndValidatePilotos(teamId) {
             const driver = driverData.driver;
             const existingDriver = await Piloto.findOne({ driverId: driver.driverId });
 
-            // Buscar datos de la segunda API
+            // 📸 Buscar datos de la segunda API
             const pilotoImagen = pilotosImagenes.find(
                 (pImagen) => pImagen.driver_number === driver.number || 
                              (pImagen.first_name === driver.name && pImagen.last_name === driver.surname)
             );
 
-            // Validar si el piloto tiene una imagen en alguna de las dos APIs
+            // 🔗 Validar y asignar imagen
             let imagenUrl = pilotoImagen?.headshot_url || rutasImagenesActualizadas[driver.driverId] || null;
             if (!imagenUrl || imagenUrl === "Sin URL") {
-                // Si no tiene imagen y tampoco en el mapeo, lanzar un error
-                console.error(`El piloto ${driver.name} ${driver.surname} no tiene imagen asignada ni en el mapeo.`);
-                continue; // Omitir este piloto si no tiene ninguna imagen
+                console.error(`❌ Piloto ${driver.name} ${driver.surname} sin imagen asignada.`);
+                continue;
             }
 
             if (existingDriver) {
-                // Validar si la información está completa o si necesita actualizar la URL
                 const fieldsToUpdate = {};
                 if (!existingDriver.fechaNacimiento) fieldsToUpdate.fechaNacimiento = pilotoImagen?.birthday || "Sin fecha";
                 if (!existingDriver.url || !existingDriver.url.startsWith("http")) {
-                    fieldsToUpdate.url = imagenUrl; // Usar la URL encontrada o asignada
+                    fieldsToUpdate.url = imagenUrl;
                 }
 
                 if (Object.keys(fieldsToUpdate).length > 0) {
                     await Piloto.updateOne({ driverId: driver.driverId }, { $set: fieldsToUpdate });
-                    console.log(`Piloto actualizado: ${driver.name} ${driver.surname}`);
+                    console.log(`🔄 Piloto actualizado: ${driver.name} ${driver.surname}`);
                 }
 
                 pilotosValidados.push(existingDriver);
             } else {
-                // Crear nuevo piloto si no existe en la base de datos
                 const nuevoPiloto = new Piloto({
                     driverId: driver.driverId,
                     nombre: driver.name,
@@ -80,174 +80,172 @@ async function fetchAndValidatePilotos(teamId) {
                     fechaNacimiento: pilotoImagen?.birthday || driver.birthday || "Sin fecha",
                     numero: driver.number || null,
                     nombreCorto: driver.shortName || "Sin nombre corto",
-                    url: imagenUrl, // Usar la URL encontrada o asignada
+                    url: imagenUrl,
                     team: teamId,
                 });
 
                 await nuevoPiloto.save();
-                console.log(`Nuevo piloto agregado: ${nuevoPiloto.nombre} ${nuevoPiloto.apellido}`);
+                console.log(`✅ Nuevo piloto agregado: ${nuevoPiloto.nombre} ${nuevoPiloto.apellido}`);
                 pilotosValidados.push(nuevoPiloto);
             }
         }
 
         return pilotosValidados;
     } catch (error) {
-        console.error(`Error al obtener o validar los pilotos del equipo ${teamId}:`, error.message);
+        console.error(`❌ Error al obtener pilotos del equipo ${teamId}:`, error.message);
         return [];
     }
 }
 
+// 🏆 Obtener y almacenar equipos junto con sus pilotos
 async function fetchAndSaveTeams() {
     try {
-        await connectDB(); // Conectar a MongoDB
+        await connectDB(); // 🔗 Conectar a MongoDB
 
-        // Consumir la API de equipos actuales
+        // 🌍 Consumir API de equipos
         let teams;
         try {
             const response = await axios.get("https://f1api.dev/api/current/teams");
             teams = response.data.teams;
         } catch (error) {
-            console.error("Error al consumir la API de equipos:", error.message);
-            return; // Salir si la API falla
+            console.error("❌ Error al consumir API de equipos:", error.message);
+            return;
         }
 
         if (!Array.isArray(teams)) {
-            throw new Error("Estructura inesperada de la API de equipos: No es un array");
+            throw new Error("❌ Estructura inesperada de la API de equipos");
         }
 
         for (const team of teams) {
-            const nuevoTeam = new Team({
-                teamId: team.teamId,
-                nombre: team.teamName || "Desconocido",
-                nacionalidad: team.teamNationality || "Sin nacionalidad",
-                primeraAparicion: team.firstAppeareance || "Sin información",
-                campeonatosConstructores: team.constructorsChampionships || 0,
-                campeonatosPilotos: team.driversChampionships || 0,
-                url: team.url || "Sin URL",
-            });
-
             const existingTeam = await Team.findOne({ teamId: team.teamId });
 
-            if (existingTeam) {
-                console.log(`Equipo ya existente: ${team.teamName}`);
-            } else {
+            if (!existingTeam) {
+                const nuevoTeam = new Team({
+                    teamId: team.teamId,
+                    nombre: team.teamName || "Desconocido",
+                    nacionalidad: team.teamNationality || "Sin nacionalidad",
+                    primeraAparicion: team.firstAppeareance || "Sin información",
+                    campeonatosConstructores: team.constructorsChampionships || 0,
+                    campeonatosPilotos: team.driversChampionships || 0,
+                    url: team.url || "Sin URL",
+                });
+
                 await nuevoTeam.save();
-                console.log(`Equipo guardado: ${nuevoTeam.nombre}`);
+                console.log(`✅ Equipo guardado: ${nuevoTeam.nombre}`);
+            } else {
+                console.log(`⚡ Equipo ya existente: ${team.teamName}`);
             }
 
-            // Validar y agregar pilotos de cada equipo
             const pilotos = await fetchAndValidatePilotos(team.teamId);
-            console.log(`Pilotos procesados para el equipo ${team.teamName}: ${pilotos.length}`);
+            console.log(`🏎️ Pilotos procesados para el equipo ${team.teamName}: ${pilotos.length}`);
         }
 
-        console.log("¡Se han procesado los equipos y pilotos en MongoDB!");
+        console.log("🎉 ¡Equipos y pilotos procesados en MongoDB!");
     } catch (error) {
-        console.error("Error al obtener o guardar equipos y pilotos:", error);
+        console.error("❌ Error al obtener o guardar equipos y pilotos:", error);
     }
 }
 
-// Punto de entrada
-// fetchAndSaveTeams();
-
+// 📦 Mapeo de imágenes para los circuitos de F1
 const circuitImages = {
-    Circuit1: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Bahrain_Circuit",
-    Circuit2: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Saudi_Arabia_Circuit",
-    Circuit3: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Australia_Circuit",
-    Circuit4: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Japan_Circuit",
-    Circuit5: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/China_Circuit",
-    Circuit6: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Miami_Circuit",
-    Circuit7: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Emilia_Romagna_Circuit",
-    Circuit8: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Monaco_Circuit",
-    Circuit9: "https://static.wikia.nocookie.net/f1wikia/images/5/5c/CircuitGillesVilleneuve.png/revision/latest/scale-to-width-down/1200?cb=20220401000204",
-    Circuit10: "https://static.wikia.nocookie.net/f1wikia/images/b/bf/Circuit_de_Barcelona-Catalunya.png/revision/latest?cb=20220331225556",
-    Circuit11: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Austria_Circuit",
-    Circuit12: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Great_Britain_Circuit",
+    Circuit1: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Bahrain_Circuit", // 🇧🇭 Circuito de Baréin
+    Circuit2: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Saudi_Arabia_Circuit", // 🇸🇦 Circuito de Arabia Saudita
+    Circuit3: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Australia_Circuit", // 🇦🇺 Circuito de Australia
+    Circuit4: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Japan_Circuit", // 🇯🇵 Circuito de Japón
+    Circuit5: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/China_Circuit", // 🇨🇳 Circuito de China
+    Circuit6: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Miami_Circuit", // 🇺🇸 Circuito de Miami
+    Circuit7: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Emilia_Romagna_Circuit", // 🇮🇹 Circuito de Imola
+    Circuit8: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Monaco_Circuit", // 🇲🇨 Circuito de Mónaco
+    Circuit9: "https://static.wikia.nocookie.net/f1wikia/images/5/5c/CircuitGillesVilleneuve.png/revision/latest/scale-to-width-down/1200?cb=20220401000204", // 🇨🇦 Circuito Gilles Villeneuve
+    Circuit10: "https://static.wikia.nocookie.net/f1wikia/images/b/bf/Circuit_de_Barcelona-Catalunya.png/revision/latest?cb=20220331225556", // 🇪🇸 Circuito de Barcelona-Cataluña
+    Circuit11: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Austria_Circuit", // 🇦🇹 Circuito de Austria
+    Circuit12: "https://media.formula1.com/image/upload/f_auto,c_limit,w_960,q_auto/f_auto/q_auto/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Great_Britain_Circuit", // 🇬🇧 Circuito de Silverstone
 };
 
+// 🔍 Obtener y almacenar circuitos en la base de datos
 async function fetchAndSaveCircuits() {
     try {
-        await connectDB(); // Conectar a MongoDB
+        await connectDB(); // 🔗 Conectar a MongoDB
 
-        // Consumir la API de circuitos
+        // 🌍 Consumir API de circuitos
         const response = await axios.get("https://f1api.dev/api/circuits");
         const circuitos = response.data.circuits;
 
         if (!Array.isArray(circuitos) || circuitos.length === 0) {
-            throw new Error("No se encontraron circuitos en la API.");
+            throw new Error("❌ No se encontraron circuitos en la API.");
         }
 
-        // Obtener los primeros 12 circuitos
+        // 🔢 Obtener los primeros 12 circuitos
         const primeros12Circuitos = circuitos.slice(0, 12);
 
         for (const [index, circuito] of primeros12Circuitos.entries()) {
-            const nuevoCircuito = new Circuit({
-                circuitId: circuito.circuitId,
-                nombre: circuito.circuitName,
-                pais: circuito.country,
-                ciudad: circuito.city,
-                longitud: circuito.circuitLength,
-                lapRecord: circuito.lapRecord,
-                primerAñoParticipacion: circuito.firstParticipationYear,
-                numeroCurvas: circuito.numberOfCorners,
-                pilotoVueltaRapida: circuito.fastestLapDriverId,
-                equipoVueltaRapida: circuito.fastestLapTeamId,
-                añoVueltaRapida: circuito.fastestLapYear,
-                url: circuito.url,
-                urlImagen: circuitImages[`Circuit${index + 1}`] || "Sin URL de imagen", // Asignar URL de imagen
-            });
-
             const existingCircuit = await Circuit.findOne({ circuitId: circuito.circuitId });
-            if (existingCircuit) {
-                console.log(`El circuito ya existe: ${nuevoCircuito.nombre}`);
-            } else {
+
+            if (!existingCircuit) {
+                const nuevoCircuito = new Circuit({
+                    circuitId: circuito.circuitId,
+                    nombre: circuito.circuitName,
+                    pais: circuito.country,
+                    ciudad: circuito.city,
+                    longitud: circuito.circuitLength,
+                    lapRecord: circuito.lapRecord,
+                    primerAñoParticipacion: circuito.firstParticipationYear,
+                    numeroCurvas: circuito.numberOfCorners,
+                    pilotoVueltaRapida: circuito.fastestLapDriverId,
+                    equipoVueltaRapida: circuito.fastestLapTeamId,
+                    añoVueltaRapida: circuito.fastestLapYear,
+                    url: circuito.url,
+                    urlImagen: circuitImages[`Circuit${index + 1}`] || "❌ Sin URL de imagen",
+                });
+
                 await nuevoCircuito.save();
-                console.log(`Circuito guardado: ${nuevoCircuito.nombre}`);
+                console.log(`✅ Circuito guardado: ${nuevoCircuito.nombre}`);
+            } else {
+                console.log(`⚡ Circuito ya existente: ${existingCircuit.nombre}`);
             }
         }
 
-        console.log("¡Se han guardado los primeros 12 circuitos en la colección 'circuits'!");
+        console.log("🏁 ¡Se han procesado los circuitos en MongoDB!");
     } catch (error) {
-        console.error("Error al obtener o guardar los circuitos:", error.message);
+        console.error("❌ Error al obtener o guardar los circuitos:", error.message);
     }
 }
-
-// Ejecutar la función
-// fetchAndSaveCircuits();
-// Función para esperar antes de una nueva solicitud
+// ⏳ Función para esperar antes de una nueva solicitud
 async function delay(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
+    return new Promise(resolve => setTimeout(resolve, ms)); // ⏱️ Pausa la ejecución por `ms` milisegundos
 }
 
-// Función para reintentar la solicitud si la API limita las peticiones (429)
+// 🔄 Función para reintentar la solicitud si la API limita las peticiones (código 429)
 async function fetchWithRetry(url, retries = 3, delayMs = 5000) {
     for (let i = 0; i < retries; i++) {
         try {
-            return await axios.get(url);
+            return await axios.get(url); // 🌍 Intentar obtener datos desde la API
         } catch (error) {
             if (error.response && error.response.status === 429) {
-                console.log(`Intento ${i + 1}: La API está limitando solicitudes. Reintentando en ${delayMs / 1000} segundos...`);
-                await delay(delayMs);
+                console.log(`⚠️ Intento ${i + 1}: La API está limitando solicitudes. Reintentando en ${delayMs / 1000} segundos...`);
+                await delay(delayMs); // ⏳ Esperar antes de intentar nuevamente
             } else {
-                throw error;
+                throw error; // ❌ Lanzar error si no es un problema de límite de peticiones
             }
         }
     }
-    throw new Error("No se pudo obtener datos después de varios intentos.");
+    throw new Error("❌ No se pudo obtener datos después de varios intentos.");
 }
 
+// 🌦️ Obtener y almacenar datos meteorológicos en la base de datos
 async function fetchAndSaveWeather() {
     try {
-        await connectDB(); // Conectar a MongoDB
+        await connectDB(); // 🔗 Conectar a MongoDB
 
-        // Consumir la API del clima con manejo de errores
+        // 🌍 Consumir API del clima con reintentos en caso de limitación de solicitudes
         const response = await fetchWithRetry("https://api.openf1.org/v1/weather");
         const weatherData = response.data;
 
         if (!Array.isArray(weatherData) || weatherData.length === 0) {
-            throw new Error("No se encontraron datos de clima en la API.");
+            throw new Error("❌ No se encontraron datos de clima en la API.");
         }
 
-        // Clasificar los datos por categoría de clima
+        // 🔥 Clasificar los datos en categorías de clima
         const categoriasClima = {
             soleado: [],
             lluvioso: [],
@@ -257,26 +255,28 @@ async function fetchAndSaveWeather() {
         };
 
         for (const weather of weatherData) {
-            let categoria = "extremo"; // Valor por defecto
+            let categoria = "extremo"; // 🌪️ Valor por defecto si no entra en otra categoría
+
             if (weather.rainfall === 0 && weather.air_temperature > 25 && weather.track_temperature > 40) {
-                categoria = "soleado";
+                categoria = "soleado"; // ☀️ Condiciones cálidas y secas
                 categoriasClima.soleado.push(weather);
             } else if (weather.rainfall > 0) {
-                categoria = "lluvioso";
+                categoria = "lluvioso"; // ☔ Lluvia detectada
                 categoriasClima.lluvioso.push(weather);
             } else if (weather.humidity > 80 && weather.air_temperature < 20) {
-                categoria = "nublado";
+                categoria = "nublado"; // ☁️ Alta humedad con baja temperatura
                 categoriasClima.nublado.push(weather);
             } else if (weather.wind_speed > 10) {
-                categoria = "ventoso";
+                categoria = "ventoso"; // 💨 Fuertes vientos en la pista
                 categoriasClima.ventoso.push(weather);
             } else {
-                categoriasClima.extremo.push(weather);
+                categoriasClima.extremo.push(weather); // 🌪️ Condiciones severas o poco comunes
             }
-            weather.categoria = categoria;
+
+            weather.categoria = categoria; // 📌 Asignar la categoría al objeto de clima
         }
 
-        // Seleccionar los primeros 2 registros de cada categoría
+        // 🎯 Seleccionar los primeros 2 registros de cada categoría
         const climaSeleccionado = [
             ...categoriasClima.soleado.slice(0, 2),
             ...categoriasClima.lluvioso.slice(0, 2),
@@ -285,36 +285,35 @@ async function fetchAndSaveWeather() {
             ...categoriasClima.extremo.slice(0, 2)
         ];
 
+        // 📝 Guardar los datos clasificados en MongoDB
         for (const weather of climaSeleccionado) {
             const nuevoClima = new Weather({
-                airTemperature: weather.air_temperature,
-                date: weather.date,
-                humidity: weather.humidity,
-                meetingKey: weather.meeting_key,
-                pressure: weather.pressure,
-                rainfall: weather.rainfall === 1,
-                sessionKey: weather.session_key,
-                trackTemperature: weather.track_temperature,
-                windDirection: weather.wind_direction,
-                windSpeed: weather.wind_speed,
-                categoria: weather.categoria
+                airTemperature: weather.air_temperature, // 🌡️ Temperatura del aire
+                date: weather.date, // 📅 Fecha del registro
+                humidity: weather.humidity, // 💧 Humedad relativa
+                meetingKey: weather.meeting_key, // 🏁 Identificador de reunión
+                pressure: weather.pressure, // 🌬️ Presión atmosférica
+                rainfall: weather.rainfall === 1, // ☔ Indica si hubo lluvia
+                sessionKey: weather.session_key, // 🔑 Identificador de sesión
+                trackTemperature: weather.track_temperature, // 🏎️ Temperatura de la pista
+                windDirection: weather.wind_direction, // 🌪️ Dirección del viento
+                windSpeed: weather.wind_speed, // 💨 Velocidad del viento
+                categoria: weather.categoria // 🏷️ Categoría asignada
             });
 
             const existingWeather = await Weather.findOne({ date: weather.date, meetingKey: weather.meeting_key });
+
             if (existingWeather) {
-                console.log(`Datos de clima ya existentes para la fecha: ${nuevoClima.date}, reunión: ${nuevoClima.meetingKey}, categoría: ${nuevoClima.categoria}`);
+                console.log(`⚡ Datos de clima ya existentes para: Fecha ${nuevoClima.date}, reunión ${nuevoClima.meetingKey}, categoría ${nuevoClima.categoria}`);
             } else {
-                await delay(1000); // Espera 1 segundo antes de cada guardado
+                await delay(1000); // ⏳ Esperar 1 segundo antes de guardar cada registro
                 await nuevoClima.save();
-                console.log(`Datos de clima guardados para la fecha: ${nuevoClima.date}, reunión: ${nuevoClima.meetingKey}, categoría: ${nuevoClima.categoria}`);
+                console.log(`✅ Datos de clima guardados para: Fecha ${nuevoClima.date}, reunión ${nuevoClima.meetingKey}, categoría ${nuevoClima.categoria}`);
             }
         }
 
-        console.log("¡Se han guardado los datos de clima por categoría en la colección 'weather'!");
+        console.log("🎉 ¡Los datos de clima han sido guardados y organizados por categoría en MongoDB!");
     } catch (error) {
-        console.error("Error al obtener o guardar los datos de clima:", error.message);
+        console.error("❌ Error al obtener o guardar los datos de clima:", error.message);
     }
 }
-
-// Ejecutar la función
-// fetchAndSaveWeather();
