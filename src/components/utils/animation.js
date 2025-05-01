@@ -6,32 +6,27 @@ document.addEventListener("DOMContentLoaded", () => {
     gsap.from("p", { opacity: 0, y: 15, duration: 1.5, ease: "power2.out", stagger: 0.6 });
 
     // 🌈 Animación de degradado en el botón
-    gsap.to("main a", {  // 📌 Solo afectará los `<a>` dentro del main
-        background: "linear-gradient(90deg, #ff4d4d, #ffcc00)", 
+    gsap.to("main a", {  // 📌 Solo afecta los `<a>` dentro del main
+        background: "linear-gradient(90deg, #8b0000, #ff4500)",  // 🎨 Tonos rojo oscuro y naranja intenso
         duration: 2, 
         repeat: -1, 
         yoyo: true, 
         ease: "power1.inOut"
     });
+    
 });    
   
 
 document.addEventListener("DOMContentLoaded", () => {
     anime({
-        targets: ".card", // 📌 Aplica el efecto a todas las cards
-        translateY: [
-            { value: -10, duration: 500 }, // 📌 Sube ligeramente
-            { value: 10, duration: 500 } // 📌 Baja ligeramente
-        ],
-        easing: "easeInOutSine", // 🌊 Movimiento suave y natural
-        duration: 1000, // ⏳ Tiempo total de la animación
-        direction: "alternate", // 🔁 Oscilación continua entre arriba y abajo
-        loop: true, // 🔄 Efecto infinito
-        delay: anime.stagger(150) // 🔥 Efecto escalonado para simular ondas
-    });
-
-    // 🔹 Restaurar visibilidad de las cards manualmente
-    document.querySelectorAll(".card").forEach(card => {
-        card.style.opacity = "1"; // ✅ Evita que desaparezcan
+        targets: ".card",
+        translateX: [-400, 0], // 🏎️ Aceleración desde fuera de pantalla
+        translateY: [-20, 0], // 🔄 Simula un pequeño rebote como derrape
+        rotate: [-5, 0], // 🚀 Ligero giro inicial como efecto de velocidad
+        opacity: [0, 1], // 🔥 Se hacen visibles progresivamente
+        filter: ["blur(10px)", "blur(0px)"], // 💨 Simulación de velocidad con desenfoque inicial
+        duration: 1000, // ⏳ Velocidad de animación rápida, como F1
+        easing: "easeOutExpo", // 🔥 Simula la desaceleración tras el arranque
+        delay: anime.stagger(150), // 🚀 Aparición escalonada tipo parrilla de salida
     });
 });
