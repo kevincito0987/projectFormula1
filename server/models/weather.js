@@ -10,7 +10,8 @@ const weatherSchema = new mongoose.Schema({
     sessionKey: Number,           // Identificador único de la sesión
     trackTemperature: Number,     // Temperatura de la pista (°C)
     windDirection: Number,        // Dirección del viento (°), de 0° a 359°
-    windSpeed: Number             // Velocidad del viento (m/s)
+    windSpeed: Number,
+    categoria: String,             // Velocidad del viento (m/s)
 });
 
 const Weather = mongoose.model("Weather", weatherSchema, "weather");

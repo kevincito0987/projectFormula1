@@ -213,12 +213,34 @@ async function fetchAndSaveCircuits() {
 
 // Ejecutar la función
 // fetchAndSaveCircuits();
+// Función para esperar antes de una nueva solicitud
+async function delay(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// Función para reintentar la solicitud si la API limita las peticiones (429)
+async function fetchWithRetry(url, retries = 3, delayMs = 5000) {
+    for (let i = 0; i < retries; i++) {
+        try {
+            return await axios.get(url);
+        } catch (error) {
+            if (error.response && error.response.status === 429) {
+                console.log(`Intento ${i + 1}: La API está limitando solicitudes. Reintentando en ${delayMs / 1000} segundos...`);
+                await delay(delayMs);
+            } else {
+                throw error;
+            }
+        }
+    }
+    throw new Error("No se pudo obtener datos después de varios intentos.");
+}
+
 async function fetchAndSaveWeather() {
     try {
         await connectDB(); // Conectar a MongoDB
 
-        // Consumir la API del clima de Fórmula 1
-        const response = await axios.get("https://api.openf1.org/v1/weather");
+        // Consumir la API del clima con manejo de errores
+        const response = await fetchWithRetry("https://api.openf1.org/v1/weather");
         const weatherData = response.data;
 
         if (!Array.isArray(weatherData) || weatherData.length === 0) {
@@ -235,17 +257,23 @@ async function fetchAndSaveWeather() {
         };
 
         for (const weather of weatherData) {
+            let categoria = "extremo"; // Valor por defecto
             if (weather.rainfall === 0 && weather.air_temperature > 25 && weather.track_temperature > 40) {
+                categoria = "soleado";
                 categoriasClima.soleado.push(weather);
             } else if (weather.rainfall > 0) {
+                categoria = "lluvioso";
                 categoriasClima.lluvioso.push(weather);
             } else if (weather.humidity > 80 && weather.air_temperature < 20) {
+                categoria = "nublado";
                 categoriasClima.nublado.push(weather);
             } else if (weather.wind_speed > 10) {
+                categoria = "ventoso";
                 categoriasClima.ventoso.push(weather);
             } else {
                 categoriasClima.extremo.push(weather);
             }
+            weather.categoria = categoria;
         }
 
         // Seleccionar los primeros 2 registros de cada categoría
@@ -268,15 +296,17 @@ async function fetchAndSaveWeather() {
                 sessionKey: weather.session_key,
                 trackTemperature: weather.track_temperature,
                 windDirection: weather.wind_direction,
-                windSpeed: weather.wind_speed
+                windSpeed: weather.wind_speed,
+                categoria: weather.categoria
             });
 
             const existingWeather = await Weather.findOne({ date: weather.date, meetingKey: weather.meeting_key });
             if (existingWeather) {
-                console.log(`Datos de clima ya existentes para la fecha: ${nuevoClima.date}, reunión: ${nuevoClima.meetingKey}`);
+                console.log(`Datos de clima ya existentes para la fecha: ${nuevoClima.date}, reunión: ${nuevoClima.meetingKey}, categoría: ${nuevoClima.categoria}`);
             } else {
+                await delay(1000); // Espera 1 segundo antes de cada guardado
                 await nuevoClima.save();
-                console.log(`Datos de clima guardados para la fecha: ${nuevoClima.date}, reunión: ${nuevoClima.meetingKey}`);
+                console.log(`Datos de clima guardados para la fecha: ${nuevoClima.date}, reunión: ${nuevoClima.meetingKey}, categoría: ${nuevoClima.categoria}`);
             }
         }
 
