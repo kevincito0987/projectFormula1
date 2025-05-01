@@ -1,0 +1,8 @@
+@import url(./variables.css);
+
+/* 🔧 Reset de estilos para evitar inconsistencias entre navegadores */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
