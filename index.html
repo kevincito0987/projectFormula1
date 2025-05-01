@@ -3,63 +3,68 @@
 <head>
   <meta charset="UTF-8"> <!-- 📌 Define la codificación para caracteres especiales -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- 🌍 Garantiza el diseño responsive en dispositivos móviles -->
-  <title>Proyecto F1</title> <!-- 🏎️ Título de la página, se muestra en la pestaña del navegador -->
+  <title>Proyecto F1</title> <!-- 🏎️ Título de la página -->
 
   <!-- 🛠️ Importar Tailwind CSS para estilos rápidos y flexibles -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script type="module" src="./src/components/utils/animation.js" defer></script> <!-- 🚀 Enlace al archivo de animaciones -->
 
-  <!-- 🔗 Ícono de la página en la barra de navegación -->
+  <!-- 🎬 Importar GSAP para animaciones dinámicas -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+
+  <!-- 🚀 Archivo de animaciones personalizado -->
+  <script type="module" src="./src/components/utils/animation.js" defer></script>
+
+  <!-- 🔗 Ícono de la página -->
   <link rel="shortcut icon" href="./assets/icons/formula1Icon2.svg" type="image/x-icon">
 
   <!-- 🎨 Archivo de estilos personalizados -->
   <link rel="stylesheet" href="./styles/style.css">
 </head>
-<body >
+<body class="bg-gray-900 text-white">
+
   <!-- 🔳 Contenedor principal con ancho máximo y centrado -->
   <main class="max-w-xl mx-auto p-4 sm:p-6 text-center">
     
-    <!-- 🏆 Título con tamaños de fuente adaptables -->
+    <!-- 🏆 Título principal -->
     <h1 class="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-4 mt-10">
       🏆 El Legado F1: Un Tributo a la Historia y Gloria 🏎️
     </h1>
 
-    <!-- 📜 Primer párrafo con tamaño de texto responsive -->
+    <!-- 📜 Primer párrafo -->
     <p class="text-sm sm:text-base md:text-lg lg:text-xl mb-6">
-      Sumérgete en la rica historia de la Fórmula 1, donde leyendas nacieron y máquinas icónicas dejaron su huella. 
-      Inspírate con el espíritu de la competición, la innovación constante y el eterno deseo de cruzar la línea de meta en primer lugar.
+      Sumérgete en la rica historia de la Fórmula 1, donde leyendas nacieron y máquinas icónicas dejaron su huella.
     </p>
 
-    <!-- ⚡ Segundo párrafo con diseño adaptable -->
+    <!-- ⚡ Segundo párrafo -->
     <p class="text-sm sm:text-base md:text-lg lg:text-xl mb-6">
-      Siente la descarga de adrenalina en cada Gran Premio, desde la tensión en la parrilla hasta la euforia en el podio. 
-      Inspírate con la audacia de los pilotos, la ingeniería de vanguardia y la búsqueda implacable de la perfección en la pista.
+      Siente la descarga de adrenalina en cada Gran Premio, desde la tensión en la parrilla hasta la euforia en el podio.
     </p>
 
-    <div class="users flex flex-col items-center justify-center gap-20 p-6">
+    <!-- 👥 Sección de Usuarios -->
+    <div class="users flex flex-col items-center justify-center gap-10 p-6">
+      
       <!-- 🔥 Título y Logo -->
-      <div class="title flex flex-row text-center gap-20">
+      <div class="title flex flex-col items-center text-center gap-6">
           <img src="./assets/icons/icon2Formula1.svg" alt="Formula 1 Icon" class="w-20 sm:w-24">
-          <h1 class="text-xl sm:text-2xl">¡Únete a la Fórmula 1!</h1>
+          <h1 class="text-xl sm:text-2xl font-bold">¡Únete a la Fórmula 1!</h1>
       </div>
-  
+
       <!-- 🏁 Subtítulo -->
       <h3 class="text-sm sm:text-lg text-center subtitle">Elige un rol para comenzar tu carrera en la Fórmula 1</h3>
-  
+
       <!-- 👥 Opciones de usuario -->
-      <div class="users flex flex-row items-center gap-6 w-full">
+      <div class="users flex flex-col sm:flex-row items-center gap-6 w-full">
           <a href="#" class="flex flex-col items-center gap-3 p-4 w-full sm:w-1/2 hover:scale-105 transition">
               <img src="./assets/icons/userIcon.svg" alt="User Icon" class="w-16 h-16 sm:w-20 sm:h-20">
-              <p class="text-lg sm:text-xl">User1</p>
+              <p class="text-lg sm:text-xl font-semibold">User1</p>
           </a>
           <a href="#" class="flex flex-col items-center gap-3 p-4 w-full sm:w-1/2 hover:scale-105 transition">
               <img src="./assets/icons/userAdminIcon.svg" alt="Admin Icon" class="w-16 h-16 sm:w-20 sm:h-20">
-              <p class="text-lg sm:text-xl">Admin</p>
+              <p class="text-lg sm:text-xl font-semibold text-yellow-400">Admin</p>
           </a>
       </div>
-  </div>
-  
+    </div>
+
   </main>
 </body>
 </html>
