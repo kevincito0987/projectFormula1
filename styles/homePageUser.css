@@ -33,3 +33,49 @@ header {
     transform: scale(1.05); /* 🔥 Efecto de expansión ligero */
     box-shadow: 0px 4px 10px var(--color-5); /* ✨ Sombra suave */
 }
+
+footer {
+    background: var(--color-5);
+    background-size: cover;
+    width: 98%;
+    height: 60px;
+    padding: 17px 50px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: absolute;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    border-radius: 90px;
+    box-shadow: 0px 0px 25px 40px var(--color-8); /* Sombra blanca añadida aquí */
+    margin: 0 10px;
+    z-index: 2;
+}
+footer::after{
+    content: url(../storage/icons/maxIcon.svg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 60px;
+    height: 50px;
+    background: var(--color-3);
+    position: absolute;
+    inset: 0;
+    top: -65px;
+    border-radius: 100%;
+    margin: auto;
+    box-shadow: 0px 0px 35px var(--color-6);
+}
+
+.moving-bar {
+    width: 30px;
+    height: 10px;
+    background-color: var(--color-4);
+    position: absolute;
+    bottom: 0; /* Ajustar para que se vea debajo de los íconos */
+    transition: transform 0.4s ease;
+    left: 0px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 35px var(--color-6);
+}
