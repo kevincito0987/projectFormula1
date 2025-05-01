@@ -7,8 +7,22 @@ class NewsLinks extends HTMLElement {
         this.shadowRoot.innerHTML = `
             <style>
                 @import "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
+                a:hover {
+                    transform: scale(1.05);
+                    box-shadow: 0px 4px 10px var(--color-5);
+                    transition: all 0.4s ease-in-out;
+                    background: var(--color-8);
+                    border-radius: 30px;
+                }
+                .filters {
+                    display: flex;
+                    flex-direction: row;
+                    align-items: center;
+                    gap: 10px;
+                    margin-bottom: 20px;
+                }
             </style>
-            <div class="flex flex-wrap justify-center gap-6">
+            <div class="flex flex-wrap justify-center gap-6 filters">
                 <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="All News">
                     <img src="../assets/icons/newsFormula1Icon.svg" alt="All News" class="w-16 h-16">
                     <p class="mt-2 text-lg font-bold">All News</p>
@@ -24,17 +38,40 @@ class NewsLinks extends HTMLElement {
             </div>
         `;
 
-        // 🏎️ Agregar evento para capturar clics en los enlaces
+        // 🏎️ Aplicar animaciones de entrada con GSAP
+        gsap.fromTo(this.shadowRoot.querySelectorAll("a"), 
+            { opacity: 0, y: 50 },  // 📌 Estado inicial: oculto y desplazado hacia abajo
+            { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" } // 📌 Animación escalonada hacia arriba
+        );
+
+        // 🏎️ Aplicar animación con Anime.js en hover
         this.shadowRoot.querySelectorAll("a").forEach(link => {
+            link.addEventListener("mouseenter", () => {
+                anime({
+                    targets: link,
+                    scale: [1, 1.15], // 🔥 Expansión suave en hover
+                    duration: 500,
+                    easing: "easeInOutQuad",
+                });
+            });
+
+            link.addEventListener("mouseleave", () => {
+                anime({
+                    targets: link,
+                    scale: [1.15, 1], // 🔥 Regresa a su tamaño original
+                    duration: 500,
+                    easing: "easeInOutQuad",
+                });
+            });
+
+            // 🔥 Despacha un evento personalizado al hacer clic
             link.addEventListener("click", (event) => {
                 event.preventDefault();
                 const newsType = event.currentTarget.dataset.name;
-                
-                // 🔥 Despacha un evento personalizado
                 this.dispatchEvent(new CustomEvent("news-selected", {
                     detail: { newsType },
-                    bubbles: true, // Permite que el evento salga del Shadow DOM
-                    composed: true // Hace que el evento sea accesible fuera del Shadow DOM
+                    bubbles: true,
+                    composed: true 
                 }));
             });
         });
