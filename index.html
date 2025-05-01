@@ -37,23 +37,29 @@
       Inspírate con la audacia de los pilotos, la ingeniería de vanguardia y la búsqueda implacable de la perfección en la pista.
     </p>
 
-    <div class="users">
-      <a href="">
-        <img src="./assets/icons/userIcon.svg" alt="User Icon">
-        <p>User1</p>
-      </a>
-      <a href="">
-        <img src="" alt="">
-        <p>Admin</p>
-      </a>
-    </div>
-
-    <!-- 🎟️ Botón interactivo con efectos de hover y transiciones suaves -->
-    <a href="#" class="inline-flex items-center gap-2 font-bold py-3 px-6 rounded-lg border border-gray-300 hover:border-red-600 transition duration-300">
-      <img src="./assets/icons/icon2Formula1.svg" alt="Logo F1" class="w-10 sm:w-12 h-10 sm:h-12"> <!-- 🏎️ Logo con tamaño ajustable -->
-      <p class="text-sm sm:text-lg">Get Started in F1.</p> <!-- 🎯 Texto del botón con tamaño adaptable -->
-    </a>
-
+    <div class="users flex flex-col items-center justify-center gap-20 p-6">
+      <!-- 🔥 Título y Logo -->
+      <div class="title flex flex-row text-center gap-20">
+          <img src="./assets/icons/icon2Formula1.svg" alt="Formula 1 Icon" class="w-20 sm:w-24">
+          <h1 class="text-xl sm:text-2xl">¡Únete a la Fórmula 1!</h1>
+      </div>
+  
+      <!-- 🏁 Subtítulo -->
+      <h3 class="text-sm sm:text-lg text-center subtitle">Elige un rol para comenzar tu carrera en la Fórmula 1</h3>
+  
+      <!-- 👥 Opciones de usuario -->
+      <div class="users flex flex-row items-center gap-6 w-full">
+          <a href="#" class="flex flex-col items-center gap-3 p-4 w-full sm:w-1/2 hover:scale-105 transition">
+              <img src="./assets/icons/userIcon.svg" alt="User Icon" class="w-16 h-16 sm:w-20 sm:h-20">
+              <p class="text-lg sm:text-xl">User1</p>
+          </a>
+          <a href="#" class="flex flex-col items-center gap-3 p-4 w-full sm:w-1/2 hover:scale-105 transition">
+              <img src="./assets/icons/userAdminIcon.svg" alt="Admin Icon" class="w-16 h-16 sm:w-20 sm:h-20">
+              <p class="text-lg sm:text-xl">Admin</p>
+          </a>
+      </div>
+  </div>
+  
   </main>
 </body>
 </html>
