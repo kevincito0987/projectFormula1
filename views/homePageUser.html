@@ -4,89 +4,81 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Proyecto F1</title>
+    
+    <!-- 📌 Importar Tailwind CSS -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <link rel="shortcut icon" href="./assets/icons/formula1Icon2.svg" type="image/x-icon">
+    
     <link rel="stylesheet" href="./styles/style.css">
+    <link rel="shortcut icon" href="../assets/icons/formula1Icon2.svg" type="image/x-icon">
 </head>
-<body>
-    <header>
-        <h1>🔥 F1enza Tu Pasión por la Fórmula 1 a la Cima 🚀</h1>
-        <p> Desata tu fervor por la Fórmula 1 en un espacio que respira la emoción de cada curva, cada adelantamiento, cada victoria. Inspírate con la grandeza del deporte motor y únete a una comunidad que vive al límite de la velocidad.</p>
+<body class="bg-gray-900 text-white">
+
+    <!-- 🏆 Header -->
+    <header class="text-center p-6">
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-bold mb-4">🔥 F1enza Tu Pasión por la Fórmula 1 a la Cima 🚀</h1>
+        <p class="text-sm sm:text-base md:text-lg lg:text-xl max-w-2xl mx-auto">
+            Desata tu fervor por la Fórmula 1 en un espacio que respira la emoción de cada curva, cada adelantamiento, cada victoria.
+        </p>
     </header>
-    <main>
-        <div class="filters">
-            <a href="#">
-                <img src="../assets/icons/newsFormula1Icon.svg" alt="Logo F1">
-                <p>All News</p>
+
+    <!-- 🏁 Main Content -->
+    <main class="max-w-4xl mx-auto p-4 space-y-6">
+        
+        <!-- 🔎 Filters -->
+        <div class="flex flex-wrap justify-center gap-4">
+            <a href="#" class="flex flex-col items-center p-3 hover:scale-105 transition">
+                <img src="../assets/icons/newsFormula1Icon.svg" alt="Logo F1" class="w-16 h-16">
+                <p class="mt-2 text-lg font-bold">All News</p>
             </a>
-            <a href="#">
-                <img src="../assets/icons/newsTeamFormula1Icon.svg" alt="Logo F1 Teams">
-                <p>News F1 Teams</p>
+            <a href="#" class="flex flex-col items-center p-3 hover:scale-105 transition">
+                <img src="../assets/icons/newsTeamFormula1Icon.svg" alt="Logo F1 Teams" class="w-16 h-16">
+                <p class="mt-2 text-lg font-bold">News F1 Teams</p>
             </a>
-            <a href="#">
-                <img src="../assets/icons/newsCircuitsFormula1Icon.svg" alt="Logo F1 Circuits">
-                <p>News F1 Circuits</p>
+            <a href="#" class="flex flex-col items-center p-3 hover:scale-105 transition">
+                <img src="../assets/icons/newsCircuitsFormula1Icon.svg" alt="Logo F1 Circuits" class="w-16 h-16">
+                <p class="mt-2 text-lg font-bold">News F1 Circuits</p>
             </a>
         </div>
-        <div class="card-container">
-            <div class="card">
-                <img src="../assets/images/imageCardNews1.jpeg" alt="Card image 1">
-                <div class="card-content">
-                    <h3 class="card-title">📰 ¡Bomba en el Paddock! Últimas Novedades de los Equipos ➡️</h3>
-                    <p class="card-text">Entérate de los fichajes sorpresa 🤝, los cambios técnicos de última hora ⚙️ y las declaraciones que están agitando el mundo de la F1 🗣️. ¡Mantente al día con la información más reciente! ⏰</p>
-                    <a href="#" class="card-button">
-                        <img src="../assets/icons/icon2Formula1.svg" alt="">
+
+        <!-- 📢 News Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
+                <img src="../assets/images/imageCardNews1.jpeg" alt="Card image 1" class="rounded-lg">
+                <div class="mt-4">
+                    <h3 class="text-xl font-bold">📰 ¡Bomba en el Paddock! Últimas Novedades ➡️</h3>
+                    <p class="text-sm mt-2">Entérate de los fichajes sorpresa 🤝, los cambios técnicos de última hora ⚙️ y las declaraciones que están agitando el mundo de la F1 🗣️.</p>
+                    <a href="#" class="flex items-center gap-2 mt-4 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        <img src="../assets/icons/icon2Formula1.svg" alt="" class="w-6 h-6">
                         <p>Learn More...</p>
                     </a>
                 </div>
             </div>
-            <div class="card">
-                <img src="../assets/images/imageCardNews2.jpeg" alt="Card image 1">
-                <div class="card-content">
-                    <h3 class="card-title">🧐 Bajo la Lupa: Desglosamos las Claves del Último Gran Premio 🏁</h3>
-                    <p class="card-text">Profundizamos en la estrategia 🧠, los momentos cruciales 💥 y el rendimiento de los pilotos 📊 en la última carrera. Descubre los detalles que marcaron la diferencia en la pista 🛣️.</p>
-                    <a href="#" class="card-button">
-                        <img src="../assets/icons/icon2Formula1.svg" alt="">
-                        <p>Learn More...</p>
-                    </a>
-                </div>
-            </div>
-            <div class="card">
-                <img src="../assets/images/imageCardNews3.jpeg" alt="Card image 1">
-                <div class="card-content">
-                    <h3 class="card-title">🤫 Secretos de Boxes: Los Rumores más Calientes de la Temporada 🔥</h3>
-                    <p class="card-text">¿Qué se comenta entre bambalinas? 🤔 Te traemos los rumores más jugosos 🌶️, las posibles sorpresas 😲 y las exclusivas que podrían sacudir el campeonato 🌪️.</p>
-                    <a href="#" class="card-button">
-                        <img src="../assets/icons/icon2Formula1.svg" alt="">
-                        <p>Learn More...</p>
-                    </a>
-                </div>
-            </div>
-            <div class="card">
-                <img src="../assets/images/imageCardNews4.jpeg" alt="Card image 1">
-                <div class="card-content">
-                    <h3 class="card-title">🗓️ ¡A Calentar Motores! Previa y Horarios del Próximo Gran Premio 🚦</h3>
-                    <p class="card-text">No te pierdas ningún detalle del próximo evento 📍. Te presentamos el circuito 🗺️, los horarios clave ⏱️ y los puntos a tener en cuenta para la siguiente batalla en la pista 💪.</p>
-                    <a href="#" class="card-button">
-                        <img src="../assets/icons/icon2Formula1.svg" alt="">
+
+            <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
+                <img src="../assets/images/imageCardNews2.jpeg" alt="Card image 2" class="rounded-lg">
+                <div class="mt-4">
+                    <h3 class="text-xl font-bold">🧐 Bajo la Lupa: Último Gran Premio 🏁</h3>
+                    <p class="text-sm mt-2">Profundizamos en la estrategia 🧠, los momentos cruciales 💥 y el rendimiento de los pilotos 📊 en la última carrera.</p>
+                    <a href="#" class="flex items-center gap-2 mt-4 p-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+                        <img src="../assets/icons/icon2Formula1.svg" alt="" class="w-6 h-6">
                         <p>Learn More...</p>
                     </a>
                 </div>
             </div>
         </div>
     </main>
-    <footer>
-        <div class="div__izquierdo">
-            <a href="#" id="home-icon"><img src="../assets/icons/homeIcon.svg" alt="Home Icon"></a>
-            <a href="#" id="bag-icon"><img src="../assets/icons/RacingDetailsIcon.svg" alt="Bag Icon"></a>
+
+    <!-- 🏁 Footer -->
+    <footer class="flex justify-between items-center p-4 bg-gray-800">
+        <div class="flex gap-4">
+            <a href="#"><img src="../assets/icons/homeIcon.svg" alt="Home" class="w-10"></a>
+            <a href="#"><img src="../assets/icons/RacingDetailsIcon.svg" alt="Racing Details" class="w-10"></a>
         </div>
-        <div class="div__derecho">
-            <a href="#" id="heart-icon">
-                <img src="../assets/icons/simulationRacingIcon.svg" alt="Heart Icon">
-            </a>
-            <a href="#" id="profile-icon"><img src="../assets/icons/userIcon.svg" alt="Profile Icon"></a>
+        <div class="flex gap-4">
+            <a href="#"><img src="../assets/icons/simulationRacingIcon.svg" alt="Simulation" class="w-10"></a>
+            <a href="#"><img src="../assets/icons/userIcon.svg" alt="Profile" class="w-10"></a>
         </div>
-        <div id="moving-bar" class="moving-bar"></div>
     </footer>
+
 </body>
 </html>
