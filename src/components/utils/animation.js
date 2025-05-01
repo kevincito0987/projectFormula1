@@ -1,13 +1,16 @@
-// 📌 Asegurar que el DOM esté listo antes de ejecutar GSAP
 document.addEventListener("DOMContentLoaded", () => {
-    gsap.from("h1", { opacity: 0, y: -50, duration: 2.5, ease: "power2.out" }); // 🏆 Animación de entrada del título más lenta
-    gsap.from("p", { opacity: 0, y: 30, duration: 2, ease: "power2.out", stagger: 1 }); // 📜 Aparición escalonada más pausada en los párrafos
-    gsap.from("a", { 
-        opacity: 0, 
-        scale: 0.1, /* 📌 Inicia pequeño para expandirse */
-        y: 20, /* 🔽 Movimiento vertical leve */
+    // 🔎 Verificar si el cuerpo tiene la clase `no-animations`
+    if (document.body.classList.contains("no-animations")) return;
+
+    gsap.from("h1", { opacity: 0, y: -20, duration: 2, ease: "power2.out" });
+    gsap.from("p", { opacity: 0, y: 15, duration: 1.5, ease: "power2.out", stagger: 0.6 });
+
+    // 🌈 Animación de degradado en el botón
+    gsap.to("a", { 
+        background: "linear-gradient(90deg, #ff4d4d, #ffcc00)", /* 🎨 Degradado inicial */
         duration: 2, 
-        ease: "elastic.out(1, 0.9)", /* 🌊 Efecto ondulado elástico */
+        repeat: -1, /* 🔁 Efecto infinito */
+        yoyo: true, /* 🔄 Hace que el degradado oscile */
+        ease: "power1.inOut"
     });
-    
 });
