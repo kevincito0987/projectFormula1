@@ -29,6 +29,13 @@ main {
     width: 90%;
     margin: 10px 30px;
 }
+/* 📌 Estilos para efecto de persianas */
+.panel {
+    overflow: hidden; /* 🔎 Oculta el contenido inicialmente */
+    height: 0; /* 📌 Empieza con altura cero */
+    opacity: 0; /* 🚫 Oculta hasta la animación */
+}
+
 
 /* 🏆 Estilos del título */
 h1 {
@@ -100,10 +107,6 @@ a:hover {
         align-items: center;
         justify-content: flex-start;
         padding-top: 10px;
-
-        /* 🚫 Desactivar animaciones */
-        animation: none !important;
-        transition: none !important;
     }
 
     /* 📌 Contenedor principal */
