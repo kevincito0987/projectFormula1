@@ -219,7 +219,7 @@ async function fetchAndSaveWeather() {
         await connectDB(); // Conectar a MongoDB
 
         // Consumir la API del clima de Fórmula 1
-        const response = await axios.get("https://api.openf1.org/v1/weather"); // URL de ejemplo
+        const response = await axios.get("https://api.openf1.org/v1/weather"); // URL según documentación
         const weatherData = response.data;
 
         if (!Array.isArray(weatherData) || weatherData.length === 0) {
@@ -231,20 +231,24 @@ async function fetchAndSaveWeather() {
 
         for (const weather of primeros5Climas) {
             const nuevoClima = new Weather({
-                circuito: weather.circuit_name,
-                fecha: weather.date,
-                temperatura: weather.temperature,
-                humedad: weather.humidity,
-                velocidadViento: weather.wind_speed,
-                condiciones: weather.conditions, // Ejemplo: "soleado", "lluvioso"
+                airTemperature: weather.air_temperature,
+                date: weather.date,
+                humidity: weather.humidity,
+                meetingKey: weather.meeting_key,
+                pressure: weather.pressure,
+                rainfall: weather.rainfall === 1, // Convertir a booleano
+                sessionKey: weather.session_key,
+                trackTemperature: weather.track_temperature,
+                windDirection: weather.wind_direction,
+                windSpeed: weather.wind_speed
             });
 
-            const existingWeather = await Weather.findOne({ circuito: weather.circuit_name, fecha: weather.date });
+            const existingWeather = await Weather.findOne({ date: weather.date, meetingKey: weather.meeting_key });
             if (existingWeather) {
-                console.log(`Datos de clima ya existentes para el circuito: ${nuevoClima.circuito} en la fecha: ${nuevoClima.fecha}`);
+                console.log(`Datos de clima ya existentes para la fecha: ${nuevoClima.date}, reunión: ${nuevoClima.meetingKey}`);
             } else {
                 await nuevoClima.save();
-                console.log(`Datos de clima guardados para el circuito: ${nuevoClima.circuito} en la fecha: ${nuevoClima.fecha}`);
+                console.log(`Datos de clima guardados para la fecha: ${nuevoClima.date}, reunión: ${nuevoClima.meetingKey}`);
             }
         }
 
