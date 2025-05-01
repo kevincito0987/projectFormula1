@@ -211,4 +211,4 @@ async function fetchAndSaveCircuits() {
 }
 
 // Ejecutar la función
-fetchAndSaveCircuits();
+// fetchAndSaveCircuits();

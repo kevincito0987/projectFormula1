@@ -1,0 +1,221 @@
+{
+    "equipos": [
+      {
+        "equipo": "McLaren Formula 1 Team",
+        "autos": [
+          {
+            "modelo": "MCL60",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 340,
+            "aceleracion_0_100": 2.8,
+            "pilotos": [7, 8],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 305,
+                "consumo_combustible": { "seco": 2.2, "lluvioso": 2.5, "extremo": 2.9 },
+                "desgaste_neumaticos": { "seco": 1.7, "lluvioso": 1.1, "extremo": 2.7 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 325,
+                "consumo_combustible": { "seco": 2.8, "lluvioso": 3.0, "extremo": 3.5 },
+                "desgaste_neumaticos": { "seco": 2.4, "lluvioso": 1.6, "extremo": 3.8 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 285,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.3, "lluvioso": 0.8, "extremo": 2.2 }
+              }
+            },
+            "imagen": "https://m.media-amazon.com/images/I/716FJhiW-YL._AC_SL1500_.jpg"
+          },
+          {
+            "modelo": "MCL59",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 335,
+            "aceleracion_0_100": 2.9,
+            "pilotos": [7, 8],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 300,
+                "consumo_combustible": { "seco": 2.3, "lluvioso": 2.6, "extremo": 3.0 },
+                "desgaste_neumaticos": { "seco": 1.8, "lluvioso": 1.2, "extremo": 2.8 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 320,
+                "consumo_combustible": { "seco": 2.9, "lluvioso": 3.1, "extremo": 3.6 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.7, "extremo": 3.9 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 280,
+                "consumo_combustible": { "seco": 1.8, "lluvioso": 2.0, "extremo": 2.3 },
+                "desgaste_neumaticos": { "seco": 1.2, "lluvioso": 0.7, "extremo": 2.1 }
+              }
+            },
+            "imagen": "https://phantom-marca.unidadeditorial.es/df1fbd1cb8a75f1c4c2dc85a68038ead/resize/640/assets/multimedia/imagenes/2020/04/12/15866857832961.jpg"
+          }
+        ]
+      },
+      {
+        "equipo": "Mercedes Formula 1 Team",
+        "autos": [
+          {
+            "modelo": "W14",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 355,
+            "aceleracion_0_100": 2.6,
+            "pilotos": [3, 4],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 315,
+                "consumo_combustible": { "seco": 2.0, "lluvioso": 2.2, "extremo": 2.5 },
+                "desgaste_neumaticos": { "seco": 1.6, "lluvioso": 0.9, "extremo": 2.6 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 335,
+                "consumo_combustible": { "seco": 2.6, "lluvioso": 2.8, "extremo": 3.2 },
+                "desgaste_neumaticos": { "seco": 2.3, "lluvioso": 1.4, "extremo": 3.8 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 295,
+                "consumo_combustible": { "seco": 1.7, "lluvioso": 1.9, "extremo": 2.2 },
+                "desgaste_neumaticos": { "seco": 1.1, "lluvioso": 0.6, "extremo": 1.9 }
+              }
+            },
+            "imagen": "https://p.turbosquid.com/ts-thumb/5y/IKpnf6/C8/w14_0000/jpg/1678424493/600x600/fit_q87/a961abd499156dcb209ba31219a835c8a91cba44/w14_0000.jpg"
+          },
+          {
+            "modelo": "W13",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 350,
+            "aceleracion_0_100": 2.8,
+            "pilotos": [3, 4],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 310,
+                "consumo_combustible": { "seco": 2.1, "lluvioso": 2.3, "extremo": 2.6 },
+                "desgaste_neumaticos": { "seco": 1.7, "lluvioso": 1.0, "extremo": 2.7 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 330,
+                "consumo_combustible": { "seco": 2.7, "lluvioso": 2.9, "extremo": 3.3 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.5, "extremo": 3.6 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 290,
+                "consumo_combustible": { "seco": 1.8, "lluvioso": 2.0, "extremo": 2.3 },
+                "desgaste_neumaticos": { "seco": 1.2, "lluvioso": 0.7, "extremo": 2.0 }
+              }
+            },
+            "imagen": "https://www.amalgamcollection.com/cdn/shop/files/DSCF9896_4000x2677_crop_center.jpg?v=1690987578"
+          },
+          {
+            "modelo": "W12",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 345,
+            "aceleracion_0_100": 2.9,
+            "pilotos": [3, 4],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 305,
+                "consumo_combustible": { "seco": 2.2, "lluvioso": 2.5, "extremo": 2.8 },
+                "desgaste_neumaticos": { "seco": 1.8, "lluvioso": 1.1, "extremo": 2.9 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 325,
+                "consumo_combustible": { "seco": 2.8, "lluvioso": 3.0, "extremo": 3.5 },
+                "desgaste_neumaticos": { "seco": 2.6, "lluvioso": 1.6, "extremo": 3.8 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 285,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.3, "lluvioso": 0.8, "extremo": 2.2 }
+              }
+            },
+            "imagen": "https://http2.mlstatic.com/D_NQ_NP_692728-MLU70544408919_072023-O.webp"
+          }
+        ]
+      },
+      {
+        "equipo": "Red Bull Racing",
+        "autos": [
+          {
+            "modelo": "RB20",
+            "motor": "Honda",
+            "velocidad_maxima_kmh": 360,
+            "aceleracion_0_100": 2.5,
+            "pilotos": [1, 2],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 320,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.5, "lluvioso": 0.8, "extremo": 2.5 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 340,
+                "consumo_combustible": { "seco": 2.4, "lluvioso": 2.6, "extremo": 3.0 },
+                "desgaste_neumaticos": { "seco": 2.2, "lluvioso": 1.2, "extremo": 3.5 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 300,
+                "consumo_combustible": { "seco": 1.6, "lluvioso": 1.8, "extremo": 2.1 },
+                "desgaste_neumaticos": { "seco": 1.0, "lluvioso": 0.5, "extremo": 1.8 }
+              }
+            },
+            "imagen": "https://global.honda/en/F1/machine/2024_RedBullRB20/img/main.jpg"
+          },
+          {
+            "modelo": "RB19",
+            "motor": "Honda",
+            "velocidad_maxima_kmh": 355,
+            "aceleracion_0_100": 2.6,
+            "pilotos": [1, 2],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 315,
+                "consumo_combustible": { "seco": 2.0, "lluvioso": 2.2, "extremo": 2.5 },
+                "desgaste_neumaticos": { "seco": 1.6, "lluvioso": 0.9, "extremo": 2.6 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 335,
+                "consumo_combustible": { "seco": 2.6, "lluvioso": 2.8, "extremo": 3.2 },
+                "desgaste_neumaticos": { "seco": 2.3, "lluvioso": 1.4, "extremo": 3.8 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 295,
+                "consumo_combustible": { "seco": 1.7, "lluvioso": 1.9, "extremo": 2.2 },
+                "desgaste_neumaticos": { "seco": 1.1, "lluvioso": 0.6, "extremo": 1.9 }
+              }
+            },
+            "imagen": "https://acnews.blob.core.windows.net/imgnews/medium/NAZ_28e093dae41642d5b2bb3d218e0fca84.webp"
+          },
+          {
+            "modelo": "RB18",
+            "motor": "Honda",
+            "velocidad_maxima_kmh": 350,
+            "aceleracion_0_100": 2.7,
+            "pilotos": [1, 2],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 310,
+                "consumo_combustible": { "seco": 2.1, "lluvioso": 2.4, "extremo": 2.7 },
+                "desgaste_neumaticos": { "seco": 1.8, "lluvioso": 1.0, "extremo": 2.8 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 330,
+                "consumo_combustible": { "seco": 2.7, "lluvioso": 2.9, "extremo": 3.3 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.5, "extremo": 3.6 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 290,
+                "consumo_combustible": { "seco": 1.8, "lluvioso": 2.0, "extremo": 2.3 },
+                "desgaste_neumaticos": { "seco": 1.2, "lluvioso": 0.7, "extremo": 2.0 }
+              }
+            },
+            "imagen": "https://phantom-marca.unidadeditorial.es/bf4f50d69fb732ab407f28e7e6d73dd5/resize/828/f/jpg/assets/multimedia/imagenes/2022/02/09/16444242286100.jpg"
+          }
+        ]
+      }
+      
+    ]
+  }
+  
