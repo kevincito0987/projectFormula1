@@ -1,69 +1,73 @@
-/* 📌 Importar variables de estilo */
+/* 📌 Importar variables globales de estilo */
 @import url(./variables.css);
 
-/* 🔧 Reset de estilos para evitar inconsistencias */
+/* 🔧 Reset de estilos para evitar inconsistencias entre navegadores */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
-/* 🎬 Fondo de pantalla con imagen */
+/* 🎬 Fondo de pantalla */
 body {
     background-image: url(../assets/images/bgScreenPage.png);
-    background-size: cover; /* 📌 Ajustar la imagen al tamaño de la pantalla */
+    background-size: cover; /* 🖼️ Ajustar imagen al tamaño de la pantalla */
     background-position: center; /* 🎯 Centrar la imagen de fondo */
     background-repeat: no-repeat; /* 🚫 Evitar la repetición */
     width: 100%;
-    height: 150vh; /* 📌 Mantener la altura completa de la ventana */
+    min-height: 100vh; /* 📌 Ajustar altura sin desbordamiento */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 /* 🏎️ Contenedor principal */
 main {
-    display: flex; /* 📌 Flexbox para alinear elementos */
-    flex-direction: column; /* 📌 Alinear los elementos en columna */
-    align-items: center; /* 🎯 Centrar contenido horizontalmente */
-    justify-content: center; /* 🎯 Centrar contenido verticalmente */
-    height: 100%;
-    padding: 20px;
+    display: flex; /* 🔄 Usar Flexbox para alineación */
+    flex-direction: column; /* 📌 Mantener elementos en columna */
+    align-items: center; /* 🎯 Centrar horizontalmente */
+    justify-content: center; /* 📌 Centrar verticalmente */
     width: 90%;
-    margin: 10px 30px;
-}
-.title {
-    display: flex;
-   justify-content: center;
-   align-items: center;
+    padding: 20px;
+    margin: 20px auto;
 }
 
+/* 🔥 Estilos del título */
+.title {
+    display: flex;
+    flex-direction: column; /* 📌 Mantener estructura vertical */
+    align-items: center;
+    gap: 10px; /* 🔄 Espaciado entre elementos */
+}
+
+/* 🏆 Título */
+h1 {
+    font-size: 2rem; /* 📌 Tamaño adecuado para pantallas grandes */
+    color: var(--color-1); /* 🎨 Aplicar color dinámico */
+    text-align: center;
+    font-family: "Inter24-Bold"; /* 🔡 Fuente personalizada */
+}
+
+/* 📝 Subtítulo */
 .subtitle {
-    font-family: "Inter18-SemiBold";
     font-size: 1.8rem;
     color: var(--color-2);
     text-align: center;
-}
-/* 🏆 Estilos del título */
-h1 {
-    font-size: 2rem; /* 📌 Tamaño adecuado para pantallas grandes */
-    color: var(--color-1); /* 🎨 Color dinámico desde variables */
-    text-align: center;
-    margin-bottom: 20px;
-    margin-top: 90px;
-    font-family: "Inter24-Bold"; /* 🔡 Fuente específica */
+    font-family: "Inter18-SemiBold";
 }
 
-/* 📝 Estilos de los párrafos */
+/* 📜 Estilos de los párrafos */
 p {
-    font-size: 1.2rem; /* 📌 Tamaño de texto legible */
+    font-size: 1.2rem; /* 📌 Texto legible */
     color: var(--color-2);
     text-align: center;
-    margin-bottom: 20px;
     font-family: "Inter24-Regular";
 }
 
 /* 🎟️ Botón interactivo */
 a {
     display: flex; /* 📌 Diseño flexible */
-    flex-direction: row; /* 📌 Alinear elementos en fila */
     align-items: center;
     justify-content: center;
     text-decoration: none; /* 🚫 Eliminar subrayado */
@@ -72,6 +76,7 @@ a {
     border-radius: 30px; /* 🔘 Bordes redondeados */
     padding: 10px 20px;
     margin-bottom: 30px;
+    transition: all 0.4s ease-in-out; /* 🚀 Transición fluida */
 }
 
 /* 🏎️ Ajuste del icono dentro del botón */
@@ -83,13 +88,7 @@ a img {
 /* 🎯 Ajuste del texto dentro del botón */
 a p {
     margin-left: 10px;
-    margin-top: 8px;
     font-family: "Inter18-SemiBold";
-}
-
-/* 🔄 Transiciones y efectos */
-a {
-    transition: background-color 0.4s ease-in-out, color 0.4s ease-in-out, transform 0.2s ease-in-out;
 }
 
 /* 🚀 Efectos al hacer hover */
@@ -97,47 +96,53 @@ a:hover {
     background: var(--color-5);
     color: var(--color-6);
     transform: scale(1.05); /* 🔥 Efecto de expansión ligero */
-    box-shadow: 0px 4px 10px var(--color-5); /* 🌟 Sombra suave al hacer hover */
+    box-shadow: 0px 4px 10px var(--color-5); /* ✨ Sombra suave */
 }
 
+/* ⌚ Estilos específicos para Apple Watch (162px) */
 @media (max-width: 162px) {
-    /* 📌 Ajuste general del cuerpo */
     body {
         width: 100%;
-        min-height: 700vh; /* 🔎 Asegurar que el fondo cubra toda la pantalla */
+        min-height: 100vh; /* 📌 Ajustar altura sin desbordamiento */
         background-position: center;
         background-size: cover;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: flex-start;
-        padding-top: 10px;
     }
 
-    /* 📌 Contenedor principal */
     main {
         max-width: 90%;
         padding: 4px;
         text-align: center;
-        height: auto;
-        margin-top: 0;
     }
 
-    /* 🎯 Títulos y textos */
-    h1 {
-        font-size: 12px;
-        margin-bottom: 4px;
+    .title {
+        display: flex !important;
+        width: 90% !important;
+        flex-direction: column !important;
+        gap: 20px !important;
     }
-  
-    p {
-        font-size: 5px;
+
+    h1 {
+        font-size: 22px;
         margin-bottom: 6px;
+    }
+
+    p {
+        font-size: 10px;
+    }
+
+    .subtitle {
+        font-size: 16px;
     }
 }
 
 /* 📱 Estilos específicos para pantallas pequeñas (320px) */
 @media (max-width: 320px) {
     body {
-        height: 120vh; /* 📌 Ajustar la altura para dispositivos móviles */
+        min-height: 100vh; /* 📌 Asegurar que el fondo cubra toda la pantalla */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        background-size: cover; /* 🖼️ Ajustar correctamente el fondo */
     }
 }
