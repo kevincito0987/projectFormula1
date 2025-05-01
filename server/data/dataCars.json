@@ -454,8 +454,327 @@
             "imagen": "https://acnews.blob.core.windows.net/imgnews/medium/NAZ_5e52f7655a414abf9e4972627ff98251.jpg"
           }
         ]
-      }
-      
+      },
+      {
+        "equipo": "Aston Martin F1 Team",
+        "autos": [
+          {
+            "modelo": "AMR23",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 345,
+            "aceleracion_0_100": 2.8,
+            "pilotos": [13, 14],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 310,
+                "consumo_combustible": { "seco": 2.2, "lluvioso": 2.4, "extremo": 2.7 },
+                "desgaste_neumaticos": { "seco": 1.6, "lluvioso": 0.9, "extremo": 2.5 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 330,
+                "consumo_combustible": { "seco": 2.7, "lluvioso": 2.9, "extremo": 3.4 },
+                "desgaste_neumaticos": { "seco": 2.3, "lluvioso": 1.3, "extremo": 3.6 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 290,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.2, "lluvioso": 0.6, "extremo": 2.0 }
+              }
+            },
+            "imagen": "https://fotografias.lasexta.com/clipping/cmsimages02/2023/02/13/3ED012F2-BBCC-4F9F-9EA1-A2AF15C63E5E/aston-martin-amr23-fernando-alonso_160.jpg?crop=1200,675,x0,y103&width=544&height=306&optimize=low&format=webply"
+          },
+          {
+            "modelo": "AMR22",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 340,
+            "aceleracion_0_100": 2.9,
+            "pilotos": [13, 14],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 305,
+                "consumo_combustible": { "seco": 2.3, "lluvioso": 2.5, "extremo": 2.8 },
+                "desgaste_neumaticos": { "seco": 1.7, "lluvioso": 1.0, "extremo": 2.6 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 325,
+                "consumo_combustible": { "seco": 2.8, "lluvioso": 3.0, "extremo": 3.5 },
+                "desgaste_neumaticos": { "seco": 2.4, "lluvioso": 1.4, "extremo": 3.7 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 285,
+                "consumo_combustible": { "seco": 1.8, "lluvioso": 2.0, "extremo": 2.3 },
+                "desgaste_neumaticos": { "seco": 1.3, "lluvioso": 0.7, "extremo": 2.2 }
+              }
+            },
+            "imagen": "https://fuelcarmagazine.com/wp-content/uploads/2022/02/Aston-Martin-AMR22_01.jpg"
+          },
+          {
+            "modelo": "AMR21",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 335,
+            "aceleracion_0_100": 3.0,
+            "pilotos": [13, 14],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 300,
+                "consumo_combustible": { "seco": 2.4, "lluvioso": 2.7, "extremo": 3.0 },
+                "desgaste_neumaticos": { "seco": 1.9, "lluvioso": 1.2, "extremo": 2.7 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 320,
+                "consumo_combustible": { "seco": 2.9, "lluvioso": 3.2, "extremo": 3.7 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.5, "extremo": 3.9 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 280,
+                "consumo_combustible": { "seco": 2.0, "lluvioso": 2.2, "extremo": 2.5 },
+                "desgaste_neumaticos": { "seco": 1.4, "lluvioso": 0.8, "extremo": 2.4 }
+              }
+            },
+            "imagen": "https://e00-marca.uecdn.es/assets/multimedia/imagenes/2021/03/03/16147877158642.jpg"
+          }
+        ]
+      },
+      {
+        "equipo": "RB F1 Team",
+        "autos": [
+          {
+            "modelo": "RB10",
+            "motor": "Renault",
+            "velocidad_maxima_kmh": 340,
+            "aceleracion_0_100": 2.9,
+            "pilotos": [15, 16],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 305,
+                "consumo_combustible": { "seco": 2.2, "lluvioso": 2.5, "extremo": 2.9 },
+                "desgaste_neumaticos": { "seco": 1.7, "lluvioso": 1.0, "extremo": 2.6 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 325,
+                "consumo_combustible": { "seco": 2.8, "lluvioso": 3.0, "extremo": 3.5 },
+                "desgaste_neumaticos": { "seco": 2.4, "lluvioso": 1.4, "extremo": 3.7 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 285,
+                "consumo_combustible": { "seco": 1.8, "lluvioso": 2.0, "extremo": 2.3 },
+                "desgaste_neumaticos": { "seco": 1.3, "lluvioso": 0.7, "extremo": 2.2 }
+              }
+            },
+            "imagen": "https://www.f1-fansite.com/wp-content/uploads/2014/08/GEPA_full_3594_GEPA-24081499050-Custom.jpg"
+          },
+          {
+            "modelo": "RB9",
+            "motor": "Renault",
+            "velocidad_maxima_kmh": 335,
+            "aceleracion_0_100": 3.0,
+            "pilotos": [15, 16],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 300,
+                "consumo_combustible": { "seco": 2.3, "lluvioso": 2.6, "extremo": 3.0 },
+                "desgaste_neumaticos": { "seco": 1.8, "lluvioso": 1.1, "extremo": 2.7 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 320,
+                "consumo_combustible": { "seco": 2.9, "lluvioso": 3.1, "extremo": 3.6 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.5, "extremo": 3.9 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 280,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.4, "lluvioso": 0.8, "extremo": 2.3 }
+              }
+            },
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/a/a9/Sebastian_Vettel_2013_Malaysia_FP2.jpg"
+          },
+          {
+            "modelo": "RB8",
+            "motor": "Renault",
+            "velocidad_maxima_kmh": 330,
+            "aceleracion_0_100": 3.1,
+            "pilotos": [15, 16],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 295,
+                "consumo_combustible": { "seco": 2.4, "lluvioso": 2.7, "extremo": 3.1 },
+                "desgaste_neumaticos": { "seco": 1.9, "lluvioso": 1.2, "extremo": 2.8 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 315,
+                "consumo_combustible": { "seco": 3.0, "lluvioso": 3.2, "extremo": 3.7 },
+                "desgaste_neumaticos": { "seco": 2.6, "lluvioso": 1.7, "extremo": 4.0 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 275,
+                "consumo_combustible": { "seco": 2.0, "lluvioso": 2.2, "extremo": 2.5 },
+                "desgaste_neumaticos": { "seco": 1.5, "lluvioso": 0.9, "extremo": 2.4 }
+              }
+            },
+            "imagen": "https://img.remediosdigitales.com/846f5e/renault-megane-rs-red-bull-rb8-edition-1p/1366_2000.jpg"
+          }
+        ]
+      },
+      {
+        "equipo": "Alpine F1 Team",
+        "autos": [
+          {
+            "modelo": "A523",
+            "motor": "Renault",
+            "velocidad_maxima_kmh": 335,
+            "aceleracion_0_100": 2.8,
+            "pilotos": [17, 18],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 300,
+                "consumo_combustible": { "seco": 2.3, "lluvioso": 2.5, "extremo": 2.8 },
+                "desgaste_neumaticos": { "seco": 1.7, "lluvioso": 0.9, "extremo": 2.6 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 320,
+                "consumo_combustible": { "seco": 2.7, "lluvioso": 2.9, "extremo": 3.3 },
+                "desgaste_neumaticos": { "seco": 2.4, "lluvioso": 1.4, "extremo": 3.7 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 280,
+                "consumo_combustible": { "seco": 1.8, "lluvioso": 2.0, "extremo": 2.3 },
+                "desgaste_neumaticos": { "seco": 1.2, "lluvioso": 0.6, "extremo": 2.2 }
+              }
+            },
+            "imagen": "https://www.grandprix247.com/wp-content/uploads/2023/02/4eadb59b-7ecb-fe40-5ede-92f1dcfb63a3.jpg"
+          },
+          {
+            "modelo": "A522",
+            "motor": "Renault",
+            "velocidad_maxima_kmh": 330,
+            "aceleracion_0_100": 3.0,
+            "pilotos": [17, 18],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 295,
+                "consumo_combustible": { "seco": 2.4, "lluvioso": 2.6, "extremo": 3.0 },
+                "desgaste_neumaticos": { "seco": 1.8, "lluvioso": 1.0, "extremo": 2.7 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 315,
+                "consumo_combustible": { "seco": 2.8, "lluvioso": 3.0, "extremo": 3.5 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.5, "extremo": 3.8 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 275,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.3, "lluvioso": 0.8, "extremo": 2.3 }
+              }
+            },
+            "imagen": "https://www.elcarrocolombiano.com/wp-content/uploads/2022/02/Alpine-A522-fo%CC%81rmula-1.jpg"
+          },
+          {
+            "modelo": "A521",
+            "motor": "Renault",
+            "velocidad_maxima_kmh": 325,
+            "aceleracion_0_100": 3.1,
+            "pilotos": [17, 18],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 290,
+                "consumo_combustible": { "seco": 2.5, "lluvioso": 2.8, "extremo": 3.1 },
+                "desgaste_neumaticos": { "seco": 1.9, "lluvioso": 1.2, "extremo": 2.8 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 310,
+                "consumo_combustible": { "seco": 2.9, "lluvioso": 3.2, "extremo": 3.7 },
+                "desgaste_neumaticos": { "seco": 2.6, "lluvioso": 1.7, "extremo": 4.0 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 270,
+                "consumo_combustible": { "seco": 2.0, "lluvioso": 2.2, "extremo": 2.5 },
+                "desgaste_neumaticos": { "seco": 1.5, "lluvioso": 0.9, "extremo": 2.4 }
+              }
+            },
+            "imagen": "https://www.elcarrocolombiano.com/wp-content/uploads/2021/03/Portada-1.jpg"
+          }
+        ]
+      },
+      {
+        "equipo": "Sauber F1 Team",
+        "autos": [
+          {
+            "modelo": "C43",
+            "motor": "Ferrari",
+            "velocidad_maxima_kmh": 335,
+            "aceleracion_0_100": 2.9,
+            "pilotos": [19, 20],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 305,
+                "consumo_combustible": { "seco": 2.3, "lluvioso": 2.6, "extremo": 3.0 },
+                "desgaste_neumaticos": { "seco": 1.7, "lluvioso": 1.0, "extremo": 2.7 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 325,
+                "consumo_combustible": { "seco": 2.8, "lluvioso": 3.0, "extremo": 3.5 },
+                "desgaste_neumaticos": { "seco": 2.4, "lluvioso": 1.5, "extremo": 3.8 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 285,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.2, "lluvioso": 0.8, "extremo": 2.3 }
+              }
+            },
+            "imagen": "https://upload.wikimedia.org/wikipedia/commons/e/ea/FIA_F1_Austria_2023_Nr._77_%281%29.jpg"
+          },
+          {
+            "modelo": "C42",
+            "motor": "Ferrari",
+            "velocidad_maxima_kmh": 330,
+            "aceleracion_0_100": 3.0,
+            "pilotos": [19, 20],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 300,
+                "consumo_combustible": { "seco": 2.4, "lluvioso": 2.7, "extremo": 3.1 },
+                "desgaste_neumaticos": { "seco": 1.8, "lluvioso": 1.2, "extremo": 2.8 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 320,
+                "consumo_combustible": { "seco": 2.9, "lluvioso": 3.2, "extremo": 3.7 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.6, "extremo": 3.9 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 280,
+                "consumo_combustible": { "seco": 2.0, "lluvioso": 2.2, "extremo": 2.5 },
+                "desgaste_neumaticos": { "seco": 1.4, "lluvioso": 0.9, "extremo": 2.4 }
+              }
+            },
+            "imagen": "https://cdn-9.motorsport.com/images/mgl/0RrnXZE0/s800/guanyu-zhou-alfa-romeo-c42-1.jpg"
+          },
+          {
+            "modelo": "C41",
+            "motor": "Ferrari",
+            "velocidad_maxima_kmh": 325,
+            "aceleracion_0_100": 3.1,
+            "pilotos": [19, 20],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 295,
+                "consumo_combustible": { "seco": 2.5, "lluvioso": 2.8, "extremo": 3.2 },
+                "desgaste_neumaticos": { "seco": 1.9, "lluvioso": 1.3, "extremo": 2.9 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 315,
+                "consumo_combustible": { "seco": 3.0, "lluvioso": 3.3, "extremo": 3.8 },
+                "desgaste_neumaticos": { "seco": 2.6, "lluvioso": 1.7, "extremo": 4.0 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 275,
+                "consumo_combustible": { "seco": 2.1, "lluvioso": 2.3, "extremo": 2.6 },
+                "desgaste_neumaticos": { "seco": 1.5, "lluvioso": 1.0, "extremo": 2.5 }
+              }
+            },
+            "imagen": "https://phantom-marca.uecdn.es/20e62a279ac00e474cca793f47cc6bb5/crop/0x381/2045x1531/resize/414/f/webp/assets/multimedia/imagenes/2021/02/22/16139931563006.jpg"
+          }
+        ]
+      }      
     ]
   }
   
