@@ -3,8 +3,8 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
-// Importar rutas
-const weatherRoutes = require("./models/weather");
+// Importar rutas correctamente desde `routes/weather.js`
+const weatherRoutes = require("./routes/weather");
 
 const app = express();
 app.use(express.json());
@@ -21,10 +21,10 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
         process.exit(1); // Salir del proceso en caso de fallo
     });
 
-// Rutas de la API
+// Rutas de la API (ahora correctamente apuntando a `routes/weather.js`)
 app.use("/api/weather", weatherRoutes);
 
-// Ruta principal
+// Ruta principal para verificar que el servidor está activo
 app.get("/", (req, res) => {
     res.send("🚀 API de Clima F1 funcionando en localhost! 🌎📡");
 });
