@@ -1,5 +1,5 @@
 const express = require("express");
-const Circuit = require("../models/circuit"); // Importamos el modelo de MongoDB
+const Circuit = require("../models/circuits");
 
 const router = express.Router();
 
@@ -13,14 +13,16 @@ router.get("/", async (req, res) => {
     }
 });
 
-// 📌 Obtener un circuito por su ID
-router.get("/:id", async (req, res) => {
+// 📌 Obtener un circuito por `circuitId`
+router.get("/:circuitId", async (req, res) => {
     try {
-        const { id } = req.params;
-        const circuit = await Circuit.findOne({ circuitId: Number(id) });
+        const { circuitId } = req.params;
+        const circuit = await Circuit.findOne({ circuitId: circuitId });
+
         if (!circuit) {
             return res.status(404).json({ error: "Circuito no encontrado" });
         }
+
         res.json(circuit);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener el circuito: " + error.message });
@@ -28,10 +30,15 @@ router.get("/:id", async (req, res) => {
 });
 
 // 📌 Obtener circuitos por país
-router.get("/pais/:country", async (req, res) => {
+router.get("/pais/:pais", async (req, res) => {
     try {
-        const { country } = req.params;
-        const circuits = await Circuit.find({ "location.country": country });
+        const { pais } = req.params;
+        const circuits = await Circuit.find({ pais: pais });
+
+        if (circuits.length === 0) {
+            return res.status(404).json({ error: "No se encontraron circuitos en este país." });
+        }
+
         res.json(circuits);
     } catch (error) {
         res.status(500).json({ error: "Error al obtener circuitos por país: " + error.message });
