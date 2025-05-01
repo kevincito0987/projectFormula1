@@ -21,3 +21,9 @@ header {
     position: relative; /* 📌 Necesario para que el pseudo-elemento funcione */
     z-index: 2; /* 🔼 Mantiene el contenido sobre el degradado */
 }
+
+.card {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  

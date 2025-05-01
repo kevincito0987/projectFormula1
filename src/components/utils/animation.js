@@ -14,20 +14,27 @@ document.addEventListener("DOMContentLoaded", () => {
         ease: "power1.inOut"
     });
 });    
+  
 
-document.addEventListener("DOMContentLoaded", () => {
-    gsap.fromTo(".card", 
-        { opacity: 0, scale: 0.5 },  // 📌 Estado inicial (opacas y reducidas)
-        { opacity: 1, scale: 1, duration: 1, stagger: { amount: 1, grid: [2, 2], from: "edges" }, ease: "power2.out" } // 📌 Animación panal
-    );
-});
-
-document.addEventListener("DOMContentLoaded", () => {
-    gsap.fromTo(".card", 
-        { opacity: 0, boxShadow: "0px 0px 0px rgba(255,255,255,0)" },  // 📌 Estado inicial sin brillo
-        { opacity: 1, duration: 1, stagger: 0.3, ease: "power2.out",
-          boxShadow: "0px 0px 20px rgba(255,255,255,0.8)" } // 📌 Brillo progresivo
-    );
-});
-
-
+window.onload = () => {
+    // 🔹 GSAP: Entrada con escala y opacidad
+    gsap.from(".card", {
+      scale: 0.5,
+      opacity: 0,
+      stagger: 0.2, // 📌 Aparición escalonada
+      duration: 1,
+      ease: "power2.out"
+    });
+  
+    // 🔹 Anime.js: Refinamiento de opacidad + escalado dinámico
+    anime({
+      targets: ".card",
+      opacity: [0, 1],
+      scale: [0.8, 1],
+      duration: 1200,
+      delay: anime.stagger(150), // 📌 Se mantiene el efecto secuencial
+      easing: "easeOutQuad"
+    });
+  };
+  
+  
