@@ -213,30 +213,58 @@ async function fetchAndSaveCircuits() {
 
 // Ejecutar la función
 // fetchAndSaveCircuits();
-
 async function fetchAndSaveWeather() {
     try {
         await connectDB(); // Conectar a MongoDB
 
         // Consumir la API del clima de Fórmula 1
-        const response = await axios.get("https://api.openf1.org/v1/weather"); // URL según documentación
+        const response = await axios.get("https://api.openf1.org/v1/weather");
         const weatherData = response.data;
 
         if (!Array.isArray(weatherData) || weatherData.length === 0) {
             throw new Error("No se encontraron datos de clima en la API.");
         }
 
-        // Filtrar los primeros 5 registros actuales
-        const primeros5Climas = weatherData.slice(0, 5);
+        // Clasificar los datos por categoría de clima
+        const categoriasClima = {
+            soleado: [],
+            lluvioso: [],
+            nublado: [],
+            ventoso: [],
+            extremo: []
+        };
 
-        for (const weather of primeros5Climas) {
+        for (const weather of weatherData) {
+            if (weather.rainfall === 0 && weather.air_temperature > 25 && weather.track_temperature > 40) {
+                categoriasClima.soleado.push(weather);
+            } else if (weather.rainfall > 0) {
+                categoriasClima.lluvioso.push(weather);
+            } else if (weather.humidity > 80 && weather.air_temperature < 20) {
+                categoriasClima.nublado.push(weather);
+            } else if (weather.wind_speed > 10) {
+                categoriasClima.ventoso.push(weather);
+            } else {
+                categoriasClima.extremo.push(weather);
+            }
+        }
+
+        // Seleccionar los primeros 2 registros de cada categoría
+        const climaSeleccionado = [
+            ...categoriasClima.soleado.slice(0, 2),
+            ...categoriasClima.lluvioso.slice(0, 2),
+            ...categoriasClima.nublado.slice(0, 2),
+            ...categoriasClima.ventoso.slice(0, 2),
+            ...categoriasClima.extremo.slice(0, 2)
+        ];
+
+        for (const weather of climaSeleccionado) {
             const nuevoClima = new Weather({
                 airTemperature: weather.air_temperature,
                 date: weather.date,
                 humidity: weather.humidity,
                 meetingKey: weather.meeting_key,
                 pressure: weather.pressure,
-                rainfall: weather.rainfall === 1, // Convertir a booleano
+                rainfall: weather.rainfall === 1,
                 sessionKey: weather.session_key,
                 trackTemperature: weather.track_temperature,
                 windDirection: weather.wind_direction,
@@ -252,7 +280,7 @@ async function fetchAndSaveWeather() {
             }
         }
 
-        console.log("¡Se han guardado los primeros 5 datos de clima en la colección 'weather'!");
+        console.log("¡Se han guardado los datos de clima por categoría en la colección 'weather'!");
     } catch (error) {
         console.error("Error al obtener o guardar los datos de clima:", error.message);
     }
