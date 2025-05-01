@@ -69,11 +69,11 @@ footer::after{
 .moving-bar {
     width: 30px;
     height: 10px;
-    background-color: var(--color-4);
+    background-color: var(--color-2);
     position: absolute;
     bottom: 0; /* Ajustar para que se vea debajo de los íconos */
     transition: transform 0.4s ease;
     left: 0px;
     border-radius: 5px;
-    box-shadow: 0px 0px 35px var(--color-6);
+    box-shadow: 0px 0px 35px var(--color-18);
 }
