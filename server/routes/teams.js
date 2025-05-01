@@ -45,38 +45,4 @@ router.get("/nacionalidad/:pais", async (req, res) => {
     }
 });
 
-// 📌 Obtener el equipo con más campeonatos de constructores
-router.get("/mas-campeonatos-constructores", async (req, res) => {
-    try {
-        const topConstructorTeam = await Team.find()
-            .sort({ campeonatosConstructores: -1 }) // Orden descendente
-            .limit(1);
-
-        if (topConstructorTeam.length === 0) {
-            return res.status(404).json({ error: "No hay registros de campeonatos de constructores disponibles." });
-        }
-
-        res.json(topConstructorTeam[0]);
-    } catch (error) {
-        res.status(500).json({ error: "Error al obtener el equipo con más campeonatos de constructores: " + error.message });
-    }
-});
-
-// 📌 Obtener el equipo con más campeonatos de pilotos
-router.get("/mas-campeonatos-pilotos", async (req, res) => {
-    try {
-        const topDriverChampionshipTeam = await Team.find()
-            .sort({ campeonatosPilotos: -1 }) // Orden descendente
-            .limit(1);
-
-        if (topDriverChampionshipTeam.length === 0) {
-            return res.status(404).json({ error: "No hay registros de campeonatos de pilotos disponibles." });
-        }
-
-        res.json(topDriverChampionshipTeam[0]);
-    } catch (error) {
-        res.status500().json({ error: "Error al obtener el equipo con más campeonatos de pilotos: " + error.message });
-    }
-});
-
 module.exports = router;
