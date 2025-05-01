@@ -23,7 +23,7 @@ main {
     height: 100%;
     padding: 20px;
     width: 90%;
-    margin: 30px;
+    margin: 10px 30px;
 }
 
 h1 {
@@ -107,4 +107,11 @@ a:hover {
       height: 20px;
     }
   }
+
+  @media (max-width: 320px) {
+    body {
+        height: 120vh;
+    }
+  }
+  
   
