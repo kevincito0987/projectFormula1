@@ -11,7 +11,7 @@ header::before {
     left: 0;
     width: 100%; /* 📏 Ancho extendido */
     height: 100%; /* 📏 Que cubra todo el header */
-    background: linear-gradient(180deg, rgba(0,0,0,10) 0%, var(--color-23) 30%, var(--color-21) 100%); /* 🎨 Degradado */
+    background: linear-gradient(180deg, rgba(0,0,0,2) 0%, var(--color-23) 30%, var(--color-21) 100%); /* 🎨 Degradado */
     z-index: 10; /* 🔼 Asegura que esté sobre el video */
     pointer-events: none; /* 🚫 Evita que interfiera con la interacción */
 }
@@ -21,4 +21,3 @@ header {
     position: relative; /* 📌 Necesario para que el pseudo-elemento funcione */
     z-index: 2; /* 🔼 Mantiene el contenido sobre el degradado */
 }
-
