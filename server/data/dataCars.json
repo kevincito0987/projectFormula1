@@ -214,6 +214,246 @@
             "imagen": "https://phantom-marca.unidadeditorial.es/bf4f50d69fb732ab407f28e7e6d73dd5/resize/828/f/jpg/assets/multimedia/imagenes/2022/02/09/16444242286100.jpg"
           }
         ]
+      },
+      {
+        "equipo": "Scuderia Ferrari",
+        "autos": [
+          {
+            "modelo": "SF23",
+            "motor": "Ferrari",
+            "velocidad_maxima_kmh": 350,
+            "aceleracion_0_100": 2.7,
+            "pilotos": [5, 6],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 310,
+                "consumo_combustible": { "seco": 2.1, "lluvioso": 2.4, "extremo": 2.7 },
+                "desgaste_neumaticos": { "seco": 1.8, "lluvioso": 1.0, "extremo": 2.8 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 330,
+                "consumo_combustible": { "seco": 2.7, "lluvioso": 2.9, "extremo": 3.3 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.5, "extremo": 3.6 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 290,
+                "consumo_combustible": { "seco": 1.8, "lluvioso": 2.0, "extremo": 2.3 },
+                "desgaste_neumaticos": { "seco": 1.2, "lluvioso": 0.7, "extremo": 2.0 }
+              }
+            },
+            "imagen": "https://www.amalgamcollection.com/cdn/shop/files/DSCF5220_2ac22c57-58e9-496c-bef0-b62b397b2f7c_4000x2677_crop_center.jpg?v=1705412070"
+          },
+          {
+            "modelo": "SF22",
+            "motor": "Ferrari",
+            "velocidad_maxima_kmh": 345,
+            "aceleracion_0_100": 2.8,
+            "pilotos": [5, 6],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 305,
+                "consumo_combustible": { "seco": 2.3, "lluvioso": 2.5, "extremo": 2.8 },
+                "desgaste_neumaticos": { "seco": 1.9, "lluvioso": 1.2, "extremo": 2.9 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 325,
+                "consumo_combustible": { "seco": 2.8, "lluvioso": 3.0, "extremo": 3.4 },
+                "desgaste_neumaticos": { "seco": 2.6, "lluvioso": 1.6, "extremo": 3.7 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 285,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.3, "lluvioso": 0.8, "extremo": 2.1 }
+              }
+            },
+            "imagen": "https://www.f1-fansite.com/wp-content/uploads/2024/02/240213_SF-Media31_42df08ea-d9ab-47bb-a5bd-4b740676a3d6.jpg"
+          },
+          {
+            "modelo": "SF21",
+            "motor": "Ferrari",
+            "velocidad_maxima_kmh": 340,
+            "aceleracion_0_100": 2.9,
+            "pilotos": [5, 6],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 300,
+                "consumo_combustible": { "seco": 2.4, "lluvioso": 2.6, "extremo": 3.0 },
+                "desgaste_neumaticos": { "seco": 2.0, "lluvioso": 1.4, "extremo": 3.0 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 320,
+                "consumo_combustible": { "seco": 2.9, "lluvioso": 3.2, "extremo": 3.7 },
+                "desgaste_neumaticos": { "seco": 2.7, "lluvioso": 1.8, "extremo": 3.8 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 280,
+                "consumo_combustible": { "seco": 2.0, "lluvioso": 2.2, "extremo": 2.5 },
+                "desgaste_neumaticos": { "seco": 1.5, "lluvioso": 1.0, "extremo": 2.5 }
+              }
+            },
+            "imagen": "https://cdn-3.motorsport.com/images/amp/YEQA8A5Y/s1000/formula-1-ferrari-livery-unvei-3.jpg"
+          }
+        ]
+      },
+      {
+        "equipo": "Williams Racing",
+        "autos": [
+          {
+            "modelo": "FW45",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 340,
+            "aceleracion_0_100": 2.8,
+            "pilotos": [9, 10],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 305,
+                "consumo_combustible": { "seco": 2.2, "lluvioso": 2.5, "extremo": 2.9 },
+                "desgaste_neumaticos": { "seco": 1.6, "lluvioso": 0.9, "extremo": 2.5 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 325,
+                "consumo_combustible": { "seco": 2.7, "lluvioso": 2.9, "extremo": 3.3 },
+                "desgaste_neumaticos": { "seco": 2.3, "lluvioso": 1.3, "extremo": 3.4 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 285,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.2, "lluvioso": 0.7, "extremo": 2.1 }
+              }
+            },
+            "imagen": "https://cdn.williamsf1.tech/images/fnx611yr/production/2cdf6ed00313048b697858c4085e8ec2fe8425ba-8187x5458.jpg?w=1200&auto=format"
+          },
+          {
+            "modelo": "FW44",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 335,
+            "aceleracion_0_100": 2.9,
+            "pilotos": [9, 10],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 300,
+                "consumo_combustible": { "seco": 2.3, "lluvioso": 2.6, "extremo": 3.0 },
+                "desgaste_neumaticos": { "seco": 1.7, "lluvioso": 1.0, "extremo": 2.6 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 320,
+                "consumo_combustible": { "seco": 2.8, "lluvioso": 3.0, "extremo": 3.5 },
+                "desgaste_neumaticos": { "seco": 2.4, "lluvioso": 1.4, "extremo": 3.7 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 280,
+                "consumo_combustible": { "seco": 1.8, "lluvioso": 2.0, "extremo": 2.3 },
+                "desgaste_neumaticos": { "seco": 1.3, "lluvioso": 0.8, "extremo": 2.2 }
+              }
+            },
+            "imagen": "https://fuelcarmagazine.com/wp-content/uploads/2022/02/Williams-FW44-2022.jpg"
+          },
+          {
+            "modelo": "FW43",
+            "motor": "Mercedes",
+            "velocidad_maxima_kmh": 330,
+            "aceleracion_0_100": 3.0,
+            "pilotos": [9, 10],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 295,
+                "consumo_combustible": { "seco": 2.4, "lluvioso": 2.7, "extremo": 3.1 },
+                "desgaste_neumaticos": { "seco": 1.8, "lluvioso": 1.1, "extremo": 2.7 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 315,
+                "consumo_combustible": { "seco": 2.9, "lluvioso": 3.2, "extremo": 3.7 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.5, "extremo": 3.8 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 275,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.4, "lluvioso": 0.9, "extremo": 2.3 }
+              }
+            },
+            "imagen": "https://cdn-4.motorsport.com/images/mgl/0ZRkxlM0/s800/williams-fw43-1.jpg"
+          }
+        ]
+      },
+      {
+        "equipo": "Haas F1 Team",
+        "autos": [
+          {
+            "modelo": "VF-23",
+            "motor": "Ferrari",
+            "velocidad_maxima_kmh": 330,
+            "aceleracion_0_100": 2.9,
+            "pilotos": [11, 12],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 300,
+                "consumo_combustible": { "seco": 2.3, "lluvioso": 2.6, "extremo": 3.0 },
+                "desgaste_neumaticos": { "seco": 1.8, "lluvioso": 1.1, "extremo": 2.9 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 320,
+                "consumo_combustible": { "seco": 2.8, "lluvioso": 3.0, "extremo": 3.5 },
+                "desgaste_neumaticos": { "seco": 2.4, "lluvioso": 1.4, "extremo": 3.8 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 280,
+                "consumo_combustible": { "seco": 1.9, "lluvioso": 2.1, "extremo": 2.4 },
+                "desgaste_neumaticos": { "seco": 1.3, "lluvioso": 0.8, "extremo": 2.3 }
+              }
+            },
+            "imagen": "https://lh5.googleusercontent.com/proxy/IEiQNT3kaT1Ef6rOXhdgf4BCF8EyIEU4y1f40KCGovaXdpRmVdyVdZDgn4YebVIvUMz0_BF8QfMLFIBqQVion0-Ucx4KgjEPYUtTYVk7QhtyJOIGKD8FjPfdNafKrQI0MFJSVUWA0kFOfRo7QZJkKTZaTG4XliAiKQ"
+          },
+          {
+            "modelo": "VF-22",
+            "motor": "Ferrari",
+            "velocidad_maxima_kmh": 325,
+            "aceleracion_0_100": 3.0,
+            "pilotos": [11, 12],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 295,
+                "consumo_combustible": { "seco": 2.4, "lluvioso": 2.7, "extremo": 3.1 },
+                "desgaste_neumaticos": { "seco": 1.9, "lluvioso": 1.3, "extremo": 2.8 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 315,
+                "consumo_combustible": { "seco": 2.9, "lluvioso": 3.2, "extremo": 3.7 },
+                "desgaste_neumaticos": { "seco": 2.5, "lluvioso": 1.6, "extremo": 3.9 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 275,
+                "consumo_combustible": { "seco": 2.0, "lluvioso": 2.2, "extremo": 2.5 },
+                "desgaste_neumaticos": { "seco": 1.4, "lluvioso": 0.9, "extremo": 2.4 }
+              }
+            },
+            "imagen": "https://www.ultimatecarpage.com/images/car/8272/Haas-VF-22-Ferrari-163020.jpg"
+          },
+          {
+            "modelo": "VF-21",
+            "motor": "Ferrari",
+            "velocidad_maxima_kmh": 320,
+            "aceleracion_0_100": 3.1,
+            "pilotos": [11, 12],
+            "rendimiento": {
+              "conduccion_normal": {
+                "velocidad_promedio_kmh": 290,
+                "consumo_combustible": { "seco": 2.5, "lluvioso": 2.8, "extremo": 3.2 },
+                "desgaste_neumaticos": { "seco": 2.0, "lluvioso": 1.5, "extremo": 3.0 }
+              },
+              "conduccion_agresiva": {
+                "velocidad_promedio_kmh": 310,
+                "consumo_combustible": { "seco": 3.0, "lluvioso": 3.4, "extremo": 3.9 },
+                "desgaste_neumaticos": { "seco": 2.6, "lluvioso": 1.8, "extremo": 4.0 }
+              },
+              "ahorro_combustible": {
+                "velocidad_promedio_kmh": 270,
+                "consumo_combustible": { "seco": 2.1, "lluvioso": 2.3, "extremo": 2.6 },
+                "desgaste_neumaticos": { "seco": 1.5, "lluvioso": 1.0, "extremo": 2.5 }
+              }
+            },
+            "imagen": "https://acnews.blob.core.windows.net/imgnews/medium/NAZ_5e52f7655a414abf9e4972627ff98251.jpg"
+          }
+        ]
       }
       
     ]
