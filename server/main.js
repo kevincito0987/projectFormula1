@@ -317,4 +317,4 @@ async function fetchAndSaveWeather() {
 }
 
 // Ejecutar la función
-fetchAndSaveWeather();
+// fetchAndSaveWeather();
