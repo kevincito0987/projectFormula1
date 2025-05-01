@@ -7,22 +7,4 @@
     box-sizing: border-box;
 }
 
-/* 🏎️ Estilos para el video de fondo */
-video {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 190vh;
-    object-fit: cover; /* 📌 Ajusta el tamaño del video */
-    z-index: 0; /* 🔽 Mantener el video detrás del contenido */
-}
 
-/* 🎯 Contenedor de texto sobre el video */
-header div {
-    position: relative;
-    z-index: 10; /* 📌 Asegura que el texto esté por encima */
-    background: rgba(0, 0, 0, 0.5); /* 🌑 Fondo semitransparente para mejorar legibilidad */
-    padding: 20px;
-    border-radius: 8px;
-}
