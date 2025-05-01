@@ -27,3 +27,9 @@ header {
     transform: scale(0.5);
   }
   
+.button:hover {
+    background: var(--color-5);
+    color: var(--color-6);
+    transform: scale(1.05); /* 🔥 Efecto de expansión ligero */
+    box-shadow: 0px 4px 10px var(--color-5); /* ✨ Sombra suave */
+}
