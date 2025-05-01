@@ -3,6 +3,7 @@ const { connectDB } = require("./data/mongoDb.js");
 const Piloto = require("./models/piloto");
 const Team = require("./models/team");
 const Circuit = require("./models/circuits");
+const Weather = require("./models/weather");
 
 const rutasImagenesActualizadas = {
     norris: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli",
@@ -212,3 +213,46 @@ async function fetchAndSaveCircuits() {
 
 // Ejecutar la función
 // fetchAndSaveCircuits();
+
+async function fetchAndSaveWeather() {
+    try {
+        await connectDB(); // Conectar a MongoDB
+
+        // Consumir la API del clima de Fórmula 1
+        const response = await axios.get("https://api.openf1.org/v1/weather"); // URL de ejemplo
+        const weatherData = response.data;
+
+        if (!Array.isArray(weatherData) || weatherData.length === 0) {
+            throw new Error("No se encontraron datos de clima en la API.");
+        }
+
+        // Filtrar los primeros 5 registros actuales
+        const primeros5Climas = weatherData.slice(0, 5);
+
+        for (const weather of primeros5Climas) {
+            const nuevoClima = new Weather({
+                circuito: weather.circuit_name,
+                fecha: weather.date,
+                temperatura: weather.temperature,
+                humedad: weather.humidity,
+                velocidadViento: weather.wind_speed,
+                condiciones: weather.conditions, // Ejemplo: "soleado", "lluvioso"
+            });
+
+            const existingWeather = await Weather.findOne({ circuito: weather.circuit_name, fecha: weather.date });
+            if (existingWeather) {
+                console.log(`Datos de clima ya existentes para el circuito: ${nuevoClima.circuito} en la fecha: ${nuevoClima.fecha}`);
+            } else {
+                await nuevoClima.save();
+                console.log(`Datos de clima guardados para el circuito: ${nuevoClima.circuito} en la fecha: ${nuevoClima.fecha}`);
+            }
+        }
+
+        console.log("¡Se han guardado los primeros 5 datos de clima en la colección 'weather'!");
+    } catch (error) {
+        console.error("Error al obtener o guardar los datos de clima:", error.message);
+    }
+}
+
+// Ejecutar la función
+fetchAndSaveWeather();
