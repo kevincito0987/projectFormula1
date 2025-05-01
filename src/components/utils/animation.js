@@ -36,5 +36,3 @@ window.onload = () => {
       easing: "easeOutQuad"
     });
   };
-  
-  
