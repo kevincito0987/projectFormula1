@@ -8,15 +8,13 @@ const Weather = require("./models/weather"); // 🌦️ Modelo de datos climáti
 const News = require("./models/news"); // 📌 Importar el schema de noticias
 
 
-// 📸 Mapeo de imágenes actualizadas para pilotos
+// 📸 Mapeo de imágenes actualizadas para pilotos sin imagen
 const rutasImagenesActualizadas = {
-    norris: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli",
-    sainz: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/tsunoda",
-    verstappen: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/verstappen",
-    leclerc: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bearman",
-    perez: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/fom-website/drivers/2025Drivers/lawson-racing-bulls",
-    hamilton: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hadjar",
-    russell: "https://gpticketstore.vshcdn.net/uploads/images/10726/jack-doohan-alpine-big.jpg",
+    antonelli: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli",
+    bearman: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bearman",
+    lawson: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/fom-website/drivers/2025Drivers/lawson-racing-bulls",
+    hadjar: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hadjar",
+    doohan: "https://gpticketstore.vshcdn.net/uploads/images/10726/jack-doohan-alpine-big.jpg",
 };
 
 // 🔍 Validar y obtener información de los pilotos de un equipo
@@ -32,13 +30,12 @@ async function fetchAndValidatePilotos(teamId) {
         }
 
         // 📸 Consumir API de imágenes de pilotos
-        let pilotosImagenes;
+        let pilotosImagenes = [];
         try {
             const response2 = await axios.get("https://api.openf1.org/v1/drivers");
             pilotosImagenes = response2.data;
         } catch (error) {
             console.error("❌ Error al consumir API de imágenes:", error.message);
-            pilotosImagenes = [];
         }
 
         const pilotosValidados = [];
@@ -53,11 +50,10 @@ async function fetchAndValidatePilotos(teamId) {
                              (pImagen.first_name === driver.name && pImagen.last_name === driver.surname)
             );
 
-            // 🔗 Validar y asignar imagen
-            let imagenUrl = pilotoImagen?.headshot_url || rutasImagenesActualizadas[driver.driverId] || null;
+            // 🔗 Validar y asignar imagen, usando imagen almacenada si no existe
+            let imagenUrl = pilotoImagen?.headshot_url || rutasImagenesActualizadas[driver.surname.toLowerCase()] || null;
             if (!imagenUrl || imagenUrl === "Sin URL") {
-                console.error(`❌ Piloto ${driver.name} ${driver.surname} sin imagen asignada.`);
-                continue;
+                console.warn(`⚠️ Piloto sin imagen asignada: ${driver.name} ${driver.surname}`);
             }
 
             if (existingDriver) {
@@ -98,7 +94,6 @@ async function fetchAndValidatePilotos(teamId) {
         return [];
     }
 }
-
 // 🏆 Obtener y almacenar equipos junto con sus pilotos
 async function fetchAndSaveTeams() {
     try {
@@ -147,6 +142,8 @@ async function fetchAndSaveTeams() {
         console.error("❌ Error al obtener o guardar equipos y pilotos:", error);
     }
 }
+
+fetchAndSaveTeams();
 
 // 📦 Mapeo de imágenes para los circuitos de F1
 const circuitImages = {
@@ -563,4 +560,4 @@ async function fetchAndSaveF1News() {
 }
 
 // 🔥 Ejecutar la función para obtener, filtrar y guardar noticias de F1
-fetchAndSaveF1News();
+// fetchAndSaveF1News();
