@@ -1,0 +1,79 @@
+@import url(./variables.css);
+
+/* 🔧 Reset de estilos para evitar inconsistencias entre navegadores */
+
+/* 🌄 Pseudo-elemento para degradado */
+/* 🌄 Pseudo-elemento para degradado en el header */
+header::before {
+    content: ""; /* 🌀 Elemento vacío para aplicar el fondo */
+    position: absolute; /* 📌 Permite que el degradado se superponga */
+    top: 0; /* 📍 Ubicarlo desde arriba */
+    left: 0;
+    width: 100%; /* 📏 Ancho extendido */
+    height: 100%; /* 📏 Que cubra todo el header */
+    background: linear-gradient(180deg, rgba(0,0,0,2) 0%, var(--color-23) 30%, var(--color-21) 100%); /* 🎨 Degradado */
+    z-index: 10; /* 🔼 Asegura que esté sobre el video */
+    pointer-events: none; /* 🚫 Evita que interfiera con la interacción */
+}
+
+/* 🔹 Asegurar que el contenido del header esté encima */
+header {
+    position: relative; /* 📌 Necesario para que el pseudo-elemento funcione */
+    z-index: 2; /* 🔼 Mantiene el contenido sobre el degradado */
+}
+
+.card {
+    opacity: 0;
+    transform: scale(0.5);
+  }
+  
+.button:hover {
+    background: var(--color-5);
+    color: var(--color-6);
+    transform: scale(1.05); /* 🔥 Efecto de expansión ligero */
+    box-shadow: 0px 4px 10px var(--color-5); /* ✨ Sombra suave */
+}
+
+footer {
+    position: sticky; /* 📌 Mantiene el footer fijo mientras haces scroll */
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    padding: 17px 50px;
+    background: var(--color-5);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 90px;
+    box-shadow: 0px 0px 25px 40px var(--color-8); /* ✅ Mantiene el efecto visual */
+    margin: 0 auto;
+    z-index: 30; /* ✅ Mantiene el footer sobre otros elementos */
+}
+
+footer::after{
+    content: url(../assets/icons/lightModeIcon.svg);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 90px;
+    background: var(--color-3);
+    position: absolute;
+    inset: 0;
+    top: -65px;
+    border-radius: 100%;
+    margin: auto;
+    box-shadow: 0px 0px 35px var(--color-1);
+}
+
+.moving-bar {
+    width: 30px;
+    height: 10px;
+    background-color: var(--color-2);
+    position: absolute;
+    bottom: 0; /* Ajustar para que se vea debajo de los íconos */
+    transition: transform 0.4s ease;
+    left: 0px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 35px var(--color-18);
+}
