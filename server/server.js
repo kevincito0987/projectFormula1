@@ -11,6 +11,7 @@ const circuitsRoutes = require("./routes/circuits"); // 🏎️ Circuitos de F1
 const driversRoutes = require("./routes/drivers"); // 🏆 Pilotos de F1
 const teamsRoutes = require("./routes/teams"); // 🏁 Equipos de F1
 const carsRoutes = require("./routes/cars"); // 🚗 Información de los autos
+const newsRoutes = require("./routes/news"); // 📰 Noticias de F1
 
 const app = express();
 app.use(express.json()); // 📌 Permitir intercambio de datos en formato JSON
@@ -33,6 +34,7 @@ app.use("/api/circuits", circuitsRoutes); // 🏁 Circuitos
 app.use("/api/drivers", driversRoutes); // 🏆 Pilotos
 app.use("/api/teams", teamsRoutes); // 🔧 Equipos
 app.use("/api/cars", carsRoutes); // 🚗 Autos
+app.use("/api/news", newsRoutes); // 📰 Noticias
 
 // 🔍 Ruta principal para verificar que el servidor está activo
 app.get("/", (req, res) => {
