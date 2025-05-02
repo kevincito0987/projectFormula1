@@ -86,9 +86,10 @@ a img {
 }
 
 /* 🎯 Ajuste del texto dentro del botón */
-a p {
+.rol {
     margin-left: 10px;
-    font-family: "Inter18-SemiBold";
+    font-family: "Inter24-SemiBold";
+    font-size: 1.5rem;
 }
 
 /* 🚀 Efectos al hacer hover */
