@@ -444,4 +444,123 @@ async function fetchAndSaveNews() {
 // fetchAndSaveNews();
 
 // 🌍 Función para obtener noticias y filtrarlas por F1
-// 🌍 Función para obtener noticias y filtrarlas por F1
+// 🌍 Función para obtener noticias y filtrarlas por F1 de todos los países
+async function fetchAndSaveF1News() {
+    try {
+        await connectDB(); // 🔗 Conectar a MongoDB
+
+        console.log("🌍 Consultando noticias globales de la API GNews...");
+        const apikey = "55635c90754ed1abe5dded8298bc8956"; // 🔐 Tu API Key
+        const url = `https://gnews.io/api/v4/search?q=formula%201&lang=en&country=all&max=10&apikey=${apikey}`;
+
+        const response = await fetch(url);
+        const newsData = await response.json();
+
+        if (!Array.isArray(newsData.articles) || newsData.articles.length === 0) {
+            throw new Error("❌ No se encontraron noticias.");
+        }
+
+        console.log(`📢 Se encontraron ${newsData.articles.length} noticias globales. Aplicando filtros...`);
+
+        // 🔥 Palabras clave estrictas sobre F1
+        const keywordsF1 = [
+            "Formula 1", "F1", "Grand Prix", "Hamilton", "Verstappen", "Red Bull", 
+            "Ferrari", "Mercedes", "McLaren", "Alpine", "Aston Martin", "Pirelli"
+        ];
+
+        // 🏎️ Filtrar noticias relevantes de F1
+        const filteredNews = newsData.articles.filter(article => 
+            keywordsF1.some(keyword => 
+                (article.title && article.title.includes(keyword)) ||
+                (article.description && article.description.includes(keyword))
+            )
+        );
+
+        console.log(`✅ ${filteredNews.length} noticias de F1 después del filtro.`);
+
+        for (const article of filteredNews) {
+            const existingNews = await News.findOne({ article_id: article.url });
+
+            if (!existingNews) {
+                const nuevaNoticia = new News({
+                    article_id: article.url, // 📌 Usa la URL como identificador único
+                    title: article.title || "Título no disponible",
+                    link: article.url,
+                    keywords: keywordsF1.filter(keyword => article.title.includes(keyword) || article.description.includes(keyword)),
+                    creator: article.source.name || "Desconocido",
+                    description: article.description || "Sin descripción disponible",
+                    pubDate: new Date(article.publishedAt),
+                    image_url: article.image || "../assets/images/defaultNewsImage.jpeg",
+                    source_name: article.source.name,
+                    source_icon: "../assets/icons/icon2Formula1.svg",
+                    category: ["Formula 1"],
+                    language: article.language || "english"
+                });
+
+                await nuevaNoticia.save();
+                console.log(`✅ Noticia guardada: ${nuevaNoticia.title}`);
+            } else {
+                console.log(`⚡ Noticia ya existente: ${existingNews.title}`);
+            }
+        }
+
+        console.log("🎉 ¡Noticias globales de F1 guardadas correctamente en MongoDB!");
+    } catch (error) {
+        console.error("❌ Error al obtener o guardar las noticias:", error.message);
+    }
+}
+
+// 🔥 Ejecutar la función para obtener, filtrar y guardar noticias de F1 de todos los países
+// fetchAndSaveF1News();
+
+async function fetchAndSaveF1News() {
+    try {
+        await connectDB(); // 🔗 Conectar a MongoDB
+
+        console.log("🌍 Consultando noticias de F1 desde Mediastack...");
+        const apiKey = "bfd3dc9c5a4bc89ff00d0dbc4aad5cd6"; // 🔐 Tu API Key
+        const url = `http://api.mediastack.com/v1/news?access_key=${apiKey}&categories=sports&keywords=F1`;
+
+        const response = await fetch(url);
+        const newsData = await response.json();
+
+        if (!Array.isArray(newsData.data) || newsData.data.length === 0) {
+            throw new Error("❌ No se encontraron noticias.");
+        }
+
+        console.log(`📢 Se encontraron ${newsData.data.length} noticias de F1. Procesando...`);
+
+        for (const article of newsData.data) {
+            const existingNews = await News.findOne({ article_id: article.url });
+
+            if (!existingNews) {
+                const nuevaNoticia = new News({
+                    article_id: article.url, // 📌 Usa la URL como identificador único
+                    title: article.title || "Título no disponible",
+                    link: article.url,
+                    keywords: ["Formula 1", "F1"], // 📌 Ajustado para asegurar que sean de F1
+                    creator: article.source || "Desconocido",
+                    description: article.description || "Sin descripción disponible",
+                    pubDate: new Date(article.published_at),
+                    image_url: article.image || "../assets/images/defaultNewsImage.jpeg",
+                    source_name: article.source,
+                    source_icon: "../assets/icons/icon2Formula1.svg",
+                    category: ["Formula 1"],
+                    language: article.language || "english"
+                });
+
+                await nuevaNoticia.save();
+                console.log(`✅ Noticia guardada: ${nuevaNoticia.title}`);
+            } else {
+                console.log(`⚡ Noticia ya existente: ${existingNews.title}`);
+            }
+        }
+
+        console.log("🎉 ¡Noticias de F1 guardadas correctamente en MongoDB!");
+    } catch (error) {
+        console.error("❌ Error al obtener o guardar las noticias:", error.message);
+    }
+}
+
+// 🔥 Ejecutar la función para obtener, filtrar y guardar noticias de F1
+fetchAndSaveF1News();
