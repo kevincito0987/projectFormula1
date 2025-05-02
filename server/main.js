@@ -317,3 +317,24 @@ async function fetchAndSaveWeather() {
         console.error("❌ Error al obtener o guardar los datos de clima:", error.message);
     }
 }
+
+
+async function getAllF1NewsData() {
+    const url = "https://newsdata.io/api/1/news?apikey=pub_84242dd4d0babd6f98871ec1289f74df4957b&q=formula%201";
+    
+    try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Error en la solicitud: ${response.status}`);
+        
+        const data = await response.json();
+        
+        console.log("🚀 Toda la data de la API:", data); // 🔥 Verifica toda la información en consola
+        return data; // 📌 Devuelve el objeto completo sin recortes
+    } catch (error) {
+        console.error("❌ Error obteniendo la data:", error);
+        return {};
+    }
+}
+
+// 🔥 Llamar a la función para obtener toda la información
+getAllF1NewsData().then(fullData => console.log(fullData));
