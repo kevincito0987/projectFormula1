@@ -10,11 +10,26 @@ const News = require("./models/news"); // 📌 Importar el schema de noticias
 
 // 📸 Mapeo de imágenes actualizadas para pilotos sin imagen
 const rutasImagenesActualizadas = {
-    antonelli: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli",
-    bearman: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bearman",
-    lawson: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/fom-website/drivers/2025Drivers/lawson-racing-bulls",
-    hadjar: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hadjar",
-    doohan: "https://gpticketstore.vshcdn.net/uploads/images/10726/jack-doohan-alpine-big.jpg",
+    driver1: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/norris",
+    driver2: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/piastri",
+    driver3: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/russell",
+    driver4: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/tsunoda",
+    driver5: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/verstappen",
+    driver6: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hamilton",
+    driver7: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/leclerc",
+    driver8: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/sainz",
+    driver9: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/albon",
+    driver10: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/ocon",
+    driver11: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/alonso",
+    driver12: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/stroll",
+    driver13: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/gasly",
+    driver14: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bortoleto",
+    driver15: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hulkenberg",
+    driver16: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli",
+    driver17: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bearman",
+    driver18: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/fom-website/drivers/2025Drivers/lawson-racing-bulls",
+    driver19: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hadjar",
+    driver20: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/doohan"
 };
 
 // 🔍 Validar y obtener información de los pilotos de un equipo
@@ -24,66 +39,42 @@ async function fetchAndValidatePilotos(teamId) {
         const response = await axios.get(`https://f1api.dev/api/current/teams/${teamId}/drivers`);
         const { drivers } = response.data;
 
-        if (!drivers || !Array.isArray(drivers)) {
-            console.error(`❌ Estructura inesperada de la respuesta para el equipo ${teamId}`);
+        if (!drivers || !Array.isArray(drivers) || drivers.length !== 20) {
+            console.error(`❌ Error: La API no devolvió 20 pilotos como se esperaba.`);
             return [];
-        }
-
-        // 📸 Consumir API de imágenes de pilotos
-        let pilotosImagenes = [];
-        try {
-            const response2 = await axios.get("https://api.openf1.org/v1/drivers");
-            pilotosImagenes = response2.data;
-        } catch (error) {
-            console.error("❌ Error al consumir API de imágenes:", error.message);
         }
 
         const pilotosValidados = [];
 
-        for (const driverData of drivers) {
-            const driver = driverData.driver;
+        for (let i = 0; i < drivers.length; i++) {
+            const driver = drivers[i].driver;
             const existingDriver = await Piloto.findOne({ driverId: driver.driverId });
 
-            // 📸 Buscar datos de la segunda API
-            const pilotoImagen = pilotosImagenes.find(
-                (pImagen) => pImagen.driver_number === driver.number || 
-                             (pImagen.first_name === driver.name && pImagen.last_name === driver.surname)
-            );
-
-            // 🔗 Validar y asignar imagen, usando imagen almacenada si no existe
-            let imagenUrl = pilotoImagen?.headshot_url || rutasImagenesActualizadas[driver.surname.toLowerCase()] || null;
-            if (!imagenUrl || imagenUrl === "Sin URL") {
-                console.warn(`⚠️ Piloto sin imagen asignada: ${driver.name} ${driver.surname}`);
-            }
+            // 🔗 Asignar imagen usando el índice exacto del piloto
+            let nuevaImagenUrl = rutasImagenesActualizadas[`driver${i + 1}`] || "https://default-image.com/default.jpg";
 
             if (existingDriver) {
-                const fieldsToUpdate = {};
-                if (!existingDriver.fechaNacimiento) fieldsToUpdate.fechaNacimiento = pilotoImagen?.birthday || "Sin fecha";
-                if (!existingDriver.url || !existingDriver.url.startsWith("http")) {
-                    fieldsToUpdate.url = imagenUrl;
-                }
-
-                if (Object.keys(fieldsToUpdate).length > 0) {
-                    await Piloto.updateOne({ driverId: driver.driverId }, { $set: fieldsToUpdate });
-                    console.log(`🔄 Piloto actualizado: ${driver.name} ${driver.surname}`);
-                }
-
+                await Piloto.updateOne(
+                    { driverId: driver.driverId },
+                    { $set: { url: nuevaImagenUrl } }
+                );
+                console.log(`🔄 Imagen actualizada: ${driver.name} ${driver.surname}`);
                 pilotosValidados.push(existingDriver);
             } else {
                 const nuevoPiloto = new Piloto({
                     driverId: driver.driverId,
                     nombre: driver.name,
                     apellido: driver.surname,
-                    nacionalidad: driver.nationality,
-                    fechaNacimiento: pilotoImagen?.birthday || driver.birthday || "Sin fecha",
+                    nacionalidad: driver.nationality || "Desconocida",
+                    fechaNacimiento: driver.birthday || "Sin fecha",
                     numero: driver.number || null,
-                    nombreCorto: driver.shortName || "Sin nombre corto",
-                    url: imagenUrl,
+                    nombreCorto: driver.shortName || driver.name,
+                    url: nuevaImagenUrl, // 🔥 Imagen del mapeo exacto
                     team: teamId,
                 });
 
                 await nuevoPiloto.save();
-                console.log(`✅ Nuevo piloto agregado: ${nuevoPiloto.nombre} ${nuevoPiloto.apellido}`);
+                console.log(`✅ Nuevo piloto guardado con imagen correcta: ${nuevoPiloto.nombre} ${nuevoPiloto.apellido}`);
                 pilotosValidados.push(nuevoPiloto);
             }
         }
@@ -94,6 +85,8 @@ async function fetchAndValidatePilotos(teamId) {
         return [];
     }
 }
+
+
 // 🏆 Obtener y almacenar equipos junto con sus pilotos
 async function fetchAndSaveTeams() {
     try {
@@ -142,8 +135,43 @@ async function fetchAndSaveTeams() {
         console.error("❌ Error al obtener o guardar equipos y pilotos:", error);
     }
 }
+async function reasignarImagenesPilotos() {
+    try {
+        // 🔗 Conectar a la base de datos antes de realizar operaciones
+        await connectDB();
+        console.log("✅ Conectado a MongoDB.");
 
-fetchAndSaveTeams();
+        // 🌍 Obtener pilotos desde la API local
+        const response = await axios.get("http://localhost:5000/api/drivers/");
+        const pilotos = response.data;
+
+        // 🔍 Validar que la API devuelve 20 pilotos
+        if (!pilotos || !Array.isArray(pilotos) || pilotos.length !== 20) {
+            console.error(`❌ Error: Se esperaban 20 pilotos, pero la API devolvió ${pilotos.length || 0}.`);
+            return;
+        }
+
+        for (let i = 0; i < pilotos.length; i++) {
+            const piloto = pilotos[i];
+
+            // 🔗 Asignar imagen en orden según `driverX`
+            const nuevaImagenUrl = rutasImagenesActualizadas[`driver${i + 1}`] || "https://default-image.com/default.jpg";
+
+            await Piloto.updateOne(
+                { driverId: piloto.driverId },
+                { $set: { url: nuevaImagenUrl } }
+            );
+
+            console.log(`🔄 Imagen reasignada: ${piloto.nombre} ${piloto.apellido}`);
+        }
+
+        console.log("🎉 Todas las imágenes fueron actualizadas correctamente.");
+    } catch (error) {
+        console.error("❌ Error al conectar o actualizar imágenes de los pilotos:", error.message);
+    }
+}
+
+reasignarImagenesPilotos();
 
 // 📦 Mapeo de imágenes para los circuitos de F1
 const circuitImages = {
