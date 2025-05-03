@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 dotenv.config({ path: "./server/.env" }); // ✅ Ajusta la ruta si es necesario
 
 // 🔗 Función para conectar a la base de datos MongoDB
-export async function connectDB() {
+async function connectDB() {
     try {
         console.log("🔗 Conectando a:", process.env.MONGO_URI); // ✅ Verifica que la variable se está cargando
         await mongoose.connect(process.env.MONGO_URI, {
