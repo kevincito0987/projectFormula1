@@ -10,7 +10,7 @@ import driversRoutes from "./routes/drivers.js";
 import teamsRoutes from "./routes/teams.js";
 import carsRoutes from "./routes/cars.js";
 import newsRoutes from "./routes/news.js";
-import sessionRoutes from "./routes/sessionsRoutes.js";
+import sessionRoutes from "./routes/sesionsRoutes.js";
 
 const app = express();
 app.use(express.json());
