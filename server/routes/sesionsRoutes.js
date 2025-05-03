@@ -1,5 +1,7 @@
-const express = require("express");
-const Session = require("../models/sesions");
+// 📦 Importar módulos esenciales para manejar rutas y modelos
+import express from "express";
+import Session from "../models/sesions.js";
+
 const router = express.Router();
 
 // 📝 **Crear una nueva sesión** (POST)
@@ -45,7 +47,7 @@ router.get("/:userType", async (req, res) => {
         const sessions = await Session.find({ userType: req.params.userType });
         res.json({ success: true, sessions });
     } catch (error) {
-        res.status(500).json({ success: false, message: "❌ Error al obtener sesiones.", error });
+        res.status500.json({ success: false, message: "❌ Error al obtener sesiones.", error });
     }
 });
 
@@ -89,4 +91,5 @@ router.delete("/:sessionId", async (req, res) => {
     }
 });
 
-module.exports = router;
+// 📦 Exportar el router para ES Modules
+export default router;

@@ -1,5 +1,5 @@
 // 📦 Importar Mongoose para definir el esquema de datos meteorológicos
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // 🌤️ Esquema de Clima - Define la estructura de los datos meteorológicos en la base de datos
 const weatherSchema = new mongoose.Schema({
@@ -19,5 +19,5 @@ const weatherSchema = new mongoose.Schema({
 // 📌 Creación del modelo de MongoDB basado en el esquema definido
 const Weather = mongoose.model("Weather", weatherSchema, "weather");
 
-// 📦 Exportar el modelo para su uso en otras partes del proyecto
-module.exports = Weather;
+// 📦 Exportar el modelo para ES Modules
+export default Weather;

@@ -1,5 +1,5 @@
 // 📦 Importar Mongoose para definir el esquema de los circuitos
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // 🏁 Esquema de Circuito - Define la estructura de los datos de cada circuito de F1
 const circuitSchema = new mongoose.Schema({
@@ -21,5 +21,5 @@ const circuitSchema = new mongoose.Schema({
 // 📌 Creación del modelo de MongoDB basado en el esquema definido
 const Circuit = mongoose.model("Circuit", circuitSchema, "circuits");
 
-// 📦 Exportar el modelo para su uso en otras partes del proyecto
-module.exports = Circuit;
+// 📦 Exportar el modelo para ES Modules
+export default Circuit;

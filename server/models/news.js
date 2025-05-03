@@ -1,5 +1,7 @@
-const mongoose = require("mongoose");
+// 📦 Importar Mongoose para definir el esquema de las noticias
+import mongoose from "mongoose";
 
+// 📰 Esquema de Noticias - Define la estructura de los datos de cada artículo en la base de datos
 const NewsSchema = new mongoose.Schema({
     article_id: { type: String, required: true, unique: true },
     title: { type: String, required: true },
@@ -15,5 +17,8 @@ const NewsSchema = new mongoose.Schema({
     language: { type: String, default: "english" }
 });
 
+// 📌 Creación del modelo de MongoDB basado en el esquema definido
 const News = mongoose.model("News", NewsSchema);
-module.exports = News;
+
+// 📦 Exportar el modelo para su uso en otras partes del proyecto
+export default News;

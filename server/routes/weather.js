@@ -1,6 +1,6 @@
 // 📦 Importar módulos esenciales para manejar rutas y modelos
-const express = require("express");
-const Weather = require("../models/weather"); // 🌍 Modelo que representa los registros climáticos en la base de datos
+import express from "express";
+import Weather from "../models/weather.js"; // 🌍 Modelo que representa los registros climáticos en la base de datos
 
 const router = express.Router();
 
@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
         const weatherData = await Weather.find(); // 🔍 Consulta de todos los registros climáticos
         res.json(weatherData); // 📦 Respuesta con la lista completa de registros
     } catch (error) {
-        console.error("❌ Error al obtener los datos de clima:", error); // ⚠️ Registro de error en consola
+        console.error("❌ Error al obtener los datos de clima:", error);
         res.status(500).json({ error: "Error al obtener los datos de clima: " + error.message });
     }
 });
@@ -22,12 +22,12 @@ router.get("/categoria/:tipo", async (req, res) => {
         const weatherData = await Weather.find({ categoria: tipo }); // 🔎 Buscar registros que coincidan con la categoría
 
         if (weatherData.length === 0) {
-            return res.status(404).json({ error: "No se encontraron registros en esta categoría." }); // 🚨 Manejo de error si no hay registros
+            return res.status(404).json({ error: "No se encontraron registros en esta categoría." });
         }
 
         res.json(weatherData); // 📦 Enviar la lista de registros encontrados
     } catch (error) {
-        console.error("❌ Error al filtrar por categoría:", error); // ⚠️ Registro de error en consola
+        console.error("❌ Error al filtrar por categoría:", error);
         res.status(500).json({ error: "Error al filtrar por categoría: " + error.message });
     }
 });
@@ -39,15 +39,15 @@ router.get("/fecha/:date", async (req, res) => {
         const weatherData = await Weather.find({ date }); // 🔎 Buscar registros climáticos en la fecha indicada
 
         if (weatherData.length === 0) {
-            return res.status(404).json({ error: "No se encontraron registros en esta fecha." }); // 🚨 Manejo de error si no hay registros en esa fecha
+            return res.status(404).json({ error: "No se encontraron registros en esta fecha." });
         }
 
         res.json(weatherData); // 📦 Enviar la lista de registros encontrados
     } catch (error) {
-        console.error("❌ Error al filtrar por fecha:", error); // ⚠️ Registro de error en consola
+        console.error("❌ Error al filtrar por fecha:", error);
         res.status(500).json({ error: "Error al filtrar por fecha: " + error.message });
     }
 });
 
-// 📦 Exportar el router para su uso en el servidor principal
-module.exports = router;
+// 📦 Exportar el router para ES Modules
+export default router;

@@ -1,11 +1,14 @@
 // 📦 Importar módulos esenciales para manejar rutas y archivos
-const express = require("express");
-const fs = require("fs");
-const path = require("path");
+import express from "express";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const router = express.Router();
 
-// 📌 Cargar el archivo JSON de carros
+// 📌 Obtener la ruta absoluta del archivo JSON
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 const carsFilePath = path.join(__dirname, "../data/dataCars.json");
 
 // 🏎️ Obtener todos los autos agrupados por equipo
@@ -24,7 +27,7 @@ router.get("/", async (req, res) => {
 
         res.json(formattedCars);
     } catch (error) {
-        console.error("❌ Error al cargar los datos de autos:", error); // ⚠️ Log de error en consola
+        console.error("❌ Error al cargar los datos de autos:", error);
         res.status(500).json({ error: "Error al cargar los datos de autos: " + error.message });
     }
 });
@@ -35,19 +38,18 @@ router.get("/:modelo", async (req, res) => {
         const { modelo } = req.params;
         const carsData = JSON.parse(fs.readFileSync(carsFilePath, "utf-8"));
 
-        // 🔄 Convertir el objeto "equipos" en un array de valores
         const equiposArray = Object.values(carsData.equipos);
 
         // 📌 Buscar el auto en todos los equipos
         const car = equiposArray.flatMap(team => team.autos).find(auto => auto.modelo.toLowerCase() === modelo.toLowerCase());
 
         if (!car) {
-            return res.status(404).json({ error: "Auto no encontrado" }); // 🚨 Manejo de error si el modelo no existe
+            return res.status(404).json({ error: "Auto no encontrado" });
         }
 
         res.json(car);
     } catch (error) {
-        console.error("❌ Error al obtener el auto:", error); // ⚠️ Log de error en consola
+        console.error("❌ Error al obtener el auto:", error);
         res.status(500).json({ error: "Error al obtener el auto: " + error.message });
     }
 });
@@ -58,22 +60,21 @@ router.get("/equipo/:team", async (req, res) => {
         const { team } = req.params;
         const carsData = JSON.parse(fs.readFileSync(carsFilePath, "utf-8"));
 
-        // 🔄 Convertir el objeto "equipos" en un array de valores
         const equiposArray = Object.values(carsData.equipos);
 
         // 📌 Buscar los autos dentro del equipo
         const teamData = equiposArray.find(e => e.equipo.toLowerCase() === team.toLowerCase());
 
         if (!teamData) {
-            return res.status(404).json({ error: "Equipo no encontrado." }); // 🚨 Manejo de error si el equipo no existe
+            return res.status(404).json({ error: "Equipo no encontrado." });
         }
 
         res.json({ equipo: teamData.equipo, autos: teamData.autos });
     } catch (error) {
-        console.error("❌ Error al obtener los autos por equipo:", error); // ⚠️ Log de error en consola
+        console.error("❌ Error al obtener los autos por equipo:", error);
         res.status(500).json({ error: "Error al obtener los autos por equipo: " + error.message });
     }
 });
 
-// 📦 Exportar el router para su uso en el servidor principal
-module.exports = router;
+// 📦 Exportar el router para ES Modules
+export default router;

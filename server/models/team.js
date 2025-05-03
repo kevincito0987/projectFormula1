@@ -1,5 +1,5 @@
 // 📦 Importar Mongoose para definir el esquema de los equipos de F1
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // 🏁 Esquema de Equipo - Define la estructura de los datos de cada equipo en la base de datos
 const teamSchema = new mongoose.Schema({
@@ -16,4 +16,4 @@ const teamSchema = new mongoose.Schema({
 const Team = mongoose.model("Team", teamSchema, "teams");
 
 // 📦 Exportar el modelo para su uso en otras partes del proyecto
-module.exports = Team;
+export default Team;

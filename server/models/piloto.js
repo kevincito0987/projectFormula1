@@ -1,5 +1,5 @@
 // 📦 Importar Mongoose para definir el esquema de los pilotos de F1
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 
 // 🏁 Esquema de Piloto - Define la estructura de los datos de cada piloto en la base de datos
 const pilotoSchema = new mongoose.Schema({
@@ -18,4 +18,4 @@ const pilotoSchema = new mongoose.Schema({
 const Piloto = mongoose.model("Piloto", pilotoSchema, "drivers");
 
 // 📦 Exportar el modelo para su uso en otras partes del proyecto
-module.exports = Piloto;
+export default Piloto;

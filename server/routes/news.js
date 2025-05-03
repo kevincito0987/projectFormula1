@@ -1,5 +1,7 @@
-const express = require("express");
-const News = require("../models/news"); // 📌 Importar el modelo de noticias
+// 📦 Importar módulos esenciales para manejar rutas y modelos
+import express from "express";
+import News from "../models/news.js"; // 📌 Importar el modelo de noticias
+
 const router = express.Router();
 
 // 🔍 Obtener todas las noticias de F1
@@ -59,4 +61,5 @@ router.put("/:id", async (req, res) => {
     }
 });
 
-module.exports = router;
+// 📦 Exportar el router para ES Modules
+export default router;
