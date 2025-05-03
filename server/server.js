@@ -22,14 +22,7 @@ app.use(cors()); // 🌍 Habilitar acceso CORS para evitar restricciones en el c
 // 🚀 Definir puerto con manejo de fallback
 const PORT = process.env.PORT || 5000;
 
-// 🔗 Conectar a MongoDB con manejo de errores
-mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
-    .then(() => console.log("✅ Conectado a MongoDB 📡"))
-    .catch((error) => {
-        console.error("❌ Error en la conexión con MongoDB:", error.message); // ⚠️ Mensaje de error en consola
-        process.exit(1); // 🔴 Salir del proceso en caso de fallo
-    });
-
+connectDB(); // 🔗 Conectar a la base de datos
 // 🏎️ Definir rutas principales de la API
 app.use("/api/weather", weatherRoutes); // 🌦️ Clima
 app.use("/api/circuits", circuitsRoutes); // 🏁 Circuitos
