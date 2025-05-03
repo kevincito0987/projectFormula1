@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 // 🔐 Cargar las variables de entorno desde el archivo .env
-require("dotenv").config();
+require("dotenv").config({ path: __dirname + "/.env" });
 
 // 📌 Función para establecer la conexión con MongoDB Atlas
 const connectDB = async () => {
