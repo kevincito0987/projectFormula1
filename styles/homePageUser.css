@@ -67,6 +67,16 @@ footer {
     align-items: center;
 }
 
+.light-mode {
+    background-color: var(--color-8); /* Cambia el fondo del body */
+    color: var(--color-5); /* Cambia el color general del texto */
+}
+
+.light-mode h1, .light-mode h2, .light-mode h3, .light-mode p {
+    color: var(--color-6); /* Ajusta los textos */
+}
+
+
 #light-mode-toggle::after {
     content: url(../assets/icons/lightModeIcon.svg); /* 🌞 Ícono */
 }
