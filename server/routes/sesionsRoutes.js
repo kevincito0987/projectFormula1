@@ -1,4 +1,3 @@
-// 📦 Importar módulos esenciales para manejar rutas y modelos
 import express from "express";
 import Session from "../models/sesions.js";
 
@@ -10,24 +9,34 @@ router.post("/:userType", async (req, res) => {
     const { userType } = req.params;
 
     try {
-        // 🔎 Validar datos antes de guardar
         if (!sessionId || !userData || !timestamp) {
             return res.status(400).json({ success: false, message: "❌ Datos incompletos." });
         }
 
-        // 📝 Insertar sesión en MongoDB
-        const newSession = new Session({
-            sessionId,
-            userType,
-            userData,
-            timestamp,
-        });
-
+        const newSession = new Session({ sessionId, userType, userData, timestamp });
         await newSession.save();
-        res.status(201).json({ success: true, message: "✅ Sesión guardada.", session: newSession });
 
+        res.status(201).json({ success: true, message: "✅ Sesión guardada.", session: newSession });
     } catch (error) {
         res.status(500).json({ success: false, message: "❌ Error al guardar sesión.", error });
+    }
+});
+
+// 🔎 **Obtener todas las sesiones clasificadas entre Admin y User**
+router.get("/all", async (req, res) => {
+    try {
+        const adminSessions = await Session.find({ userType: "admin" });
+        const userSessions = await Session.find({ userType: "user" });
+
+        res.json({
+            success: true,
+            sesiones: {
+                admin: adminSessions,
+                user: userSessions
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ success: false, message: "❌ Error al obtener todas las sesiones.", error });
     }
 });
 
@@ -57,7 +66,6 @@ router.put("/:sessionId", async (req, res) => {
     const { userData, timestamp } = req.body;
 
     try {
-        // 🔎 Verificar si la sesión existe
         const updatedSession = await Session.findOneAndUpdate(
             { sessionId },
             { userData, timestamp },

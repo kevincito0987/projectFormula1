@@ -1,68 +1,95 @@
-// 📦 Importar módulos esenciales para manejar rutas y modelos
 import express from "express";
-import Driver from "../models/piloto.js"; // 🏎️ Importa el modelo de piloto desde la base de datos
+import Team from "../models/team.js"; // 🏆 Modelo que representa los equipos de F1 en la base de datos
 
 const router = express.Router();
 
-// 🏆 Obtener todos los pilotos registrados en la base de datos
+// 🏎️ Obtener todos los equipos registrados en la base de datos (GET)
 router.get("/", async (req, res) => {
     try {
-        const drivers = await Driver.find(); // 🔎 Consulta de todos los pilotos disponibles
-        res.json(drivers); // 📦 Respuesta con la lista completa de pilotos
+        const teams = await Team.find();
+        res.json(teams);
     } catch (error) {
-        console.error("❌ Error al obtener los pilotos:", error);
-        res.status(500).json({ error: "Error al obtener los pilotos: " + error.message });
+        console.error("❌ Error al obtener los equipos:", error);
+        res.status(500).json({ error: "Error al obtener los equipos: " + error.message });
     }
 });
 
-// 🔍 Obtener un piloto por `driverId`
-router.get("/:driverId", async (req, res) => {
+// 🔍 Obtener un equipo por `teamId` (GET)
+router.get("/:teamId", async (req, res) => {
     try {
-        const { driverId } = req.params; // 📋 Extraer el ID del piloto desde los parámetros
-        const driver = await Driver.findOne({ driverId }); // 🔎 Buscar el piloto por su ID único
+        const { teamId } = req.params;
+        const team = await Team.findOne({ teamId });
 
-        if (!driver) {
-            return res.status(404).json({ error: "Piloto no encontrado" });
+        if (!team) {
+            return res.status(404).json({ error: "Equipo no encontrado" });
         }
 
-        res.json(driver); // 📦 Enviar los detalles del piloto encontrado
+        res.json(team);
     } catch (error) {
-        console.error("❌ Error al obtener el piloto:", error);
-        res.status(500).json({ error: "Error al obtener el piloto: " + error.message });
+        console.error("❌ Error al obtener el equipo:", error);
+        res.status(500).json({ error: "Error al obtener el equipo: " + error.message });
     }
 });
 
-// 🔧 Obtener pilotos por equipo
-router.get("/team/:team", async (req, res) => {
-    try {
-        const { team } = req.params; // 🏁 Extraer el nombre del equipo desde los parámetros
-        const drivers = await Driver.find({ team }); // 🔍 Buscar los pilotos que pertenecen al equipo
-
-        if (drivers.length === 0) {
-            return res.status(404).json({ error: "No se encontraron pilotos en este equipo." });
-        }
-
-        res.json(drivers); // 📦 Enviar la lista de pilotos encontrados
-    } catch (error) {
-        console.error("❌ Error al obtener pilotos por equipo:", error);
-        res.status(500).json({ error: "Error al obtener pilotos por equipo: " + error.message });
-    }
-});
-
-// 🌍 Obtener pilotos por nacionalidad
+// 🌍 Obtener equipos por nacionalidad (GET)
 router.get("/nacionalidad/:pais", async (req, res) => {
     try {
-        const { pais } = req.params; // 🌎 Extraer la nacionalidad desde los parámetros
-        const drivers = await Driver.find({ nacionalidad: pais }); // 🔍 Buscar pilotos según la nacionalidad
+        const { pais } = req.params;
+        const teams = await Team.find({ nacionalidad: pais });
 
-        if (drivers.length === 0) {
-            return res.status(404).json({ error: "No se encontraron pilotos con esta nacionalidad." });
+        if (teams.length === 0) {
+            return res.status(404).json({ error: "No se encontraron equipos con esta nacionalidad." });
         }
 
-        res.json(drivers); // 📦 Enviar la lista de pilotos encontrados
+        res.json(teams);
     } catch (error) {
-        console.error("❌ Error al obtener pilotos por nacionalidad:", error);
-        res.status(500).json({ error: "Error al obtener pilotos por nacionalidad: " + error.message });
+        console.error("❌ Error al obtener equipos por nacionalidad:", error);
+        res.status(500).json({ error: "Error al obtener equipos por nacionalidad: " + error.message });
+    }
+});
+
+// 🔥 Guardar un nuevo equipo en la BD (POST)
+router.post("/", async (req, res) => {
+    try {
+        const nuevoEquipo = new Team(req.body);
+        await nuevoEquipo.save();
+        res.status(201).json({ mensaje: "✅ Equipo guardado correctamente", equipo: nuevoEquipo });
+    } catch (error) {
+        res.status(500).json({ error: "❌ Error al guardar el equipo" });
+    }
+});
+
+// 🔄 Actualizar un equipo por `teamId` (PUT)
+router.put("/:teamId", async (req, res) => {
+    try {
+        const equipoActualizado = await Team.findOneAndUpdate(
+            { teamId: req.params.teamId },
+            req.body,
+            { new: true }
+        );
+
+        if (!equipoActualizado) {
+            return res.status(404).json({ error: "❌ Equipo no encontrado" });
+        }
+
+        res.json({ mensaje: "✅ Equipo actualizado correctamente", equipo: equipoActualizado });
+    } catch (error) {
+        res.status(500).json({ error: "❌ Error al actualizar el equipo" });
+    }
+});
+
+// 🗑️ Eliminar un equipo por `teamId` (DELETE)
+router.delete("/:teamId", async (req, res) => {
+    try {
+        const equipoEliminado = await Team.findOneAndDelete({ teamId: req.params.teamId });
+
+        if (!equipoEliminado) {
+            return res.status(404).json({ error: "❌ Equipo no encontrado" });
+        }
+
+        res.json({ mensaje: "✅ Equipo eliminado correctamente" });
+    } catch (error) {
+        res.status(500).json({ error: "❌ Error al eliminar el equipo" });
     }
 });
 
