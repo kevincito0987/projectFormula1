@@ -1,10 +1,10 @@
 // 🔐 Cargar variables de entorno desde el archivo .env
-require("dotenv").config({ path: __dirname + "/.env" });
-
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "../.env") }); // Asegura que carga las variables correctamente
 
 const express = require("express");
 const cors = require("cors");
-const {connectDB} = require("./data/mongoDb");
+const { connectDB } = require("./data/mongoDb");
 
 // 📦 Importar rutas de la API
 const weatherRoutes = require("./routes/weather"); // 🌦️ Datos meteorológicos
