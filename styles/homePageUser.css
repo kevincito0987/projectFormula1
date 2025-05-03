@@ -64,6 +64,18 @@ footer::after{
     border-radius: 100%;
     margin: auto;
     box-shadow: 0px 0px 35px var(--color-1);
+    pointer-events: none; /* Evita que se bloquee el click en `footer::after` */
+}
+
+#light-mode-toggle {
+    position: absolute;
+    top: -65px;
+    width: 120px;
+    height: 90px;
+    border-radius: 100%;
+    cursor: pointer;
+    background: transparent;
+    border: none;
 }
 
 .moving-bar {
