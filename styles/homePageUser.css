@@ -16,6 +16,14 @@ header::before {
     transition: background 1.5s ease-in-out;
 }
 
+.grid .card {
+    opacity: 1 !important;
+    display: block !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 250px;
+}
+
 
 /* 🔹 Asegurar que el contenido del header esté encima */
 header {
