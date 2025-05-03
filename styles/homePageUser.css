@@ -50,33 +50,27 @@ footer {
     z-index: 30; /* ✅ Mantiene el footer sobre otros elementos */
 }
 
-footer::after{
-    content: url(../assets/icons/lightModeIcon.svg);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 120px;
-    height: 90px;
-    background: var(--color-3);
+#light-mode-toggle {
     position: absolute;
     inset: 0;
     top: -65px;
+    width: 120px;
+    height: 90px;
+    background: var(--color-3);
     border-radius: 100%;
     margin: auto;
     box-shadow: 0px 0px 35px var(--color-1);
-    pointer-events: none; /* Evita que se bloquee el click en `footer::after` */
+    cursor: pointer; /* Ahora es interactivo */
+    border: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
-#light-mode-toggle {
-    position: absolute;
-    top: -65px;
-    width: 120px;
-    height: 90px;
-    border-radius: 100%;
-    cursor: pointer;
-    background: transparent;
-    border: none;
+#light-mode-toggle::after {
+    content: url(../assets/icons/lightModeIcon.svg); /* 🌞 Ícono */
 }
+
 
 .moving-bar {
     width: 30px;
