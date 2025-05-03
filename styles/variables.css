@@ -49,6 +49,11 @@
     --color-47: #DB1B41; /* ❤️ Rojo pasión */
     --color-48: #FFFFFF30; /* 🌫️ Blanco transparente */
   }
+  :root {
+    --header-gradient: linear-gradient(180deg, rgba(0,0,0,2) 0%, var(--color-23) 30%, var(--color-21) 100%);
+    
+}
+
   
   /* 📌 Importación de fuentes */
   @font-face {
