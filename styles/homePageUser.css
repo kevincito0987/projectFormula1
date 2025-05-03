@@ -53,7 +53,7 @@ footer {
     justify-content: space-between;
     align-items: center;
     border-radius: 90px;
-    box-shadow: 0px 0px 25px 40px var(--color-8); /* ✅ Mantiene el efecto visual */
+    box-shadow: var(--footer-boxshadow); /* ✅ Mantiene el efecto visual */
     margin: 0 auto;
     z-index: 30; /* ✅ Mantiene el footer sobre otros elementos */
 }
@@ -86,7 +86,8 @@ footer {
 
 
 #light-mode-toggle::after {
-    content: url(../assets/icons/lightModeIcon.svg); /* 🌞 Ícono */
+    content: var(--light-mode-icon); /* 🎨 Usa la variable */
+    transition: content 0.3s ease-in-out;
 }
 
 
