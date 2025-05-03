@@ -17,7 +17,7 @@ app.use(express.json()); // 📌 Permitir intercambio de datos en formato JSON
 app.use(cors()); // 🌍 Habilitar acceso CORS para evitar restricciones en el cliente
 
 // 🚀 Definir puerto con manejo de fallback
-const PORT = process.env.PORT || 5800;
+const PORT = process.env.PORT || 5000;
 
 connectDB(); // 🔗 Conectar a la base de datos
 // 🏎️ Definir rutas principales de la API
