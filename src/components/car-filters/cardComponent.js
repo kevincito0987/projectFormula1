@@ -135,13 +135,13 @@ class CardComponent extends HTMLElement {
 
     async fetchFilteredData() {
         try {
-            console.log(`🔄 Obteniendo datos actualizados desde la API...`);
+            console.log("🔄 Obteniendo datos actualizados desde la API...");
             const response = await fetch("https://projectformula1-production.up.railway.app/api/drivers");
-
+    
             if (!response.ok) {
                 throw new Error(`❌ Error ${response.status}: No se pudo obtener la data de pilotos`);
             }
-
+    
             return await response.json();
         } catch (error) {
             console.error(`❌ Error al obtener datos de pilotos:`, error.message);
@@ -154,26 +154,31 @@ class CardComponent extends HTMLElement {
             console.error("❌ Error: No hay suficientes tarjetas en el HTML.");
             return;
         }
-
+    
         localStorage.setItem("activeFilter", "All Drivers");
-
+    
         cards.forEach((card, index) => {
             if (index >= data.length) return;
             const item = data[index];
-
-            card.querySelector("img").src = item.urlImagen || item.url || "https://www.formula1.com/default_image.jpg";
-            card.querySelector("h3").textContent = `🏎️ ${item.nombre} ${item.apellido} - ${item.team}`;
-            card.querySelector("p").textContent = `📆 Nacimiento: ${item.fechaNacimiento} | 🇬🇧 Nacionalidad: ${item.nacionalidad}`;
-            card.querySelector("a").href = `https://www.formula1.com/en/drivers/${item.driverId}.html` || "#";
+    
+            // 📌 Asegurar que la imagen se carga correctamente
+            const imageUrl = item.url && item.url.trim() !== "" ? item.url : "https://www.formula1.com/default_image.jpg";
+    
+            card.querySelector("img").src = imageUrl;
+            card.querySelector("h3").textContent = `🏎️ ${item.nombre ?? "Desconocido"} ${item.apellido ?? ""} - ${item.team ?? "Sin equipo"}`;
+            card.querySelector("p").textContent = `📆 Nacimiento: ${item.fechaNacimiento ?? "N/A"} | 🇬🇧 Nacionalidad: ${item.nacionalidad ?? "N/A"}`;
+            card.querySelector("a").href = item.driverId ? `https://www.formula1.com/en/drivers/${item.driverId}.html` : "#";
         });
-
-        console.log(`✅ Tarjetas de pilotos actualizadas correctamente.`);
+    
+        console.log("✅ Tarjetas de pilotos actualizadas correctamente.");
     }
+    
     
     showCreateDriverModal() {
         const modalOverlay = document.createElement("div");
+        modalOverlay.id = "createDriverModal"; // ✅ ID único para el modal
         modalOverlay.classList.add(
-            "fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50"
+            "fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50", "overflow-y-auto"
         );
     
         const modalContent = document.createElement("div");
@@ -199,24 +204,27 @@ class CardComponent extends HTMLElement {
     
         modalOverlay.appendChild(modalContent);
         document.body.appendChild(modalOverlay);
-    
-        // 📌 **Cerrar el modal con `addEventListener`**
-        document.getElementById("cancelButton").addEventListener("click", closeModalPilot);
         function closeModalPilot() {
-            const modalOverlay = document.querySelector(".fixed.top-0.left-0.w-full.h-full.bg-black.bg-opacity-50");
-            if (modalOverlay) modalOverlay.remove();
+            const modal = document.getElementById("createDriverModal");
+            if (modal) modal.remove();
         }
     
         document.getElementById("driverForm").addEventListener("submit", async (event) => {
             event.preventDefault();
+    
             const newDriver = {
-                nombre: document.getElementById("nombre").value,
-                apellido: document.getElementById("apellido").value,
-                team: document.getElementById("team").value,
-                numero: document.getElementById("numero").value,
-                nacionalidad: document.getElementById("nacionalidad").value,
-                urlImagen: document.getElementById("urlImagen").value
+                nombre: document.getElementById("nombre")?.value.trim() || "Desconocido",
+                apellido: document.getElementById("apellido")?.value.trim() || "",
+                team: document.getElementById("team")?.value.trim() || "Sin equipo",
+                numero: document.getElementById("numero")?.value.trim() || "N/A",
+                nacionalidad: document.getElementById("nacionalidad")?.value.trim() || "N/A",
+                url: document.getElementById("urlImagen")?.value.trim() || "https://www.formula1.com/default_image.jpg"
             };
+    
+            if (!newDriver.nombre || !newDriver.apellido || !newDriver.team) {
+                console.error("❌ Faltan datos obligatorios del piloto.");
+                return;
+            }
     
             try {
                 const response = await fetch("https://projectformula1-production.up.railway.app/api/drivers", {
@@ -227,14 +235,39 @@ class CardComponent extends HTMLElement {
     
                 if (!response.ok) throw new Error("❌ Error al agregar piloto.");
                 const createdDriver = await response.json();
+                function updateDriverList(createdDriver) {
+                    const driverList = document.querySelector("card-component");
+                    if (!driverList) {
+                        console.error("❌ No se encontró el contenedor de la lista de pilotos.");
+                        return;
+                    }
                 
+                    const newCard = document.createElement("div");
+                    newCard.classList.add("driver-card", "p-4", "bg-gray-800", "text-white", "rounded-lg", "shadow-md");
+                
+                    newCard.innerHTML = `
+                        <img src="${createdDriver.url || 'https://www.formula1.com/default_image.jpg'}" class="w-16 h-16 rounded-full object-cover mb-2">
+                        <h3 class="text-lg font-bold">🏎️ ${createdDriver.nombre} ${createdDriver.apellido} - ${createdDriver.team}</h3>
+                        <p class="text-sm">📆 Nacimiento: ${createdDriver.numero} | 🇬🇧 Nacionalidad: ${createdDriver.nacionalidad}</p>
+                        <button class="bg-blue-500 text-white px-3 py-1 rounded-md">Editar</button>
+                        <button class="bg-red-500 text-white px-3 py-1 rounded-md" onclick="deleteDriver('${createdDriver.driverId}')">Eliminar</button>
+                    `;
+                
+                    driverList.prepend(newCard); // 📌 Agregarlo en la primera posición
+                
+                    console.log("✅ Piloto agregado correctamente.");
+                }
+                updateDriverList(createdDriver);
                 closeModalPilot();
-                updateDriverList(createdDriver); // 🔄 Agregar el nuevo piloto a la UI
             } catch (error) {
                 console.error(error.message);
             }
         });
+    
+        document.getElementById("cancelButton").addEventListener("click", closeModalPilot);
     }
+
+    
     async deleteDriver(driverId) {
         try {
             const response = await fetch(`https://projectformula1-production.up.railway.app/api/drivers/${driverId}`, { method: "DELETE" });
