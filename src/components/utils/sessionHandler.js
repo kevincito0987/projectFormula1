@@ -13,8 +13,15 @@ document.addEventListener("DOMContentLoaded", () => {
             await saveSessionToIndexedDB(sessionData, userType);
             await syncIndexedDBToMongo(userType);
 
+            // Mensaje de confirmación
+            alert(`✅ Se ha iniciado sesión como ${userType}`);
+
+            // Redirección basada en el tipo de usuario
             if (userType === "admin") {
                 activateAdminFeatures();
+                window.location.href = "../../../views/homePageAdmin.html"; // Ajusta la ruta según tu estructura
+            } else {
+                window.location.href = "../../../views/homePageUser.html"; // Ajusta la ruta según tu estructura
             }
         });
     });

@@ -79,6 +79,11 @@ class UserConfig extends HTMLElement {
                     border-radius: 30px;
                     margin: 20px;
                 }
+                .buttons a:last-child {
+                    text-align: center;
+                    text-decoration: none;
+                    color: var(--color-1);
+                }
                 .image{
                     margin-bottom: 50px;
                 }
@@ -198,7 +203,7 @@ class UserConfig extends HTMLElement {
                 <!-- Botones -->
                 <div class="buttons mt-10 flex flex-col space-y-4">
                     <a id="saveBtn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-bold rounded-lg shadow-lg text-xl uppercase tracking-wide transition-all duration-300">💾 Guardar Cambios</a>
-                    <a id="saveBtn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-bold rounded-lg shadow-lg text-xl uppercase tracking-wide transition-all duration-300" target="_blank" href="../index.html">💾 Cerrar Sesion</a>
+                    <a id="saveBtn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-bold rounded-lg shadow-lg text-xl uppercase tracking-wide transition-all duration-300"  href="../index.html">💾 Cerrar Sesion</a>
                 </div>
 
                 <!-- Imagen de F1 de fondo con efecto degradado -->

@@ -14,7 +14,7 @@
     <script type="module" src="../src/components/car-filters/carFilter.js" defer></script>
     <script type="module" src="../src/app.js" defer></script>
     <script type="module" src="../src/events/toogleTheme.js" defer></script>
-    <script type="module" src="../src/components/car-filters/carsApp.js" defer  ></script>
+    <script type="module" src="../src/components/car-filters/carsAppAdmin.js" defer  ></script>
     <script type="module" src="../src/components/user-config/userConfig.js" defer></script>
 
     <link rel="stylesheet" href="../styles/homePageUser.css">
@@ -44,7 +44,7 @@
             <cars-links></cars-links>
 
             <!-- 📢 News Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-20">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-20" id="driversContainer">
                 <div class="card bg-gray-800 p-6 rounded-lg shadow-lg transition hover:scale-105 card">
                     <img src="../assets/images/imageCardNews1.jpeg" alt="Card image 1" class="w-full h-auto rounded-lg">
                     <div class="mt-4">
