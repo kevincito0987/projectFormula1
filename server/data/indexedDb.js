@@ -1,4 +1,4 @@
-function initIndexedDB() {
+export async function initIndexedDB() {
     return new Promise((resolve, reject) => {
         const request = indexedDB.open("F1AppDB", 1);
 
@@ -17,7 +17,7 @@ function initIndexedDB() {
     });
 }
 
-async function saveSessionToIndexedDB(sessionData, userType) {
+export async function saveSessionToIndexedDB(sessionData, userType) {
     const db = await initIndexedDB();
     const transaction = db.transaction(userType === "admin" ? "adminSessions" : "userSessions", "readwrite");
     const store = transaction.objectStore(userType === "admin" ? "adminSessions" : "userSessions");
@@ -32,7 +32,7 @@ async function saveSessionToIndexedDB(sessionData, userType) {
     console.log(`✅ Sesión de ${userType} guardada en IndexedDB:`, session);
 }
 
-async function getAllSessionsFromIndexedDB(userType) {
+export async function getAllSessionsFromIndexedDB(userType) {
     return new Promise(async (resolve, reject) => {
         const db = await initIndexedDB();
         const transaction = db.transaction(userType === "admin" ? "adminSessions" : "userSessions", "readonly");
@@ -44,7 +44,7 @@ async function getAllSessionsFromIndexedDB(userType) {
     });
 }
 
-async function syncIndexedDBToMongo(userType) {
+export async function syncIndexedDBToMongo(userType) {
     const sessions = await getAllSessionsFromIndexedDB(userType);
 
     if (sessions.length === 0) {
@@ -52,12 +52,11 @@ async function syncIndexedDBToMongo(userType) {
         return;
     }
 
-    // 🔗 Definir la URL correcta según el tipo de usuario
     const syncURL = userType === "admin"
         ? "https://projectformula1-production.up.railway.app/api/sessions/admin"
         : "https://projectformula1-production.up.railway.app/api/sessions/user";
 
-    fetch(syncURL, { // ✅ Ahora usa la URL correcta
+    fetch(syncURL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessions }),
@@ -71,5 +70,3 @@ async function syncIndexedDBToMongo(userType) {
     .then(result => console.log(`✅ Sesiones de ${userType} sincronizadas con MongoDB:`, result))
     .catch(error => console.error(`❌ Error al sincronizar sesiones de ${userType}:`, error));
 }
-
-export { saveSessionToIndexedDB, syncIndexedDBToMongo, getAllSessionsFromIndexedDB }; // ✅ Ahora usando ES Modules

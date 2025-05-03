@@ -9,7 +9,7 @@
   },
   "author": "kevincito0987",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/kevincito0987/projectFormula1/issues"
   },
