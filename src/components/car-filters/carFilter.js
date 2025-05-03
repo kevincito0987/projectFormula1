@@ -1,9 +1,8 @@
 class carsLinks extends HTMLElement {
     constructor() {
         super();
-        this.attachShadow({ mode: "open" }); // 🔹 Activa el Shadow DOM
+        this.attachShadow({ mode: "open" });
 
-        // 🏎️ Plantilla HTML con Tailwind
         this.shadowRoot.innerHTML = `
             <style>
                 @import "https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css";
@@ -42,45 +41,18 @@ class carsLinks extends HTMLElement {
             </div>
         `;
 
-        // 🏎️ Aplicar animaciones de entrada con GSAP
-        gsap.fromTo(this.shadowRoot.querySelectorAll("a"), 
-            { opacity: 0, y: 50 },  // 📌 Estado inicial: oculto y desplazado hacia abajo
-            { opacity: 1, y: 0, duration: 1, stagger: 0.2, ease: "power2.out" } // 📌 Animación escalonada hacia arriba
-        );
-
-        // 🏎️ Aplicar animación con Anime.js en hover
         this.shadowRoot.querySelectorAll("a").forEach(link => {
-            link.addEventListener("mouseenter", () => {
-                anime({
-                    targets: link,
-                    scale: [1, 1.15], // 🔥 Expansión suave en hover
-                    duration: 500,
-                    easing: "easeInOutQuad",
-                });
-            });
-
-            link.addEventListener("mouseleave", () => {
-                anime({
-                    targets: link,
-                    scale: [1.15, 1], // 🔥 Regresa a su tamaño original
-                    duration: 500,
-                    easing: "easeInOutQuad",
-                });
-            });
-
-            // 🔥 Despacha un evento personalizado al hacer clic
             link.addEventListener("click", (event) => {
                 event.preventDefault();
                 const newsType = event.currentTarget.dataset.name;
                 this.dispatchEvent(new CustomEvent("news-selected", {
                     detail: { newsType },
                     bubbles: true,
-                    composed: true 
+                    composed: true  // 🔥 Permite que el evento salga del Shadow DOM
                 }));
             });
         });
     }
 }
 
-// 🔥 Registrar el componente
 customElements.define("cars-links", carsLinks);
