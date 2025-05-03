@@ -4,8 +4,7 @@ require("dotenv").config({ path: __dirname + "/.env" });
 
 const express = require("express");
 const cors = require("cors");
-const mongoose = require("mongoose");
-const connectDB = require("./data/mongoDb");
+const {connectDB} = require("./data/mongoDb");
 
 // 📦 Importar rutas de la API
 const weatherRoutes = require("./routes/weather"); // 🌦️ Datos meteorológicos
