@@ -1,101 +1,71 @@
- // 📦 Importar módulos esenciales para manejo de APIs y base de datos
 import axios from "axios";
-import { connectDB } from "./data/mongoDb.js"; // 🔗 Conectar a MongoDB
- import Piloto from "./models/piloto.js"; // 🏎️ Modelo de pilotos
+import { connectDB } from "./data/mongoDb.js"; // Conectar a MongoDB
+import Circuito from "./models/circuits.js"; // Modelo de circuitos
 
+// URLs actualizadas para los circuitos
+const circuitsImages = {
+    "6812af886cc71c50b65bff6b": "https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Canada_Circuit.png",
+    "6812af886cc71c50b65bff6e": "https://www.formula1.com/content/dam/fom-website/2018-redesign-assets/Circuit%20maps%2016x9/Spain_Circuit.png"
+};
 
- // 📸 Mapeo de imágenes actualizadas para pilotos sin imagen
- const rutasImagenesActualizadas = {
-     driver1: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/norris",
-     driver2: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/piastri",
-     driver3: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/russell",
-     driver4: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/tsunoda",
-     driver5: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/verstappen",
-     driver6: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hamilton",
-     driver7: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/leclerc",
-     driver8: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/sainz",
-     driver9: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/albon",
-     driver10: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/ocon",
-     driver11: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/alonso",
-     driver12: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/stroll",
-     driver13: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/gasly",
-     driver14: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bortoleto",
-     driver15: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hulkenberg",
-     driver16: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/antonelli",
-     driver17: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/bearman",
-     driver18: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/fom-website/drivers/2025Drivers/lawson-racing-bulls",
-     driver19: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/hadjar",
-     driver20: "https://media.formula1.com/image/upload/f_auto,c_limit,q_auto,w_1320/content/dam/fom-website/drivers/2025Drivers/doohan"
- };
-
-// 🏎️ **Primero obtenemos todos los pilotos de la API**
-async function obtenerPilotos() {
+// 🏎️ **Obtener todos los circuitos de la API**
+async function obtenerCircuitos() {
     try {
         await connectDB();
         console.log("✅ Conectado a MongoDB.");
 
-        const response = await axios.get("https://projectformula1-production.up.railway.app/api/drivers");
-        const pilotos = response.data;
+        const response = await axios.get("https://projectformula1-production.up.railway.app/api/circuits");
+        const circuitos = response.data;
 
-        if (!pilotos || !Array.isArray(pilotos)) {
-            console.error(`❌ Error: La API no devolvió pilotos válidos.`);
+        if (!circuitos || !Array.isArray(circuitos)) {
+            console.error(`❌ Error: La API no devolvió circuitos válidos.`);
             return [];
         }
 
-        console.log("📌 Pilotos obtenidos correctamente.");
-        return pilotos;
+        console.log("📌 Circuitos obtenidos correctamente.");
+        return circuitos;
     } catch (error) {
-        console.error("❌ Error al obtener pilotos:", error.message);
+        console.error("❌ Error al obtener circuitos:", error.message);
         return [];
     }
 }
 
-// 🏎️ **Luego reasignamos las imágenes respetando el orden de la API**
-async function reasignarImagenesPilotos(pilotos) {
+// 🏎️ **Actualizar imágenes de los circuitos específicos**
+async function actualizarImagenesCircuitos(circuitos) {
     try {
-        if (!pilotos || pilotos.length === 0) {
-            console.error("❌ No hay pilotos disponibles para reasignar imágenes.");
+        if (!circuitos || circuitos.length === 0) {
+            console.error("❌ No hay circuitos disponibles para actualizar imágenes.");
             return;
         }
 
-        let cambiosRealizados = false;
+        const actualizaciones = circuitos
+            .filter(circuito => circuitsImages[circuito._id]) // Filtra los circuitos que tienen una nueva imagen asignada
+            .map(async circuito => {
+                const nuevaImagenUrl = circuitsImages[circuito._id];
+                const circuitoActual = await Circuito.findOne({ _id: circuito._id });
 
-        for (let i = 0; i < pilotos.length; i++) {
-            const piloto = pilotos[i];
-            const nuevaImagenUrl = rutasImagenesActualizadas[`driver${i + 1}`] || "https://default-image.com/default.jpg";
+                if (circuitoActual && circuitoActual.urlImagen === nuevaImagenUrl) {
+                    console.log(`✅ Imagen ya asignada para ${circuito.nombre}, no se actualiza.`);
+                    return null;
+                }
 
-            const pilotoActual = await Piloto.findOne({ driverId: piloto.driverId });
+                return Circuito.updateOne(
+                    { _id: circuito._id },
+                    { $set: { urlImagen: nuevaImagenUrl } }
+                );
+            });
 
-            if (pilotoActual && pilotoActual.url === nuevaImagenUrl) {
-                console.log(`✅ Imagen ya asignada para ${piloto.nombre} ${piloto.apellido}, no se actualiza.`);
-                continue;
-            }
-
-            const updateResult = await Piloto.updateOne(
-                { driverId: piloto.driverId },
-                { $set: { url: nuevaImagenUrl } }
-            );
-
-            if (updateResult.modifiedCount > 0) {
-                console.log(`🔄 Imagen reasignada: ${piloto.nombre} ${piloto.apellido}`);
-                cambiosRealizados = true;
-            }
-        }
-
-        if (cambiosRealizados) {
-            console.log("🎉 Todas las imágenes fueron actualizadas correctamente.");
-        } else {
-            console.log("✅ No se realizaron cambios, todas las imágenes ya estaban asignadas.");
-        }
+        await Promise.all(actualizaciones);
+        console.log("🎉 Imágenes de los circuitos actualizadas correctamente.");
     } catch (error) {
-        console.error("❌ Error al reasignar imágenes de los pilotos:", error.message);
+        console.error("❌ Error al actualizar imágenes de los circuitos:", error.message);
     }
 }
 
 // 🔥 **Ejecutar el proceso en dos pasos**
 async function ejecutarProceso() {
-    const pilotos = await obtenerPilotos();
-    await reasignarImagenesPilotos(pilotos);
+    const circuitos = await obtenerCircuitos();
+    await actualizarImagenesCircuitos(circuitos);
 }
 
 ejecutarProceso();
