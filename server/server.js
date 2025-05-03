@@ -1,6 +1,4 @@
 // 🔐 Cargar variables de entorno desde el archivo .env
-const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, "../.env") }); // Asegura que carga las variables correctamente
 
 const express = require("express");
 const cors = require("cors");
