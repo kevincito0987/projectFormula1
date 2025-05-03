@@ -1,7 +1,11 @@
-require("dotenv").config({ path: "./server/.env" }); // 📌 Ajusta la ruta si es necesario
+// 📦 Importar dotenv para manejar variables de entorno
+import dotenv from "dotenv";
+import mongoose from "mongoose";
 
-const mongoose = require("mongoose");
+// 📌 Configurar dotenv para cargar variables de entorno
+dotenv.config({ path: "./server/.env" }); // ✅ Ajusta la ruta si es necesario
 
+// 🔗 Función para conectar a la base de datos MongoDB
 async function connectDB() {
     try {
         console.log("🔗 Conectando a:", process.env.MONGO_URI); // ✅ Verifica que la variable se está cargando
@@ -16,4 +20,5 @@ async function connectDB() {
     }
 }
 
-module.exports = { connectDB };
+// 📦 Exportar la función de conexión
+export { connectDB };
