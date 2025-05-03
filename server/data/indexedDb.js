@@ -24,8 +24,9 @@ export async function saveSessionToIndexedDB(sessionData, userType) {
 
     const session = {
         sessionId: `${userType}-session-${Date.now()}`,
+        userType,  // 🔹 Se agrega userType explícitamente
         userData: sessionData,
-        timestamp: new Date()
+        timestamp: new Date().toISOString() // 🔹 Formato ISO para la fecha
     };
 
     store.add(session);
@@ -39,7 +40,10 @@ export async function getAllSessionsFromIndexedDB(userType) {
         const store = transaction.objectStore(userType === "admin" ? "adminSessions" : "userSessions");
         const getAllRequest = store.getAll();
 
-        getAllRequest.onsuccess = () => resolve(getAllRequest.result);
+        getAllRequest.onsuccess = () => {
+            console.log(`🔎 Sesiones obtenidas desde IndexedDB (${userType}):`, getAllRequest.result);
+            resolve(getAllRequest.result);
+        };
         getAllRequest.onerror = () => reject(`❌ Error al obtener sesiones de ${userType} desde IndexedDB.`);
     });
 }
@@ -47,7 +51,7 @@ export async function getAllSessionsFromIndexedDB(userType) {
 export async function syncIndexedDBToMongo(userType) {
     const sessions = await getAllSessionsFromIndexedDB(userType);
 
-    if (sessions.length === 0) {
+    if (!sessions || sessions.length === 0) {
         console.log(`🔎 No hay sesiones de ${userType} para sincronizar.`);
         return;
     }
@@ -56,17 +60,21 @@ export async function syncIndexedDBToMongo(userType) {
         ? "https://projectformula1-production.up.railway.app/api/sessions/admin"
         : "https://projectformula1-production.up.railway.app/api/sessions/user";
 
-    fetch(syncURL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ sessions }),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`❌ Error en la respuesta del servidor: ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(result => console.log(`✅ Sesiones de ${userType} sincronizadas con MongoDB:`, result))
-    .catch(error => console.error(`❌ Error al sincronizar sesiones de ${userType}:`, error));
+    console.log(`🚀 Enviando sesiones de ${userType} a MongoDB en: ${syncURL}`);
+
+    for (const session of sessions) {
+        await fetch(syncURL, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(session), // 🔹 Se envía sesión individual
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`❌ Error en la respuesta del servidor: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(result => console.log(`✅ Sesión sincronizada con MongoDB:`, result))
+        .catch(error => console.error(`❌ Error al sincronizar sesión de ${userType}:`, error));
+    }
 }
