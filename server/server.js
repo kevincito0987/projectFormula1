@@ -1,5 +1,4 @@
 // 🔐 Cargar variables de entorno desde el archivo .env
-
 const express = require("express");
 const cors = require("cors");
 const { connectDB } = require("./data/mongoDb");
@@ -11,6 +10,7 @@ const driversRoutes = require("./routes/drivers"); // 🏆 Pilotos de F1
 const teamsRoutes = require("./routes/teams"); // 🏁 Equipos de F1
 const carsRoutes = require("./routes/cars"); // 🚗 Información de los autos
 const newsRoutes = require("./routes/news"); // 📰 Noticias de F1
+const sessionRoutes = require("./routes/sesionsRoutes"); // 🔐 Manejo de sesiones
 
 const app = express();
 app.use(express.json()); // 📌 Permitir intercambio de datos en formato JSON
@@ -20,6 +20,7 @@ app.use(cors()); // 🌍 Habilitar acceso CORS para evitar restricciones en el c
 const PORT = process.env.PORT || 5000;
 
 connectDB(); // 🔗 Conectar a la base de datos
+
 // 🏎️ Definir rutas principales de la API
 app.use("/api/weather", weatherRoutes); // 🌦️ Clima
 app.use("/api/circuits", circuitsRoutes); // 🏁 Circuitos
@@ -27,6 +28,7 @@ app.use("/api/drivers", driversRoutes); // 🏆 Pilotos
 app.use("/api/teams", teamsRoutes); // 🔧 Equipos
 app.use("/api/cars", carsRoutes); // 🚗 Autos
 app.use("/api/news", newsRoutes); // 📰 Noticias
+app.use("/api/sessions", sessionRoutes); // 🔐 Sesiones
 
 // 🔍 Ruta principal para verificar que el servidor está activo
 app.get("/", (req, res) => {
