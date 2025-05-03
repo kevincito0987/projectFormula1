@@ -1,26 +1,20 @@
-// 📦 Importar Mongoose para manejar la conexión con MongoDB
+require("dotenv").config();
 const mongoose = require("mongoose");
 
-// 🔐 Cargar las variables de entorno desde el archivo .env
-const path = require("path");
-require("dotenv").config({ path: path.join(__dirname, "../.env") });
-
-
-// 📌 Función para establecer la conexión con MongoDB Atlas
-const connectDB = async () => {
+async function connectDB() {
     try {
+        console.log("🔍 Conectando a:", process.env.MONGO_URI); // 🔎 Verifica que la variable se está cargando
+
         await mongoose.connect(process.env.MONGO_URI, {
-            useNewUrlParser: true, // 📜 Evita advertencias en la conexión
-            useUnifiedTopology: true, // 🌐 Mejora la administración de conexiones
-            bufferTimeoutMS: 30000, // ⏳ Aumenta el tiempo límite para prevenir desconexiones inesperadas
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
         });
 
-        console.log("✅ ¡Conexión exitosa a MongoDB Atlas! 🏁"); // 🚀 Mensaje si la conexión es correcta
+        console.log("✅ ¡Conexión exitosa a MongoDB Atlas! 🏁");
     } catch (error) {
-        console.error("❌ Error al conectar con MongoDB:", error); // ⚠️ Captura errores y los muestra en consola
-        process.exit(1); // 🔴 Termina el proceso si la conexión falla para evitar problemas en la API
+        console.error("❌ Error al conectar con MongoDB:", error.message);
+        process.exit(1);
     }
-};
+}
 
-// 📦 Exportar la función de conexión para su uso en otros archivos
 module.exports = { connectDB };
