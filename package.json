@@ -26,6 +26,6 @@
   },
   "scripts": {
     "start": "node ./server/server.js",
-    "start-babylon": "parcel serve ./views/racingSimulation.html --no-cache"
+    "run-babylon": "parcel serve ./views/racingSimulation.html --no-cache"
   }
 }
