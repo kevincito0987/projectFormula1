@@ -142,3 +142,23 @@ footer {
         margin-top:80px;
     }
 }
+
+@media screen and (min-width: 768px) {
+    footer {
+        flex-direction: row;
+        padding: 20px 50px;
+        height: 70px;
+        gap: 60px;
+    }
+
+    footer div {
+        gap: 80px; /* Aumenta el espacio entre los elementos para una mejor separación */
+        justify-content: space-between;
+    }
+
+    footer a img {
+        width: 36px;
+        height: 36px;
+        display: block;
+    }
+}
