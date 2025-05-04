@@ -2,7 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const { connectDB } = require("./data/mongoDb");
-const { syncIndexedDBToMongo } = require("./data/indexedDB");
+const { syncIndexedDBToMongo } = require("./data/indexedDb");
 
 // 📦 Importar rutas de la API
 const weatherRoutes = require("./routes/weather"); // 🌦️ Datos meteorológicos
