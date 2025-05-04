@@ -36,7 +36,7 @@ class carsLinks extends HTMLElement {
                     <p class="mt-2 text-lg font-bold">F1 Circuits</p>
                 </a>
                 <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="News F1 Circuits">
-                    <img src="../assets/icons/newsCircuitsFormula1Icon.svg" alt="News F1 Circuits" class="w-16 h-16">
+                    <img src="../assets/icons/raceIcon.svg" alt="News F1 Circuits" class="w-16 h-16">
                     <p class="mt-2 text-lg font-bold">F1 Standings</p>
                 </a>
             </div>
