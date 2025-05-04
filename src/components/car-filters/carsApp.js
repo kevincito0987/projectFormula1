@@ -1,25 +1,45 @@
-// 🏆 Función para obtener datos de la API de standings
+// 🏆 Función para obtener datos de standings con imágenes de la API de pilotos
 async function fetchStandingsData() {
-    const apiUrl = "https://f1api.dev/api/current/drivers-championship";
+    const standingsUrl = "https://f1api.dev/api/current/drivers-championship";
+    const driversUrl = "https://projectformula1-production.up.railway.app/api/drivers";
 
     try {
-        const response = await fetch(apiUrl);
-        if (!response.ok) throw new Error(`Error ${response.status}: No se pudo obtener la data.`);
+        const [standingsResponse, driversResponse] = await Promise.all([
+            fetch(standingsUrl),
+            fetch(driversUrl)
+        ]);
 
-        const standingsData = await response.json();
-
-        if (!standingsData || !standingsData.drivers_championship) {
-            throw new Error("❌ La API de standings no devolvió una lista válida.");
+        if (!standingsResponse.ok || !driversResponse.ok) {
+            throw new Error("❌ Error al obtener los datos de las APIs.");
         }
 
-        return standingsData.drivers_championship; // 🔄 Retorna la lista sin modificar
+        const standingsData = await standingsResponse.json();
+        const driversData = await driversResponse.json();
+
+        if (!standingsData.drivers_championship || !Array.isArray(driversData)) {
+            throw new Error("❌ Datos corruptos o vacíos.");
+        }
+
+        // 🔍 Fusionar standings con la imagen correspondiente desde la API de pilotos
+        const enrichedStandings = standingsData.drivers_championship.map(standing => {
+            const driverMatch = driversData.find(driver => driver.nombre === standing.driver.name);
+            return {
+                ...standing,
+                driver: {
+                    ...standing.driver,
+                    image: driverMatch ? driverMatch.url : "https://www.formula1.com/default_driver.jpg"
+                }
+            };
+        });
+
+        return enrichedStandings;
     } catch (error) {
-        console.error("❌ Error al obtener standings:", error.message);
+        console.error("❌ Error al obtener standings con imágenes:", error.message);
         return [];
     }
 }
 
-// 🏆 Función para reemplazar la información de las tarjetas con standings
+// 🏆 Función para reemplazar la información en las tarjetas con standings y su imagen correcta
 function replaceStandingsCards(standingsData) {
     const cards = document.querySelectorAll(".grid .card");
     if (cards.length < 8) {
@@ -28,13 +48,13 @@ function replaceStandingsCards(standingsData) {
     }
 
     standingsData.forEach((driver, index) => {
-        cards[index].querySelector("img").src = driver.driver.url;
+        cards[index].querySelector("img").src = driver.driver.image;
         cards[index].querySelector("h3").textContent = `🏆 ${driver.driver.name} - ${driver.team.teamName}`;
         cards[index].querySelector("p").textContent = `Posición: ${driver.position} | Puntos: ${driver.points}`;
         cards[index].querySelector("a").href = driver.driver.url || "#";
     });
 
-    console.log("✅ Standings actualizados correctamente en las tarjetas.");
+    console.log("✅ Standings con imágenes actualizados correctamente.");
 }
 
 // 🏎️ Función para obtener datos según el filtro seleccionado (Pilotos, Equipos y Circuitos)
