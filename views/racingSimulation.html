@@ -5,9 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulación F1</title>
     <script type="module" src="../src/components/f1-simulator-app/simulatorApp.js"></script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- 📌 Asegurando Tailwind -->
 </head>
-<body>
-    <canvas id="renderCanvas"></canvas> <!-- 🎮 Aquí se renderiza el juego -->
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
+    
+    <!-- 🏎️ Pantalla de inicio -->
+    <div id="start-screen" class="text-center space-y-6">
+        <h1 class="text-4xl font-bold">Simulación de Carrera F1</h1>
+        <p class="text-lg">Selecciona tu auto y empieza la carrera</p>
+        
+        <div class="flex gap-4 justify-center">
+            <button class="car-option bg-red-500 px-4 py-2 rounded hover:bg-red-600" data-car="red">Auto Rojo</button>
+            <button class="car-option bg-blue-500 px-4 py-2 rounded hover:bg-blue-600" data-car="blue">Auto Azul</button>
+            <button class="car-option bg-green-500 px-4 py-2 rounded hover:bg-green-600" data-car="green">Auto Verde</button>
+        </div>
+        <button id="start-btn" class="bg-yellow-500 px-6 py-3 rounded-lg text-lg mt-4 hover:bg-yellow-600">Iniciar Simulación</button>
+    </div>
+
+    <!-- 🏁 Canvas para la carrera -->
+    <canvas id="renderCanvas" class="hidden w-full h-screen"></canvas>
+
+    <script src="simulator.js"></script>
 </body>
 </html>
