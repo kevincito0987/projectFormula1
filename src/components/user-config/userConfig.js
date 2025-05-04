@@ -116,6 +116,52 @@ class UserConfig extends HTMLElement {
                         margin-left: 20px;
                     }
                 }
+                @media (max-width: 162px) {
+                    .container {
+                        padding: 5px;
+                        width: 94%;
+                    }
+                    h1 {
+                        font-size: 0.6rem;
+                    }
+                    .user, .escuderia, .buttons {
+                        flex-direction: column;
+                        gap: 10px;
+                    }
+                    .user input {
+                        width: 100px;
+                    }
+                    .text {
+                        flex-direction: column;
+                        gap: 5px;
+                    }
+                    .escuderia {
+                        flex-direction: column;
+                        gap: 5px;
+                        text-align: center;
+                    }
+                    .escuderia select {
+                        width: 100px;
+                    }
+                    .option {
+                        flex-direction: column;
+                        gap: 5px;
+                    }
+                    .inputs {
+                        gap: 8px;
+                    }
+                    .buttons a {
+                        padding: 8px;
+                        font-size: 0.7rem;
+                        border-radius: 20px;
+                    }
+                    .image {
+                        margin-bottom: 40px;
+                        width: 98%;
+                        margin-left: 2px;
+                    }
+                }
+
             </style>
             <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
             <div class="max-w-lg mx-auto bg-gray-900 text-white p-12 rounded-xl shadow-2xl border-2 border-gray-800 relative overflow-hidden container">
