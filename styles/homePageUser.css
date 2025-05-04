@@ -166,6 +166,25 @@ footer {
     }
 }
 
+@media screen and (min-width: 1114px) {
+    header:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 73vh;
+        background-color: rgba(0, 0, 0, 0.2); /* Puedes ajustar la opacidad y el color de fondo */
+    }
+    .header {
+        height: auto;
+        margin-top: 0.5px;
+    }
+    main {
+        margin-top: 30px;
+    }
+}
+
 @media screen and (min-width: 1280px) {
 
     main {
@@ -185,6 +204,15 @@ footer {
     footer a img {
         width: 40px;
         height: 40px;
+    }
+    header:before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 76vh;
+        background-color: rgba(0, 0, 0, 0.2); /* Puedes ajustar la opacidad y el color de fondo */
     }
 }
 

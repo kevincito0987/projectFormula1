@@ -82,6 +82,40 @@ class UserConfig extends HTMLElement {
                 .image{
                     margin-bottom: 50px;
                 }
+                    /* 📱 Media Query para pantallas pequeñas */
+                @media (max-width: 440px) {
+                    .container {
+                        width: 93%;
+                        display: flex;
+                        flex-direction: column;
+                        gap: 20px;
+                        align-items: center;
+                        justify-content: center;
+                    }
+                    h1 {
+                        font-size: 1.3rem;
+                    }
+                    .user, .escuderia, .buttons {
+                        flex-direction: column;
+                        gap: 20px;
+                    }
+                    .inputs {
+                        gap: 15px;
+                    }
+                    .user {
+                        gap: 20px;
+                        margin-left: 10px;
+                    }
+                    .buttons a {
+                        padding: 12px;
+                        font-size: 0.9rem;
+                    }
+                    .image {
+                        margin-bottom: 40px;
+                        width: 98%;
+                        margin-left: 20px;
+                    }
+                }
             </style>
             <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
             <div class="max-w-lg mx-auto bg-gray-900 text-white p-12 rounded-xl shadow-2xl border-2 border-gray-800 relative overflow-hidden container">
