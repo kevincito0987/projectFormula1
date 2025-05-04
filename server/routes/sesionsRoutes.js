@@ -2,17 +2,17 @@ const express = require("express");
 const Session = require("../models/sessionModel");
 const router = express.Router();
 
-// 🔄 Guardar sesiones en MongoDB
-router.post("/sync", async (req, res) => {
+// 🔎 Obtener todas las sesiones (solo para Admin)
+router.get("/admin/all", async (req, res) => {
     try {
-        await Session.insertMany(req.body.sessions);
-        res.json({ success: true, message: "✅ Sesiones guardadas en MongoDB Atlas." });
+        const sessions = await Session.find({ userType: "admin" });
+        res.json({ success: true, sessions });
     } catch (error) {
-        res.status(500).json({ success: false, message: "❌ Error al guardar sesiones.", error });
+        res.status(500).json({ success: false, message: "❌ Error al obtener sesiones de Admin.", error });
     }
 });
 
-// 🔎 Obtener sesiones por tipo de usuario
+// 🔎 Obtener sesiones individuales según el usuario
 router.get("/:userType", async (req, res) => {
     try {
         const sessions = await Session.find({ userType: req.params.userType });
