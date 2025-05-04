@@ -1,5 +1,5 @@
 const express = require("express");
-const Session = require("../models/sessionModel");
+const Session = require("../models/sesions");
 const router = express.Router();
 
 // 🔎 Obtener todas las sesiones (solo para Admin)
