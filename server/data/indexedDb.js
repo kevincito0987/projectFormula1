@@ -62,4 +62,5 @@ async function syncIndexedDBToMongo(userType) {
     .catch(error => console.error(`❌ Error al sincronizar sesiones de ${userType}:`, error));
 }
 
-export { saveSessionToIndexedDB, syncIndexedDBToMongo, getAllSessionsFromIndexedDB };
+// ✅ Cambiar la exportación a CommonJS para evitar errores en Railway
+module.exports = { saveSessionToIndexedDB, syncIndexedDBToMongo, getAllSessionsFromIndexedDB };
