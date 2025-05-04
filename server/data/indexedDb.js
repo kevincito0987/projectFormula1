@@ -32,28 +32,34 @@ async function saveSessionToIndexedDB(sessionData, userType) {
     console.log(`✅ Sesión de ${userType} guardada en IndexedDB:`, session);
 }
 
-async function syncIndexedDBToMongo(userType) {
-    const db = await initIndexedDB();
-    const transaction = db.transaction(userType === "admin" ? "adminSessions" : "userSessions", "readonly");
-    const store = transaction.objectStore(userType === "admin" ? "adminSessions" : "userSessions");
-    const getAllRequest = store.getAll();
+async function getAllSessionsFromIndexedDB(userType) {
+    return new Promise(async (resolve, reject) => {
+        const db = await initIndexedDB();
+        const transaction = db.transaction(userType === "admin" ? "adminSessions" : "userSessions", "readonly");
+        const store = transaction.objectStore(userType === "admin" ? "adminSessions" : "userSessions");
+        const getAllRequest = store.getAll();
 
-    getAllRequest.onsuccess = async () => {
-        const sessions = getAllRequest.result;
-        if (sessions.length === 0) {
-            console.log(`🔎 No hay sesiones de ${userType} para sincronizar.`);
-            return;
-        }
-
-        fetch(`http://localhost:5000/api/sessions/sync`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ sessions }),
-        })
-        .then(response => response.json())
-        .then(result => console.log(`✅ Sesiones de ${userType} sincronizadas con MongoDB:`, result))
-        .catch(error => console.error(`❌ Error al sincronizar sesiones de ${userType}:`, error));
-    };
+        getAllRequest.onsuccess = () => resolve(getAllRequest.result);
+        getAllRequest.onerror = () => reject(`❌ Error al obtener sesiones de ${userType} desde IndexedDB.`);
+    });
 }
 
-export { saveSessionToIndexedDB, syncIndexedDBToMongo };
+async function syncIndexedDBToMongo(userType) {
+    const sessions = await getAllSessionsFromIndexedDB(userType);
+
+    if (sessions.length === 0) {
+        console.log(`🔎 No hay sesiones de ${userType} para sincronizar.`);
+        return;
+    }
+
+    fetch(`http://localhost:5000/api/sessions/sync`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sessions }),
+    })
+    .then(response => response.json())
+    .then(result => console.log(`✅ Sesiones de ${userType} sincronizadas con MongoDB:`, result))
+    .catch(error => console.error(`❌ Error al sincronizar sesiones de ${userType}:`, error));
+}
+
+export { saveSessionToIndexedDB, syncIndexedDBToMongo, getAllSessionsFromIndexedDB };
