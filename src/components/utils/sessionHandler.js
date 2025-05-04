@@ -1,4 +1,4 @@
-import { saveSessionToIndexedDB, syncIndexedDBToMongo } from "../data/indexedDB.js";
+import { saveSessionToIndexedDB, syncIndexedDBToMongo } from "../../../server/data/indexedDb.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".users a").forEach(link => {

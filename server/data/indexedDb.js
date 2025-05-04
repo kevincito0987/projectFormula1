@@ -52,7 +52,7 @@ async function syncIndexedDBToMongo(userType) {
         return;
     }
 
-    fetch(`http://localhost:5000/api/sessions/sync`, {
+    fetch(`https://projectformula1-production.up.railway.app/api/sync`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ sessions }),
