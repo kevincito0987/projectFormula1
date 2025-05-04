@@ -24,10 +24,10 @@ function replaceDriverCards(driversData) {
     }
 
     driversData.slice(0, 8).forEach((driver, index) => {
-        cards[index].querySelector("img").src = driver.image;
-        cards[index].querySelector("h3").textContent = `🏎️ ${driver.name} - ${driver.team}`;
-        cards[index].querySelector("p").textContent = `📊 Estadísticas: ${driver.stats}`;
-        cards[index].querySelector("a").href = driver.profile_url || "#"; // 🔗 Si hay enlace de perfil en la API
+        cards[index].querySelector("img").src = driver.url; // 🔥 Usa el `url` de la API como imagen
+        cards[index].querySelector("h3").textContent = `🏎️ ${driver.nombre} ${driver.apellido} - ${driver.team}`;
+        cards[index].querySelector("p").textContent = `📆 Nacimiento: ${driver.fechaNacimiento} | 🇬🇧 Nacionalidad: ${driver.nacionalidad}`;
+        cards[index].querySelector("a").href = `https://www.formula1.com/en/drivers/${driver.driverId}.html` || "#"; // 🔗 Genera un enlace basado en su ID
     });
 
     console.log("✅ Pilotos actualizados correctamente en las tarjetas.");
