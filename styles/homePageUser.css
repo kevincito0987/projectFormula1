@@ -131,6 +131,9 @@ footer {
         height: 28px;
         display: block; /* Asegura que las imágenes sean visibles */
     }
+    header {
+        height: auto;
+    }
 
     #light-mode-toggle {
         top: -60px;
