@@ -2,6 +2,7 @@
 const express = require("express");
 const cors = require("cors");
 const { connectDB } = require("./data/mongoDb");
+const { syncIndexedDBToMongo } = require("./data/indexedDB");
 
 // 📦 Importar rutas de la API
 const weatherRoutes = require("./routes/weather"); // 🌦️ Datos meteorológicos
@@ -10,7 +11,7 @@ const driversRoutes = require("./routes/drivers"); // 🏆 Pilotos de F1
 const teamsRoutes = require("./routes/teams"); // 🏁 Equipos de F1
 const carsRoutes = require("./routes/cars"); // 🚗 Información de los autos
 const newsRoutes = require("./routes/news"); // 📰 Noticias de F1
-const sessionRoutes = require("./routes/sesionsRoutes"); // 🔐 Manejo de sesiones
+const sessionRoutes = require("./routes/sessionsRoutes"); // 🔐 Manejo de sesiones
 
 const app = express();
 app.use(express.json()); // 📌 Permitir intercambio de datos en formato JSON
@@ -35,9 +36,13 @@ app.get("/", (req, res) => {
     res.send("🚀 API de Clima, Circuitos, Pilotos, Equipos y Carros F1 funcionando en localhost! 🏎️📡");
 });
 
-// 🚀 Iniciar el servidor con manejo de errores
-app.listen(PORT, () => {
+// 🚀 Iniciar el servidor con manejo de errores y sincronización automática
+app.listen(PORT, async () => {
     console.log(`✅ Servidor corriendo en puerto ${PORT} 🌍`);
+
+    // 🔄 Sincronizar sesiones de IndexedDB con MongoDB Atlas al iniciar
+    await syncIndexedDBToMongo("admin");
+    await syncIndexedDBToMongo("user");
 }).on("error", (err) => {
     console.error(`❌ Error al iniciar el servidor: ${err.message}`);
 });
