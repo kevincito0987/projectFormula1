@@ -96,18 +96,28 @@ const teamImages = {
     team7: "https://cdn-6.motorsport.com/images/amp/6AEogmE6/s1000/sebastian-vettel-aston-martin-.jpg",
     team8: "https://img.stcrm.it/images/35901193/HOR_WIDE/800x/si202402090078-hires-jpeg-24bit-rgb.jpeg"
 };
+async function fetchPilotsByTeam(teamId) {
+    try {
+        const response = await fetch("https://projectformula1-production.up.railway.app/api/drivers");
+        if (!response.ok) throw new Error(`Error ${response.status}: No se pudieron obtener los pilotos.`);
 
-// 🏎️ Función para reemplazar la información en las tarjetas de Pilotos, Equipos y Circuitos
-function replaceCards(data, filter) {   
+        const driversData = await response.json();
+        return driversData.filter(driver => driver.team === teamId);
+    } catch (error) {
+        console.error(`❌ Error al obtener pilotos del equipo ${teamId}:`, error.message);
+        return [];
+    }
+}
+
+async function replaceCards(data, filter) {
     const cards = document.querySelectorAll(".grid .card");
     if (cards.length < 8) {
         console.error("❌ Error: No hay suficientes tarjetas en el HTML.");
         return;
     }
 
-    cards.forEach((card, index) => {
-        if (index >= data.length) return; // 🔄 Evita errores si hay menos datos que tarjetas
-
+    cards.forEach(async (card, index) => {
+        if (index >= data.length) return;
         const item = data[index];
 
         if (filter === "All Drivers") {
@@ -118,11 +128,40 @@ function replaceCards(data, filter) {
         } else if (filter === "F1 Teams") {
             card.querySelector("h3").textContent = `🏎️ ${item.nombre} - ${item.nacionalidad}`;
             card.querySelector("p").textContent = `Fundado: ${item.primeraAparicion} | 📍 Sede: ${item.nacionalidad}`;
-
-            // 🔍 Evaluamos si tiene imagen en la API o asignamos una por orden desde `teamImages`
-            const teamKey = `team${index + 1}`; // 🔄 Generamos la clave dinámica "team1", "team2", etc.
+            
+            const teamKey = `team${index + 1}`;
             card.querySelector("img").src = item.logo ? item.logo : teamImages[teamKey] || "https://www.formula1.com/default_team.jpg";
             card.querySelector("a").href = item.url || "#";
+
+            // 🔥 Obtener los pilotos del equipo y agregarlos con imágenes
+            const pilots = await fetchPilotsByTeam(item.teamId);
+            const pilotsContainer = document.createElement("div");
+            pilotsContainer.classList.add("mt-4", "border-t", "border-gray-500", "pt-2");
+
+            const title = document.createElement("h4");
+            title.textContent = "🏎️ Pilotos del equipo:";
+            title.classList.add("text-lg", "font-bold", "mt-2", "text-center");
+            pilotsContainer.appendChild(title);
+
+            pilots.forEach(pilot => {
+                const pilotWrapper = document.createElement("div");
+                pilotWrapper.classList.add("flex", "items-center", "justify-center", "gap-4", "mt-2");
+
+                const pilotImage = document.createElement("img");
+                pilotImage.src = pilot.url;
+                pilotImage.alt = pilot.nombre;
+                pilotImage.classList.add("w-12", "h-12", "rounded-full", "border", "border-gray-400");
+
+                const pilotInfo = document.createElement("p");
+                pilotInfo.textContent = `🔹 ${pilot.nombre} ${pilot.apellido} (${pilot.numero})`;
+                pilotInfo.classList.add("text-sm", "text-center");
+
+                pilotWrapper.appendChild(pilotImage);
+                pilotWrapper.appendChild(pilotInfo);
+                pilotsContainer.appendChild(pilotWrapper);
+            });
+
+            card.appendChild(pilotsContainer);
         } else if (filter === "F1 Circuits") {
             card.querySelector("h3").textContent = `📍 ${item.nombre} - ${item.pais}`;
             card.querySelector("p").textContent = `Ubicación: ${item.ciudad} | 🏁 Longitud: ${item.longitud} km`;
@@ -133,7 +172,6 @@ function replaceCards(data, filter) {
 
     console.log(`✅ Datos actualizados con el filtro: ${filter}`);
 }
-
 
 // 🔥 Detectar clics en los botones de la imagen y aplicar filtros
 document.addEventListener("DOMContentLoaded", async () => {
