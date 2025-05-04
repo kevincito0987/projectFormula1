@@ -103,23 +103,24 @@ export async function updateInIndexedDB(storeName, updatedItem) {
     store.put(updatedItem);
     console.log(`✅ Datos actualizados en IndexedDB (${storeName}).`);
 }
-
-// ❌ **Eliminar datos en IndexedDB**
+// ❌ **Eliminar datos en IndexedDB con verificación de ID válido**
 export async function deleteFromIndexedDB(storeName, itemId) {
-    if (!itemId) {
-        console.error(`❌ Error: ID inválido al intentar eliminar en ${storeName}.`);
+    if (!itemId || typeof itemId !== "string" || itemId.trim() === "") {
+        console.error(`❌ Error: ID inválido al intentar eliminar en ${storeName}.`, itemId);
         return;
     }
 
     const db = await initIndexedDB();
-    await checkObjectStoreExists(db, storeName); // 🔎 Verifica almacén antes de transacción
+    await checkObjectStoreExists(db, storeName); // 🔎 Verifica existencia del almacén antes de eliminar
 
     const transaction = db.transaction(storeName, "readwrite");
     const store = transaction.objectStore(storeName);
 
     store.delete(itemId);
-    console.log(`✅ Datos eliminados en IndexedDB (${storeName}, ID: ${itemId}).`);
+    console.log(`✅ Datos eliminados correctamente en IndexedDB (${storeName}, ID: ${itemId}).`);
 }
+
+
 
 // 🔄 **Sincronizar IndexedDB con la API**
 export async function syncIndexedDBToAPI(storeName, apiUrl) {
