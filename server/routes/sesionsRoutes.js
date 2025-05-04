@@ -1,8 +1,8 @@
 const express = require("express");
-const Session = require("../models/sesions");
+const Session = require("../models/sessionModel");
 const router = express.Router();
 
-// 🔄 Guardar sesión en MongoDB
+// 🔄 Guardar sesiones en MongoDB
 router.post("/sync", async (req, res) => {
     try {
         await Session.insertMany(req.body.sessions);
