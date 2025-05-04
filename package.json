@@ -1,16 +1,15 @@
 {
   "name": "projectformula1",
   "version": "1.0.0",
-  "description": "La Fórmula 1 combina velocidad, estrategia y tecnología de vanguardia, generando una experiencia emocionante tanto para los espectadores como para los equipos involucrados. Este proyecto busca desarrollar una **simulación interactiva de Fórmula 1** basada en tecnologías web modernas, permitiendo a los usuarios **gestionar y personalizar su experiencia de carrera** mediante un sistema dinámico de administración de **circuitos, pilotos y vehículos**.",
-  "main": "index.js",
+  "description": "Simulación interactiva de Fórmula 1 basada en tecnologías web modernas.",
+  "source": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kevincito0987/projectFormula1.git"
   },
-  "keywords": [],
   "author": "kevincito0987",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
   "bugs": {
     "url": "https://github.com/kevincito0987/projectFormula1/issues"
   },
@@ -23,10 +22,10 @@
     "express": "^4.21.2",
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.1",
-    "mongose": "^0.0.2-security",
     "nodemon": "^3.1.10"
   },
   "scripts": {
-  "start": "node ./server/server.js"
-}
+    "start": "node ./server/server.js",
+    "start-babylon": "parcel serve ./views/racingSimulation.html --no-cache"
+  }
 }

@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulación F1</title>
+    <link rel="shortcut icon" href="/formula1Icon2.964b4b5b.svg" type="image/x-icon">
+    <script type="module" src="/racingSimulation.2da91d52.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- 📌 Asegurando Tailwind -->
+    <link rel="stylesheet" href="/racingSimulation.afbfd382.css">
+    <link rel="stylesheet" href="/racingSimulation.b3c08839.css">
+    <script type="module" src="/racingSimulation.9f6e064f.js"></script>
+    <script type="module" src="/racingSimulation.ab7e846b.js" defer=""></script>
+</head>
+<body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
+    <main>
+        <!-- 🏎️ Pantalla de inicio -->
+    <div id="start-screen" class="text-center space-y-6">
+        <h1 class="text-4xl font-bold">Simulación de Carrera F1</h1>
+        <p class="text-lg">Selecciona tu auto y empieza la carrera</p>
+        
+        <div class="flex gap-4 justify-center">
+            <button class="car-option bg-red-500 px-4 py-2 rounded hover:bg-red-600" data-car="red">Auto Rojo</button>
+            <button class="car-option bg-blue-500 px-4 py-2 rounded hover:bg-blue-600" data-car="blue">Auto Azul</button>
+            <button class="car-option bg-green-500 px-4 py-2 rounded hover:bg-green-600" data-car="green">Auto Verde</button>
+        </div>
+        <button id="start-btn" class="bg-yellow-500 px-6 py-3 rounded-lg text-lg mt-4 hover:bg-yellow-600">🏁 Iniciar Simulación 🏁</button>
+    </div>
+
+    <!-- 🏁 Canvas para la carrera -->
+    <canvas id="renderCanvas" class="hidden w-full h-screen"></canvas>
+    </main>
+        <!-- 🏁 Footer -->
+        <footer class="flex justify-between items-center p-4 bg-gray-800 relative">
+            <div class="flex gap-60 ml-20">
+                <a href="#" id="home-icon"><img src="/homeIcon.e2897db2.svg" alt="Home" class="w-10 hover:none"></a>
+                <a href="/resutsRacing.html" id="bag-icon"><img src="/RacingDetailsIcon.44d32f0c.svg" alt="Racing Details" class="w-10"></a>
+            </div>
+            <div class="flex gap-60 mr-20">
+                <a href="#" id="heart-icon"><img src="/simulationRacingIcon.991e0b0a.svg" alt="Simulation" class="w-10"></a>
+                <a href="/homePageUser.html" id="profile-icon"><img src="/userIcon.90c7f4af.svg" alt="Profile" class="w-10"></a>
+            </div>
+            <a href="#" id="light-mode-toggle"></a> <!-- 🌞 Botón interactivo -->
+            <div id="moving-bar" class="moving-bar"></div>
+        </footer>
+</body>
+</html>

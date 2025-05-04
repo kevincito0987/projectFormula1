@@ -1,4 +1,4 @@
-import * as BABYLON from "babylonjs";  // 📌 Importar Babylon.js instalado
+import BABYLON from "babylonjs";
 
 // 🔗 Obtener el canvas
 const canvas = document.getElementById("renderCanvas"); 

@@ -1,0 +1,136 @@
+:root {
+  --color-1: #fff;
+  --color-2: #cccdd7;
+  --color-3: #ffffff20;
+  --color-4: #ffffff08;
+  --color-5: #000;
+  --color-6: #d9d9d9;
+  --color-7: #4d4d4d;
+  --color-8: #e00;
+  --color-9: #9e9e9e;
+  --color-10: #ffffff18;
+  --color-11: #a981ff40;
+  --color-12: #d5240f;
+  --color-13: #a3b546;
+  --color-14: #131313;
+  --color-15: #e6fe58;
+  --color-16: #141414;
+  --color-17: #cbc8c8;
+  --color-18: #9db2ce;
+  --color-19: #d9d9d906;
+  --color-20: #656565;
+  --color-21: #111827;
+  --color-22: #ffffff10;
+  --color-23: #11182795;
+  --color-24: #e18a04;
+  --color-25: #ffd200;
+  --color-26: #e4a020;
+  --color-27: #8c8e98;
+  --color-28: #21d572;
+  --color-29: #21d372;
+  --color-30: #f90;
+  --color-31: #0d0d0d;
+  --color-32: #fa9804;
+  --color-33: #ffd51a;
+  --color-34: #e7a937;
+  --color-35: #30df7f;
+  --color-36: #ffa31a;
+  --color-37: #2fde7e;
+  --color-38: #ffffff70;
+  --color-39: #0a84ff;
+  --color-40: #2737cf30;
+  --color-41: #ffffff07;
+  --color-42: #ffffff60;
+  --color-43: #00000020;
+  --color-44: #77c2ba;
+  --color-45: #8671ec20;
+  --color-46: #ffffff40;
+  --color-47: #db1b41;
+  --color-48: #ffffff30;
+  --header-gradient: linear-gradient(180deg, #000 0%, var(--color-23) 30%, var(--color-21) 100%);
+  --footer-boxshadow: 0px 0px 25px 40px var(--color-8);
+  --light-mode-icon: url("lightModeIcon.5b3428b7.svg");
+}
+
+@font-face {
+  font-family: Inter18-Bold;
+  src: url("Inter_18pt-Bold.2dde643b.ttf");
+}
+
+@font-face {
+  font-family: Inter24-Bold;
+  src: url("Inter_24pt-Bold.f5d60c13.ttf");
+}
+
+@font-face {
+  font-family: Inter28-Bold;
+  src: url("Inter_28pt-Bold.8088759f.ttf");
+}
+
+@font-face {
+  font-family: Inter18-Regular;
+  src: url("Inter_18pt-Regular.cabe7729.ttf");
+}
+
+@font-face {
+  font-family: Inter18-SemiBold;
+  src: url("Inter_18pt-SemiBold.58603b6e.ttf");
+}
+
+@font-face {
+  font-family: Inter24-SemiBold;
+  src: url("Inter_24pt-SemiBold.0ba4d5a0.ttf");
+}
+
+@font-face {
+  font-family: Roboto-Bold;
+  src: url("Roboto-Bold.8ed4f258.ttf");
+}
+
+@font-face {
+  font-family: Abel-Regular;
+  src: url("Abel-Regular.4578b7b4.ttf");
+}
+
+@font-face {
+  font-family: Poppins-ExtraBold;
+  src: url("Poppins-ExtraBold.e2327636.ttf");
+}
+
+@font-face {
+  font-family: Poppins-Regular;
+  src: url("Poppins-Regular.0396ac8e.ttf");
+}
+
+body {
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  min-height: 100vh;
+  display: flex;
+}
+
+main {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  display: flex;
+}
+
+footer {
+  background: var(--color-5);
+  width: 100%;
+  height: 60px;
+  box-shadow: var(--footer-boxshadow);
+  z-index: 30;
+  border-radius: 90px;
+  justify-content: space-between;
+  align-items: center;
+  padding: 17px 50px;
+  display: flex;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+}
+/*# sourceMappingURL=racingSimulation.afbfd382.css.map */
