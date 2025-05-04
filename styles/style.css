@@ -8,19 +8,27 @@
     box-sizing: border-box;
 }
 
-/* 🎬 Fondo de pantalla */
+@keyframes changeBg {
+    0% { background-image: url("../assets/images/bgScreenPage.png"); }
+    33% { background-image: url("../assets/images/bgScreenPage2.jpeg"); }
+    66% { background-image: url("../assets/images/bgSceenPage3.png"); }
+    100% { background-image: url("../assets/images/imageCardNews3.jpeg"); }
+}
+
+/* Aplicamos la animación al body */
 body {
-    background-image: url(../assets/images/bgScreenPage.png);
-    background-size: cover; /* 🖼️ Ajustar imagen al tamaño de la pantalla */
-    background-position: center; /* 🎯 Centrar la imagen de fondo */
-    background-repeat: no-repeat; /* 🚫 Evitar la repetición */
+    animation: changeBg 40s infinite; /* 40s porque cada imagen dura 10s */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
     width: 100%;
-    min-height: 100vh; /* 📌 Ajustar altura sin desbordamiento */
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
 }
+
 
 /* 🏎️ Contenedor principal */
 main {
