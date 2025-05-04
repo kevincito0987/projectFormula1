@@ -6,6 +6,9 @@
     <title>Simulación F1</title>
     <script type="module" src="../src/components/f1-simulator-app/simulatorApp.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- 📌 Asegurando Tailwind -->
+    <link rel="stylesheet" href="../styles/racingSimulation.css">
+    <link rel="stylesheet" href="../styles/homePageUser.css">
+    <script type="module" src="../src/components/events/footer.js"></script>
 </head>
 <body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
     
@@ -24,5 +27,19 @@
 
     <!-- 🏁 Canvas para la carrera -->
     <canvas id="renderCanvas" class="hidden w-full h-screen"></canvas>
+
+        <!-- 🏁 Footer -->
+        <footer class="flex justify-between items-center p-4 bg-gray-800 relative">
+            <div class="flex gap-60 ml-20">
+                <a href="#" id="home-icon"><img src="../assets/icons/homeIcon.svg" alt="Home" class="w-10 hover:none"></a>
+                <a href="../views/resutsRacing.html" id="bag-icon"><img src="../assets/icons/RacingDetailsIcon.svg" alt="Racing Details" class="w-10"></a>
+            </div>
+            <div class="flex gap-60 mr-20">
+                <a href="#" id="heart-icon"><img src="../assets/icons/simulationRacingIcon.svg" alt="Simulation" class="w-10"></a>
+                <a href="../views/homePageUser.html" id="profile-icon"><img src="../assets/icons/userIcon.svg" alt="Profile" class="w-10"></a>
+            </div>
+            <a href="#" id="light-mode-toggle"></a> <!-- 🌞 Botón interactivo -->
+            <div id="moving-bar" class="moving-bar"></div>
+        </footer>
 </body>
 </html>
