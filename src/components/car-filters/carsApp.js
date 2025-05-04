@@ -84,35 +84,56 @@ async function fetchFilteredData(filter = "All Drivers") {
     }
 }
 
+// 🏎️ Variable con imágenes de equipos
+// 🏎️ Variable con imágenes de equipos
+const teamImages = {
+    team1: "https://images.ps-aws.com/c?url=https%3A%2F%2Fd3cm515ijfiu6w.cloudfront.net%2Fwp-content%2Fuploads%2F2024%2F01%2F05154013%2Fmclaren-team-photo.jpg",
+    team2: "https://pbs.twimg.com/media/Fhx2X1pXgAASf9h?format=jpg&name=4096x4096",
+    team3: "https://www.racefans.net/wp-content/uploads/2024/12/racefansdotnet-24-12-18-09-34-25-2-SI202412150012.jpg",
+    team4: "https://cdn.ferrari.com/cms/network/media/img/resize/6095148f9e39fb0514497f02-ferrari-magazine-N214ydVuZ9.jpg?",
+    team5: "https://s1.cdn.autoevolution.com/images/news/gallery/williams-f1-team-unveils-all-new-2025-fw47-race-car-looks-like-it-means-business_2.jpg",
+    team6: "https://media.formula1.com/image/upload/content/dam/fom-website/manual/2023/Haas/Haas%20VF23.jpg",
+    team7: "https://cdn-6.motorsport.com/images/amp/6AEogmE6/s1000/sebastian-vettel-aston-martin-.jpg",
+    team8: "https://img.stcrm.it/images/35901193/HOR_WIDE/800x/si202402090078-hires-jpeg-24bit-rgb.jpeg"
+};
+
 // 🏎️ Función para reemplazar la información en las tarjetas de Pilotos, Equipos y Circuitos
-function replaceCards(data, filter) {
+function replaceCards(data, filter) {   
     const cards = document.querySelectorAll(".grid .card");
     if (cards.length < 8) {
         console.error("❌ Error: No hay suficientes tarjetas en el HTML.");
         return;
     }
 
-    data.slice(0, 8).forEach((item, index) => {
+    cards.forEach((card, index) => {
+        if (index >= data.length) return; // 🔄 Evita errores si hay menos datos que tarjetas
+
+        const item = data[index];
+
         if (filter === "All Drivers") {
-            cards[index].querySelector("img").src = item.url;
-            cards[index].querySelector("h3").textContent = `🏎️ ${item.nombre} ${item.apellido} - ${item.team}`;
-            cards[index].querySelector("p").textContent = `📆 Nacimiento: ${item.fechaNacimiento} | 🇬🇧 Nacionalidad: ${item.nacionalidad}`;
-            cards[index].querySelector("a").href = `https://www.formula1.com/en/drivers/${item.driverId}.html` || "#";
+            card.querySelector("img").src = item.url;
+            card.querySelector("h3").textContent = `🏎️ ${item.nombre} ${item.apellido} - ${item.team}`;
+            card.querySelector("p").textContent = `📆 Nacimiento: ${item.fechaNacimiento} | 🇬🇧 Nacionalidad: ${item.nacionalidad}`;
+            card.querySelector("a").href = `https://www.formula1.com/en/drivers/${item.driverId}.html` || "#";
         } else if (filter === "F1 Teams") {
-            cards[index].querySelector("h3").textContent = `🏎️ ${item.nombre} - ${item.pais}`;
-            cards[index].querySelector("p").textContent = `Fundado: ${item.fundacion} | 📍 Sede: ${item.sede}`;
-            cards[index].querySelector("img").src = item.logo;
-            cards[index].querySelector("a").href = item.url || "#";
+            card.querySelector("h3").textContent = `🏎️ ${item.nombre} - ${item.nacionalidad}`;
+            card.querySelector("p").textContent = `Fundado: ${item.primeraAparicion} | 📍 Sede: ${item.nacionalidad}`;
+
+            // 🔍 Evaluamos si tiene imagen en la API o asignamos una por orden desde `teamImages`
+            const teamKey = `team${index + 1}`; // 🔄 Generamos la clave dinámica "team1", "team2", etc.
+            card.querySelector("img").src = item.logo ? item.logo : teamImages[teamKey] || "https://www.formula1.com/default_team.jpg";
+            card.querySelector("a").href = item.url || "#";
         } else if (filter === "F1 Circuits") {
-            cards[index].querySelector("h3").textContent = `📍 ${item.nombre} - ${item.pais}`;
-            cards[index].querySelector("p").textContent = `Ubicación: ${item.ciudad} | 🏁 Longitud: ${item.longitud} km`;
-            cards[index].querySelector("img").src = item.urlImagen;
-            cards[index].querySelector("a").href = item.link || "#";
+            card.querySelector("h3").textContent = `📍 ${item.nombre} - ${item.pais}`;
+            card.querySelector("p").textContent = `Ubicación: ${item.ciudad} | 🏁 Longitud: ${item.longitud} km`;
+            card.querySelector("img").src = item.urlImagen;
+            card.querySelector("a").href = item.url || "#";
         }
     });
 
     console.log(`✅ Datos actualizados con el filtro: ${filter}`);
 }
+
 
 // 🔥 Detectar clics en los botones de la imagen y aplicar filtros
 document.addEventListener("DOMContentLoaded", async () => {
@@ -138,4 +159,3 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // 🔥 Exportar funciones para uso global
 export { fetchFilteredData, replaceCards, fetchStandingsData, replaceStandingsCards };
-    
