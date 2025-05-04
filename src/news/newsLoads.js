@@ -92,3 +92,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         replaceNewsCards(initialNewsData);
     }
 });
+
+
+export { fetchNewsData, replaceNewsCards };
+
