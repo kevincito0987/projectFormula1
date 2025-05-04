@@ -116,27 +116,41 @@ async function replaceCards(data, filter) {
         return;
     }
 
+    // 🏎️ Guardar el filtro en `localStorage` para persistencia
+    localStorage.setItem("activeFilter", filter);
+
     cards.forEach(async (card, index) => {
         if (index >= data.length) return;
         const item = data[index];
 
-        if (filter === "All Drivers") {
+        if (filter === "All Drivers" || filter === "F1 Standings") {
             card.querySelector("img").src = item.url;
             card.querySelector("h3").textContent = `🏎️ ${item.nombre} ${item.apellido} - ${item.team}`;
             card.querySelector("p").textContent = `📆 Nacimiento: ${item.fechaNacimiento} | 🇬🇧 Nacionalidad: ${item.nacionalidad}`;
             card.querySelector("a").href = `https://www.formula1.com/en/drivers/${item.driverId}.html` || "#";
+
+            let pilotsContainer = card.querySelector(".pilots-section");
+            if (pilotsContainer) pilotsContainer.style.display = "none";
+
         } else if (filter === "F1 Teams") {
             card.querySelector("h3").textContent = `🏎️ ${item.nombre} - ${item.nacionalidad}`;
             card.querySelector("p").textContent = `Fundado: ${item.primeraAparicion} | 📍 Sede: ${item.nacionalidad}`;
-            
+
             const teamKey = `team${index + 1}`;
             card.querySelector("img").src = item.logo ? item.logo : teamImages[teamKey] || "https://www.formula1.com/default_team.jpg";
             card.querySelector("a").href = item.url || "#";
 
-            // 🔥 Obtener los pilotos del equipo y agregarlos con imágenes
             const pilots = await fetchPilotsByTeam(item.teamId);
-            const pilotsContainer = document.createElement("div");
-            pilotsContainer.classList.add("mt-4", "border-t", "border-gray-500", "pt-2");
+            let pilotsContainer = card.querySelector(".pilots-section");
+
+            if (!pilotsContainer) {
+                pilotsContainer = document.createElement("div");
+                pilotsContainer.classList.add("pilots-section", "mt-4", "border-t", "border-gray-500", "pt-2");
+                card.appendChild(pilotsContainer);
+            }
+
+            pilotsContainer.innerHTML = "";
+            pilotsContainer.style.display = "block";
 
             const title = document.createElement("h4");
             title.textContent = "🏎️ Pilotos del equipo:";
@@ -160,18 +174,27 @@ async function replaceCards(data, filter) {
                 pilotWrapper.appendChild(pilotInfo);
                 pilotsContainer.appendChild(pilotWrapper);
             });
-
-            card.appendChild(pilotsContainer);
         } else if (filter === "F1 Circuits") {
+            // 🔥 Ajustar datos según la estructura de la API de circuitos
             card.querySelector("h3").textContent = `📍 ${item.nombre} - ${item.pais}`;
-            card.querySelector("p").textContent = `Ubicación: ${item.ciudad} | 🏁 Longitud: ${item.longitud} km`;
+            card.querySelector("p").textContent = `Ciudad: ${item.ciudad} | 🏁 Longitud: ${item.longitud}m`;
             card.querySelector("img").src = item.urlImagen;
             card.querySelector("a").href = item.url || "#";
+
+            let pilotsContainer = card.querySelector(".pilots-section");
+            if (pilotsContainer) pilotsContainer.style.display = "none";
         }
     });
 
     console.log(`✅ Datos actualizados con el filtro: ${filter}`);
 }
+
+// 🔥 **Persistir el filtro al recargar la página**
+document.addEventListener("DOMContentLoaded", async () => {
+    const savedFilter = localStorage.getItem("activeFilter") || "All Drivers";
+    await fetchFilteredData(savedFilter);
+});
+
 
 // 🔥 Detectar clics en los botones de la imagen y aplicar filtros
 document.addEventListener("DOMContentLoaded", async () => {
