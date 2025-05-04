@@ -162,3 +162,26 @@ footer {
         display: block;
     }
 }
+
+@media screen and (min-width: 1280px) {
+
+    main {
+        margin-top: 10px;
+    }
+    
+    footer {
+        padding: 25px 80px;
+        height: 80px;
+        justify-content: space-between;
+    }
+
+    footer div {
+        gap: 120px; /* Espaciado amplio para una distribución elegante */
+    }
+
+    footer a img {
+        width: 40px;
+        height: 40px;
+    }
+}
+
