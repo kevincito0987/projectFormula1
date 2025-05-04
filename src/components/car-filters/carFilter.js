@@ -23,20 +23,20 @@ class carsLinks extends HTMLElement {
                 }
             </style>
             <div class="flex flex-wrap justify-center gap-6 filters">
-                <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="All News">
-                    <img src="../assets/icons/newsFormula1Icon.svg" alt="All News" class="w-16 h-16">
+                <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="All Drivers">
+                    <img src="../assets/icons/newsFormula1Icon.svg" alt="All Drivers" class="w-16 h-16">
                     <p class="mt-2 text-lg font-bold">All Drivers</p>
                 </a>
-                <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="News F1 Teams">
-                    <img src="../assets/icons/newsTeamFormula1Icon.svg" alt="News F1 Teams" class="w-16 h-16">
+                <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="F1 Teams">
+                    <img src="../assets/icons/newsTeamFormula1Icon.svg" alt="F1 Teams" class="w-16 h-16">
                     <p class="mt-2 text-lg font-bold">F1 Teams</p>
                 </a>
-                <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="News F1 Circuits">
-                    <img src="../assets/icons/newsCircuitsFormula1Icon.svg" alt="News F1 Circuits" class="w-16 h-16">
+                <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="F1 Circuits">
+                    <img src="../assets/icons/newsCircuitsFormula1Icon.svg" alt="F1 Circuits" class="w-16 h-16">
                     <p class="mt-2 text-lg font-bold">F1 Circuits</p>
                 </a>
-                <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="News F1 Circuits">
-                    <img src="../assets/icons/raceIcon.svg" alt="News F1 Circuits" class="w-16 h-16">
+                <a href="#" class="flex flex-col items-center p-4 hover:scale-110 transition rounded-[30px]" data-name="F1 Standings">
+                    <img src="../assets/icons/raceIcon.svg" alt="F1 Standings" class="w-16 h-16">
                     <p class="mt-2 text-lg font-bold">F1 Standings</p>
                 </a>
             </div>
