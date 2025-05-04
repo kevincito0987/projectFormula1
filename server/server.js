@@ -11,7 +11,7 @@ const driversRoutes = require("./routes/drivers"); // 🏆 Pilotos de F1
 const teamsRoutes = require("./routes/teams"); // 🏁 Equipos de F1
 const carsRoutes = require("./routes/cars"); // 🚗 Información de los autos
 const newsRoutes = require("./routes/news"); // 📰 Noticias de F1
-const sessionRoutes = require("./routes/sessionsRoutes"); // 🔐 Manejo de sesiones
+const sessionRoutes = require("./routes/sesionsRoutes"); // 🔐 Manejo de sesiones
 
 const app = express();
 app.use(express.json()); // 📌 Permitir intercambio de datos en formato JSON
