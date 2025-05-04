@@ -20,7 +20,7 @@ class StandingsCardComponent extends HTMLElement {
     async connectedCallback() {
         const container = document.createElement("div");
         container.style.display = "grid";
-        container.style.gridTemplateColumns = "repeat(auto-fit, minmax(200px, 1fr))";
+        container.style.gridTemplateColumns = "repeat(auto-fit, minmax(210px, 1fr))";
         container.style.gap = "1rem";
 
         this.shadowRoot.appendChild(container);
