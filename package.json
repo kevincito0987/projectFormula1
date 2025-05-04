@@ -9,7 +9,7 @@
   },
   "author": "kevincito0987",
   "license": "ISC",
-  "type": "module",
+  "type": "commonjs",
   "bugs": {
     "url": "https://github.com/kevincito0987/projectFormula1/issues"
   },
@@ -23,7 +23,7 @@
     "mongodb": "^6.16.0",
     "mongoose": "^8.14.1",
     "nodemon": "^3.1.10"
-  },
+  }, 
   "scripts": {
     "start": "node ./server/server.js"
   }
