@@ -2,7 +2,8 @@
 const express = require("express");
 const cors = require("cors");
 const { connectDB } = require("./data/mongoDb");
-const { syncIndexedDBToMongo } = require("./data/indexedDb");
+const indexedDb = require("./data/indexedDb"); // Importar todo el módulo
+const syncIndexedDBToMongo = indexedDb.syncIndexedDBToMongo; // Extraer la función
 
 // 📦 Importar rutas de la API
 const weatherRoutes = require("./routes/weather"); // 🌦️ Datos meteorológicos
@@ -41,8 +42,12 @@ app.listen(PORT, async () => {
     console.log(`✅ Servidor corriendo en puerto ${PORT} 🌍`);
 
     // 🔄 Sincronizar sesiones de IndexedDB con MongoDB Atlas al iniciar
-    await syncIndexedDBToMongo("admin");
-    await syncIndexedDBToMongo("user");
+    if (syncIndexedDBToMongo) {
+        await syncIndexedDBToMongo("admin");
+        await syncIndexedDBToMongo("user");
+    } else {
+        console.error("❌ Error: syncIndexedDBToMongo no está definido.");
+    }
 }).on("error", (err) => {
     console.error(`❌ Error al iniciar el servidor: ${err.message}`);
 });
