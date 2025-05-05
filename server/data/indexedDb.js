@@ -1,4 +1,3 @@
-// ✅ Estas funciones deben ejecutarse en el navegador, NO en Railway
 if (typeof indexedDB !== "undefined") {
     function initIndexedDB() {
         return new Promise((resolve, reject) => {
@@ -68,9 +67,9 @@ if (typeof indexedDB !== "undefined") {
         .then(result => console.log(`✅ Sesiones de ${userType} sincronizadas con MongoDB:`, result))
         .catch(error => console.error(`❌ Error al sincronizar sesiones de ${userType}:`, error));
     }
+
+    // ✅ Exportar solo si IndexedDB está disponible en el navegador
+    module.exports = { saveSessionToIndexedDB, syncIndexedDBToMongo, getAllSessionsFromIndexedDB };
 } else {
     console.warn("🚨 IndexedDB solo está disponible en el navegador.");
 }
-
-// ✅ Exportar solo si IndexedDB está disponible en el navegador
-module.export = { saveSessionToIndexedDB, syncIndexedDBToMongo, getAllSessionsFromIndexedDB };
