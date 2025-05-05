@@ -52,7 +52,7 @@
   :root {
     --header-gradient: linear-gradient(180deg, rgba(0,0,0,2) 0%, var(--color-23) 30%, var(--color-21) 100%);
     --footer-boxshadow: 0px 0px 25px 40px var(--color-8);
-    --light-mode-icon: url(/assets/icons/lightModeIcon.svg); /* 🌞 Ícono claro */
+    --light-mode-icon: url(../assets/icons/lightModeIcon.svg); /* 🌞 Ícono claro */
 }
 
   
