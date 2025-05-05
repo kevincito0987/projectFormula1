@@ -198,7 +198,7 @@ class UserConfig extends HTMLElement {
                 <!-- Botones -->
                 <div class="buttons mt-10 flex flex-col space-y-4">
                     <a id="saveBtn" class="w-full py-4 bg-gradient-to-r from-red-600 to-red-500 hover:from-red-700 hover:to-red-600 text-white font-bold rounded-lg shadow-lg text-xl uppercase tracking-wide transition-all duration-300">💾 Guardar Cambios</a>
-                    <a id="logoutBtn" class="w-full py-4 bg-gray-700 hover:bg-gray-800 text-white font-bold rounded-lg shadow-md text-xl uppercase tracking-wide transition-all duration-300" href="../index.html">🚪 Cerrar Sesión</a>
+                    <a id="logoutBtn" class="w-full py-4 bg-gray-700 hover:bg-gray-800 text-white font-bold rounded-lg shadow-md text-xl uppercase tracking-wide transition-all duration-300" href="../index.html" target="_blank">🚪 Cerrar Sesión</a>
                 </div>
 
                 <!-- Imagen de F1 de fondo con efecto degradado -->
