@@ -34,7 +34,6 @@ connectDB(); // 🔗 Conectar a la base de datos
 app.use("/api/cars", (req, res, next) => {
     res.header("Access-Control-Allow-Origin", "*"); // 🔓 Permitir acceso desde cualquier dominio
     res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
     next();
 });
 
