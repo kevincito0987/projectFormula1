@@ -17,24 +17,23 @@ app.use(express.json());
 
 // 🔄 **Configuración avanzada de CORS**
 const corsOptions = {
-    origin: "*",
-    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // ✅ Añadir PATCH aquí
+    origin: "*", // ✅ Permitir cualquier origen
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // ✅ Asegurar que PATCH esté incluido
     allowedHeaders: [
-        "Content-Type", 
-        "Authorization", 
+        "Content-Type",
+        "Authorization",
         "Access-Control-Allow-Origin",
         "Access-Control-Allow-Methods"
     ],
     exposedHeaders: ["Content-Length"],
 };
 
-
 app.use(cors(corsOptions)); // ✅ Aplicar configuración de CORS
 
-// 🔄 **Manejo de CORS global en todas las solicitudes**
+// 🔄 **Manejo de CORS en todas las solicitudes**
 app.use((req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*"); // 🔓 Permitir acceso desde cualquier dominio
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Access-Control-Allow-Origin");
     next();
 });
@@ -56,7 +55,7 @@ app.use("/api/sessions", sessionRoutes);
 // 🔄 **Manejo de preflight requests (OPTIONS)**
 app.options("*", (req, res) => {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
     res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Access-Control-Allow-Origin");
     res.sendStatus(200);
 });
@@ -66,7 +65,7 @@ app.get("/", (req, res) => {
     res.send("🚀 API funcionando en Railway! 🏎️📡");
 });
 
-// 🚀 Iniciar el servidor con manejo de errores y sincronización automática
+// 🚀 Iniciar el servidor con manejo de errores
 app.listen(PORT, async () => {
     console.log(`✅ Servidor corriendo en puerto ${PORT} 🌍`);
 }).on("error", (err) => {
