@@ -111,10 +111,19 @@ class CardComponent extends HTMLElement {
                         text-decoration: none;
                         cursor: pointer;
                         display: flex;
-                        flex-direction: row;
+                        flex-direction: column;
                         align-items: center;
                         justify-content: center;
                         gap: 10px;
+                        padding: 20px;
+                    }
+                    .btn-news {
+                        margin-top: 10px;
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                        justify-content: center;
+                        gap: 30px;
                         padding: 20px;
                     }
                 </style>
@@ -139,8 +148,23 @@ class CardComponent extends HTMLElement {
         }
 
         this.shadowRoot.appendChild(container);
-        const data = await this.fetchFilteredData();
-        this.replaceCardsForDrivers(cards, data);
+
+    const data = await this.fetchFilteredData();
+    this.replaceCardsForDrivers(cards, data);
+
+    // ✅ Delegación de eventos asegurando que funcione dentro del Shadow DOM
+    this.shadowRoot.addEventListener("click", (event) => {
+        const path = event.composedPath();
+        const card = path.find(el => el.classList?.contains("card"));
+
+        if (!card) return;
+
+        if (card.querySelector(".edit-btn")) {
+            this.editDriver(card);
+        } else if (card.querySelector(".delete-btn")) {
+            this.deleteDriver(card);
+        }
+        });
 
     }
     async fetchFilteredData() {
@@ -189,9 +213,9 @@ class CardComponent extends HTMLElement {
                 <input type="number" id="numero" placeholder="Número" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
                 <input type="text" id="nacionalidad" placeholder="Nacionalidad" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
                 <input type="url" id="urlImagen" placeholder="URL de imagen" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                <div class="flex justify-between mt-4">
-                    <a type="button" id="cancelButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">❌ Cancelar</a>
-                    <a type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white">✅ Guardar</a>
+                <div class="flex justify-between mt-4 g-3">
+                    <button type="button" id="cancelButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">❌ Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white">✅ Guardar</button>
                 </div>
             </form>
         `;
@@ -234,8 +258,8 @@ class CardComponent extends HTMLElement {
                 <img src="${newDriver.url}" class="w-16 h-16 rounded-full object-cover mb-2">
                 <h3 class="text-lg font-bold">🏎️ ${newDriver.nombre} ${newDriver.apellido} - ${newDriver.team}</h3>
                 <p class="text-sm">📆 Número: ${newDriver.numero} | 🇬🇧 Nacionalidad: ${newDriver.nacionalidad}</p>
-                <div class="flex gap-2 mt-2">
-                    <a class="bg-blue-500 text-white px-3 py-1 rounded-md edit-btn">✏️ Editar</a>
+                <div class="flex g-20 mt-2 btn-news">
+                    <a class="bg-blue-500 text-white px-3 py-1 rounded-md edit-btn ">✏️ Editar</a>
                     <a class="bg-red-500 text-white px-3 py-1 rounded-md delete-btn" onclick="deleteDriver('${newDriver.numero}')">❌ Eliminar</a>
                 </div>
             `;
