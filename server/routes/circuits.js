@@ -14,17 +14,17 @@ router.get("/", async (req, res) => {
     }
 });
 
-// 🔍 Obtener un circuito por `circuitId` (GET)
-router.get("/:circuitId", async (req, res) => {
+// 🔍 Obtener un circuito por nombre (GET)
+router.get("/:nombre", async (req, res) => {
     try {
-        const { circuitId } = req.params;
-        const circuit = await Circuit.findOne({ circuitId });
+        const { nombre } = req.params;
+        const circuito = await Circuit.findOne({ nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true });
 
-        if (!circuit) {
-            return res.status(404).json({ error: "Circuito no encontrado" });
+        if (!circuito) {
+            return res.status(404).json({ error: "❌ Circuito no encontrado o no fue creado manualmente." });
         }
 
-        res.json(circuit);
+        res.json(circuito);
     } catch (error) {
         console.error("❌ Error al obtener el circuito:", error);
         res.status(500).json({ error: "Error al obtener el circuito: " + error.message });
@@ -44,14 +44,14 @@ router.get("/pais/:pais", async (req, res) => {
         res.json(circuits);
     } catch (error) {
         console.error("❌ Error al obtener circuitos por país:", error);
-        res.status(500).json({ error: "Error al obtener circuitos por país: " + error.message });
+        res.status500.json({ error: "Error al obtener circuitos por país: " + error.message });
     }
 });
 
 // 🔥 Guardar un nuevo circuito en la BD (POST)
 router.post("/", async (req, res) => {
     try {
-        const nuevoCircuito = new Circuit(req.body);
+        const nuevoCircuito = new Circuit({ ...req.body, creadoManualmente: true }); // ✅ Indicar que fue creado manualmente
         await nuevoCircuito.save();
         res.status(201).json({ mensaje: "✅ Circuito guardado correctamente", circuito: nuevoCircuito });
     } catch (error) {
@@ -59,37 +59,81 @@ router.post("/", async (req, res) => {
     }
 });
 
-// 🔄 Actualizar un circuito por `circuitId` (PUT)
-router.put("/:circuitId", async (req, res) => {
+// 🔄 **Actualizar un circuito creado manualmente (PUT)**
+router.put("/:nombre", async (req, res) => {
     try {
+        const { nombre } = req.params;
         const circuitoActualizado = await Circuit.findOneAndUpdate(
-            { circuitId: req.params.circuitId },
+            { nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true },
             req.body,
             { new: true }
         );
 
         if (!circuitoActualizado) {
-            return res.status(404).json({ error: "❌ Circuito no encontrado" });
+            return res.status(404).json({ error: "❌ Circuito no encontrado o no fue creado manualmente." });
         }
 
         res.json({ mensaje: "✅ Circuito actualizado correctamente", circuito: circuitoActualizado });
     } catch (error) {
-        res.status(500).json({ error: "❌ Error al actualizar el circuito" });
+        res.status(500).json({ error: "❌ Error al actualizar el circuito." });
+    }
+});
+// 🔄 **Actualizar un circuito creado manualmente (PUT)**
+router.put("/:nombre", async (req, res) => {
+    try {
+        const { nombre } = req.params;
+        const circuitoActualizado = await Circuit.findOneAndUpdate(
+            { nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true },
+            req.body,
+            { new: true }
+        );
+
+        if (!circuitoActualizado) {
+            return res.status(404).json({ error: "❌ Circuito no encontrado o no fue creado manualmente." });
+        }
+
+        res.json({ mensaje: "✅ Circuito actualizado correctamente", circuito: circuitoActualizado });
+    } catch (error) {
+        res.status(500).json({ error: "❌ Error al actualizar el circuito." });
     }
 });
 
-// 🗑️ Eliminar un circuito por `circuitId` (DELETE)
-router.delete("/:circuitId", async (req, res) => {
+// 🛠 **Actualizar parcialmente un circuito creado manualmente (PATCH)**
+router.patch("/:nombre", async (req, res) => {
     try {
-        const circuitoEliminado = await Circuit.findOneAndDelete({ circuitId: req.params.circuitId });
+        const { nombre } = req.params;
+        const circuitoActualizado = await Circuit.findOneAndUpdate(
+            { nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true },
+            { $set: req.body }, // ✅ Permitir actualización parcial con `$set`
+            { new: true }
+        );
 
-        if (!circuitoEliminado) {
-            return res.status(404).json({ error: "❌ Circuito no encontrado" });
+        if (!circuitoActualizado) {
+            return res.status(404).json({ error: "❌ Circuito no encontrado o no fue creado manualmente." });
         }
 
-        res.json({ mensaje: "✅ Circuito eliminado correctamente" });
+        res.json({ mensaje: "✅ Circuito actualizado parcialmente con PATCH", circuito: circuitoActualizado });
     } catch (error) {
-        res.status(500).json({ error: "❌ Error al eliminar el circuito" });
+        res.status(500).json({ error: "❌ Error al actualizar parcialmente el circuito." });
+    }
+});
+
+
+// 🗑️ **Eliminar un circuito solo si fue creado manualmente (DELETE)**
+router.delete("/:nombre", async (req, res) => {
+    try {
+        const { nombre } = req.params;
+        const circuitoEliminado = await Circuit.findOneAndDelete(
+            { nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true }
+        );
+
+        if (!circuitoEliminado) {
+            return res.status(404).json({ error: "❌ Circuito no encontrado o no fue creado manualmente." });
+        }
+
+        res.json({ mensaje: "✅ Circuito eliminado correctamente." });
+    } catch (error) {
+        res.status(500).json({ error: "❌ Error al eliminar el circuito." });
     }
 });
 

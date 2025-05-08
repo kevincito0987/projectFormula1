@@ -14,16 +14,14 @@ router.get("/", async (req, res) => {
     }
 });
 
-// 🔍 Obtener un piloto por `id` o `driverId` (GET)
-router.get("/:identifier", async (req, res) => {
+// 🔍 Obtener un piloto por nombre (GET)
+router.get("/:nombre", async (req, res) => {
     try {
-        const { identifier } = req.params;
-        
-        let piloto = await Piloto.findOne({ id: identifier });
-        if (!piloto) piloto = await Piloto.findOne({ driverId: identifier });
+        const { nombre } = req.params;
+        const piloto = await Piloto.findOne({ nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true });
 
         if (!piloto) {
-            return res.status(404).json({ error: "❌ Piloto no encontrado." });
+            return res.status(404).json({ error: "❌ Piloto no encontrado o no fue creado manualmente." });
         }
 
         res.json(piloto);
@@ -37,7 +35,7 @@ router.get("/:identifier", async (req, res) => {
 router.get("/nacionalidad/:pais", async (req, res) => {
     try {
         const { pais } = req.params;
-        const pilotos = await Piloto.find({ nacionalidad: pais });
+        const pilotos = await Piloto.find({ nacionalidad: new RegExp(`^${pais}$`, "i") });
 
         if (pilotos.length === 0) {
             return res.status(404).json({ error: "❌ No se encontraron pilotos con esta nacionalidad." });
@@ -53,7 +51,7 @@ router.get("/nacionalidad/:pais", async (req, res) => {
 // 🔥 Guardar un nuevo piloto en la BD (POST)
 router.post("/", async (req, res) => {
     try {
-        const nuevoPiloto = new Piloto(req.body);
+        const nuevoPiloto = new Piloto({ ...req.body, creadoManualmente: true }); // ✅ Indica que se creó manualmente
         await nuevoPiloto.save();
         res.status(201).json({ mensaje: "✅ Piloto guardado correctamente", piloto: nuevoPiloto });
     } catch (error) {
@@ -61,18 +59,18 @@ router.post("/", async (req, res) => {
     }
 });
 
-// 🔄 Actualizar un piloto por `id` o `driverId` (PUT)
-router.put("/driverId", async (req, res) => {
+// 🔄 **Actualizar un piloto por nombre (PUT)**
+router.put("/:nombre", async (req, res) => {
     try {
-        const { identifier } = req.params;
+        const { nombre } = req.params;
+        const pilotoActualizado = await Piloto.findOneAndUpdate(
+            { nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true },
+            req.body,
+            { new: true }
+        );
 
-        let pilotoActualizado = await Piloto.findOneAndUpdate({ id: identifier }, req.body, { new: true });
         if (!pilotoActualizado) {
-            pilotoActualizado = await Piloto.findOneAndUpdate({ driverId: identifier }, req.body, { new: true });
-        }
-
-        if (!pilotoActualizado) {
-            return res.status(404).json({ error: "❌ Piloto no encontrado." });
+            return res.status(404).json({ error: "❌ Piloto no encontrado o no fue creado manualmente." });
         }
 
         res.json({ mensaje: "✅ Piloto actualizado correctamente", piloto: pilotoActualizado });
@@ -81,18 +79,16 @@ router.put("/driverId", async (req, res) => {
     }
 });
 
-// 🗑️ Eliminar un piloto por `id` o `driverId` (DELETE)
-router.delete("/:identifier", async (req, res) => {
+// 🗑️ **Eliminar un piloto solo si fue creado manualmente (DELETE)**
+router.delete("/:nombre", async (req, res) => {
     try {
-        const { identifier } = req.params;
-
-        let pilotoEliminado = await Piloto.findOneAndDelete({ id: identifier });
-        if (!pilotoEliminado) {
-            pilotoEliminado = await Piloto.findOneAndDelete({ driverId: identifier });
-        }
+        const { nombre } = req.params;
+        const pilotoEliminado = await Piloto.findOneAndDelete(
+            { nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true }
+        );
 
         if (!pilotoEliminado) {
-            return res.status(404).json({ error: "❌ Piloto no encontrado." });
+            return res.status(404).json({ error: "❌ Piloto no encontrado o no fue creado manualmente." });
         }
 
         res.json({ mensaje: "✅ Piloto eliminado correctamente." });

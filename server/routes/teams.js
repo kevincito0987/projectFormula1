@@ -14,14 +14,14 @@ router.get("/", async (req, res) => {
     }
 });
 
-// 🔍 Obtener un equipo por `teamId` (GET)
-router.get("/:teamId", async (req, res) => {
+// 🔍 Obtener un equipo por nombre (GET)
+router.get("/:nombre", async (req, res) => {
     try {
-        const { teamId } = req.params;
-        const team = await Team.findOne({ teamId });
+        const { nombre } = req.params;
+        const team = await Team.findOne({ nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true });
 
         if (!team) {
-            return res.status(404).json({ error: "Equipo no encontrado" });
+            return res.status(404).json({ error: "❌ Equipo no encontrado o no fue creado manualmente." });
         }
 
         res.json(team);
@@ -35,7 +35,7 @@ router.get("/:teamId", async (req, res) => {
 router.get("/nacionalidad/:pais", async (req, res) => {
     try {
         const { pais } = req.params;
-        const teams = await Team.find({ nacionalidad: pais });
+        const teams = await Team.find({ nacionalidad: new RegExp(`^${pais}$`, "i") });
 
         if (teams.length === 0) {
             return res.status(404).json({ error: "No se encontraron equipos con esta nacionalidad." });
@@ -51,7 +51,7 @@ router.get("/nacionalidad/:pais", async (req, res) => {
 // 🔥 Guardar un nuevo equipo en la BD (POST)
 router.post("/", async (req, res) => {
     try {
-        const nuevoEquipo = new Team(req.body);
+        const nuevoEquipo = new Team({ ...req.body, creadoManualmente: true }); // ✅ Indicar que fue creado manualmente
         await nuevoEquipo.save();
         res.status(201).json({ mensaje: "✅ Equipo guardado correctamente", equipo: nuevoEquipo });
     } catch (error) {
@@ -59,37 +59,61 @@ router.post("/", async (req, res) => {
     }
 });
 
-// 🔄 Actualizar un equipo por `teamId` (PUT)
-router.put("/:teamId", async (req, res) => {
+// 🔄 **Actualizar un equipo creado manualmente (PUT)**
+router.put("/:nombre", async (req, res) => {
     try {
+        const { nombre } = req.params;
         const equipoActualizado = await Team.findOneAndUpdate(
-            { teamId: req.params.teamId },
+            { nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true },
             req.body,
             { new: true }
         );
 
         if (!equipoActualizado) {
-            return res.status(404).json({ error: "❌ Equipo no encontrado" });
+            return res.status(404).json({ error: "❌ Equipo no encontrado o no fue creado manualmente." });
         }
 
         res.json({ mensaje: "✅ Equipo actualizado correctamente", equipo: equipoActualizado });
     } catch (error) {
-        res.status(500).json({ error: "❌ Error al actualizar el equipo" });
+        res.status(500).json({ error: "❌ Error al actualizar el equipo." });
     }
 });
 
-// 🗑️ Eliminar un equipo por `teamId` (DELETE)
-router.delete("/:teamId", async (req, res) => {
+// 🛠 **Actualizar parcialmente un equipo creado manualmente (PATCH)**
+router.patch("/:nombre", async (req, res) => {
     try {
-        const equipoEliminado = await Team.findOneAndDelete({ teamId: req.params.teamId });
+        const { nombre } = req.params;
+        const equipoActualizado = await Team.findOneAndUpdate(
+            { nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true },
+            { $set: req.body }, // ✅ Permitir actualización parcial con `$set`
+            { new: true }
+        );
 
-        if (!equipoEliminado) {
-            return res.status(404).json({ error: "❌ Equipo no encontrado" });
+        if (!equipoActualizado) {
+            return res.status(404).json({ error: "❌ Equipo no encontrado o no fue creado manualmente." });
         }
 
-        res.json({ mensaje: "✅ Equipo eliminado correctamente" });
+        res.json({ mensaje: "✅ Equipo actualizado parcialmente con PATCH", equipo: equipoActualizado });
     } catch (error) {
-        res.status(500).json({ error: "❌ Error al eliminar el equipo" });
+        res.status(500).json({ error: "❌ Error al actualizar parcialmente el equipo." });
+    }
+});
+
+// 🗑️ **Eliminar un equipo solo si fue creado manualmente (DELETE)**
+router.delete("/:nombre", async (req, res) => {
+    try {
+        const { nombre } = req.params;
+        const equipoEliminado = await Team.findOneAndDelete(
+            { nombre: new RegExp(`^${nombre}$`, "i"), creadoManualmente: true }
+        );
+
+        if (!equipoEliminado) {
+            return res.status(404).json({ error: "❌ Equipo no encontrado o no fue creado manualmente." });
+        }
+
+        res.json({ mensaje: "✅ Equipo eliminado correctamente." });
+    } catch (error) {
+        res.status(500).json({ error: "❌ Error al eliminar el equipo." });
     }
 });
 
