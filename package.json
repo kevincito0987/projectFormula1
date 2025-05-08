@@ -2,7 +2,6 @@
   "name": "projectformula1",
   "version": "1.0.0",
   "description": "Simulación interactiva de Fórmula 1 basada en tecnologías web modernas.",
-  "main": "index.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kevincito0987/projectFormula1.git"

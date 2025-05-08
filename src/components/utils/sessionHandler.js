@@ -1,4 +1,4 @@
-import { saveSessionToIndexedDB, syncIndexedDBToMongo } from "../../../server/data/indexedDb.js";
+import { saveSessionToIndexedDB, syncIndexedDBSessionsToMongo } from "../../../server/data/indexedDb.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".users a").forEach(link => {
@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
             console.log(`🟢 Guardando sesión para: ${userType}`);
 
             await saveSessionToIndexedDB(sessionData, userType);
-            await syncIndexedDBToMongo(userType);
+            await syncIndexedDBSessionsToMongo(userType);
 
             // Mensaje de confirmación
             alert(`✅ Se ha iniciado sesión como ${userType}`);
