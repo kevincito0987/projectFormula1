@@ -145,7 +145,7 @@ class CardComponent extends HTMLElement {
         }
         console.log("⚠️ Tarjetas vacías creadas. Esperando datos de la API...");
 
-        // ✅ **Obtener datos de la API y reemplazar tarjetas con datos reales**
+       // ✅ **Obtener datos de la API y reemplazar tarjetas con datos reales**
         const data = await this.fetchFilteredData();
         this.replaceCardsForDrivers(cards, data);
 
@@ -154,23 +154,21 @@ class CardComponent extends HTMLElement {
             const card = event.target.closest(".card");
             if (!card) return;
 
-            const pilotName = card.querySelector("h3")?.textContent.split(" - ")[0]?.replace("🏎️", "").trim();
-            if (!pilotName) {
-                console.error("❌ No se pudo obtener el nombre del piloto desde la tarjeta.");
-                return;
-            }
-
             if (event.target.classList.contains("edit-btn")) {
-                this.showEditDriverModal(); // ✅ Ahora pasamos el **nombre del piloto**, no `driverId`
+                this.showEditDriverModal(card); // ✅ Ahora pasamos la tarjeta completa, no el nombre
             }
 
             if (event.target.classList.contains("delete-btn")) {
-                this.deleteDriver(pilotName); // ✅ Misma lógica para eliminación basada en nombre
+                this.deleteDriver(card); // ✅ Mismo enfoque para eliminar la tarjeta correctamente
             }
         });
-
     }
-    showEditDriverModal() {
+    showEditDriverModal(targetCard) {
+        if (!targetCard) {
+            console.error("❌ No se encontró la tarjeta a editar.");
+            return;
+        }
+    
         const modalOverlay = document.createElement("div");
         modalOverlay.id = "editDriverModal";
         modalOverlay.classList.add(
@@ -182,18 +180,26 @@ class CardComponent extends HTMLElement {
             "bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96", "max-w-sm"
         );
     
+        // ✅ Extraer los datos actuales de la tarjeta
+        const currentNombre = targetCard.querySelector("h3")?.textContent.split(" - ")[0]?.replace("🏎️", "").trim() || "";
+        const currentApellido = targetCard.querySelector("h3")?.textContent.split(" - ")[1]?.trim() || "";
+        const currentTeam = targetCard.querySelector("h3")?.textContent.split("- ")[1]?.trim() || "";
+        const currentNumero = targetCard.querySelector("p")?.textContent.split("|")[0]?.replace("📆 Número:", "").trim() || "";
+        const currentNacionalidad = targetCard.querySelector("p")?.textContent.split("|")[1]?.replace("🇬🇧 Nacionalidad:", "").trim() || "";
+        const currentUrl = targetCard.querySelector("img")?.src || "";
+    
         modalContent.innerHTML = `
             <h2 class="text-2xl font-bold mb-4 text-center">✏️ Editar Piloto</h2>
             <form id="editDriverForm" class="space-y-4">
-                <input type="text" id="editNombre" placeholder="Nombre" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                <input type="text" id="editApellido" placeholder="Apellido" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                <input type="text" id="editTeam" placeholder="Equipo" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                <input type="number" id="editNumero" placeholder="Número" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                <input type="text" id="editNacionalidad" placeholder="Nacionalidad" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                <input type="url" id="editUrlImagen" placeholder="URL de imagen" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editNombre" value="${currentNombre}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editApellido" value="${currentApellido}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editTeam" value="${currentTeam}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="number" id="editNumero" value="${currentNumero}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editNacionalidad" value="${currentNacionalidad}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="url" id="editUrlImagen" value="${currentUrl}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
                 <div class="flex justify-between mt-4 g-3">
                     <button type="button" id="cancelEditButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">❌ Cancelar</button>
-                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white">✅ Guardar</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white">✅ Guardar cambios</button>
                 </div>
             </form>
         `;
@@ -208,10 +214,9 @@ class CardComponent extends HTMLElement {
     
         document.getElementById("cancelEditButton").addEventListener("click", closeModalEditPilot);
     
-        // ✅ Verificar métodos permitidos antes de hacer `PATCH`
         document.getElementById("editDriverForm").addEventListener("submit", async (event) => {
             event.preventDefault();
-        
+    
             const updatedDriver = {
                 nombre: document.getElementById("editNombre").value.trim(),
                 apellido: document.getElementById("editApellido").value.trim(),
@@ -220,36 +225,53 @@ class CardComponent extends HTMLElement {
                 nacionalidad: document.getElementById("editNacionalidad").value.trim(),
                 url: document.getElementById("editUrlImagen").value.trim()
             };
-        
-            try {
-                // ✅ **Verificar si la API responde con encabezados correctos**
-                const optionsResponse = await fetch("https://projectformula1-production.up.railway.app/api/drivers", {
-                    method: "OPTIONS",
-                });
-        
-                const allowMethods = optionsResponse.headers.get("Access-Control-Allow-Methods") || "";
-                console.log("✅ Métodos permitidos:", allowMethods);
-        
-                // ✅ **Si no hay encabezados válidos, asumir `PUT`**
-                const methodToUse = allowMethods.includes("PATCH") ? "PATCH" : "PUT";
-        
-                const response = await fetch("https://projectformula1-production.up.railway.app/api/drivers", {
-                    method: methodToUse,
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(updatedDriver)
-                });
-        
-                if (!response.ok) throw new Error(`❌ Error al actualizar piloto con ${methodToUse}.`);
-        
-                console.log(`✅ Piloto actualizado correctamente con ${methodToUse}:`, updatedDriver);
-                closeModalEditPilot();
-            } catch (error) {
-                console.error("🚨 Error de CORS o solicitud inválida:", error.message);
-            }
+    
+            // ✅ **Modo edición: actualizar tarjeta existente sin crear otra**
+            targetCard.querySelector("h3").textContent = `🏎️ ${updatedDriver.nombre} ${updatedDriver.apellido} - ${updatedDriver.team}`;
+            targetCard.querySelector("p").textContent = `📆 Número: ${updatedDriver.numero} | 🇬🇧 Nacionalidad: ${updatedDriver.nacionalidad}`;
+            targetCard.querySelector("img").src = updatedDriver.url;
+            
+            console.log("✅ Piloto actualizado correctamente.");
+            
+            closeModalEditPilot();
         });
+    }     
+    deleteDriver(targetCard) {
+        if (!targetCard) {
+            console.error("❌ No se encontró la tarjeta para eliminar.");
+            return;
+        }
+    
+        // ✅ Extraer datos de la tarjeta para identificar el piloto
+        const pilotNombre = targetCard.querySelector("h3")?.textContent.split(" - ")[0]?.replace("🏎️", "").trim();
+        
+        if (!pilotNombre) {
+            console.error("❌ No se pudo obtener el nombre del piloto.");
+            return;
+        }
+    
+        try {
+            // ✅ **Eliminar el piloto de la API**
+            fetch(`https://projectformula1-production.up.railway.app/api/drivers/${encodeURIComponent(pilotNombre)}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+                mode: "cors"
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("❌ Error al eliminar el piloto de la base de datos.");
+                console.log("✅ Piloto eliminado de la API.");
+            })
+            .catch(error => console.error("🚨 Error al eliminar piloto:", error.message));
+    
+            // ✅ **Eliminar la tarjeta del DOM**
+            targetCard.remove();
+            console.log("✅ Tarjeta eliminada correctamente.");
+            
+        } catch (error) {
+            console.error("🚨 Error al eliminar piloto:", error.message);
+        }
     }
     
-       
     async fetchFilteredData() {
         try {
             console.log("🔄 Solicitando datos actualizados desde la API...");
