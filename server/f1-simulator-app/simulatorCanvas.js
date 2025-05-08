@@ -38,6 +38,11 @@ async function fetchCircuitData() {
     try {
         const response = await fetch("https://projectformula1-production.up.railway.app/api/circuits", {
             mode: "cors",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json",
+                "Access-Control-Allow-Origin": "*"
+            }
         });
         const circuits = await response.json();
         return circuits || [];

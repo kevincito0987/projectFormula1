@@ -18,24 +18,25 @@ app.use(express.json());
 // 🔄 **Configuración avanzada de CORS**
 const corsOptions = {
     origin: "*", // 🚀 Permitir cualquier origen
-    methods: ["GET", "POST", "PUT", "DELETE"], // 🏁 Métodos permitidos
-    allowedHeaders: ["Content-Type", "Authorization"], // 🔓 Headers permitidos
-    exposedHeaders: ["Content-Length"], // 📢 Headers visibles para el cliente
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // 🏁 Métodos permitidos
+    allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Origin"],
+    exposedHeaders: ["Content-Length"],
 };
 
 app.use(cors(corsOptions)); // ✅ Aplicar configuración de CORS
+
+// 🔄 **Manejo de CORS global en todas las solicitudes**
+app.use((req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*"); // 🔓 Permitir acceso desde cualquier dominio
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Access-Control-Allow-Origin");
+    next();
+});
 
 // 🚀 Definir puerto con manejo de fallback
 const PORT = process.env.PORT || 5000;
 
 connectDB(); // 🔗 Conectar a la base de datos
-
-// 🔄 **Manejo de CORS específico para imágenes de autos**
-app.use("/api/cars", (req, res, next) => {
-    res.header("Access-Control-Allow-Origin", "*"); // 🔓 Permitir acceso desde cualquier dominio
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
-    next();
-});
 
 // 🏎️ Definir rutas principales de la API
 app.use("/api/weather", weatherRoutes);
@@ -45,6 +46,14 @@ app.use("/api/teams", teamsRoutes);
 app.use("/api/cars", carsRoutes);
 app.use("/api/news", newsRoutes);
 app.use("/api/sessions", sessionRoutes);
+
+// 🔄 **Manejo de preflight requests (OPTIONS)**
+app.options("*", (req, res) => {
+    res.header("Access-Control-Allow-Origin", "*");
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization, Access-Control-Allow-Origin");
+    res.sendStatus(200);
+});
 
 // 🔍 Ruta principal para verificar que el servidor está activo
 app.get("/", (req, res) => {
