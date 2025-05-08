@@ -14,12 +14,29 @@ import sessionRoutes from "./routes/sesionsRoutes.js";
 
 const app = express();
 app.use(express.json());
-app.use(cors());
+
+// 🔄 **Configuración avanzada de CORS**
+const corsOptions = {
+    origin: "*", // 🚀 Permitir cualquier origen
+    methods: ["GET", "POST", "PUT", "DELETE"], // 🏁 Métodos permitidos
+    allowedHeaders: ["Content-Type", "Authorization"], // 🔓 Headers permitidos
+    exposedHeaders: ["Content-Length"], // 📢 Headers visibles para el cliente
+};
+
+app.use(cors(corsOptions)); // ✅ Aplicar configuración de CORS
 
 // 🚀 Definir puerto con manejo de fallback
 const PORT = process.env.PORT || 5000;
 
 connectDB(); // 🔗 Conectar a la base de datos
+
+// 🔄 **Manejo de CORS específico para imágenes de autos**
+app.use("/api/cars", (req, res, next) => {
+    res.header("Access-Control-Allow-Origin", "*"); // 🔓 Permitir acceso desde cualquier dominio
+    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
+    next();
+});
 
 // 🏎️ Definir rutas principales de la API
 app.use("/api/weather", weatherRoutes);

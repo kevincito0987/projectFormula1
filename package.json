@@ -14,8 +14,10 @@
   },
   "homepage": "https://github.com/kevincito0987/projectFormula1#readme",
   "dependencies": {
+    "@babylonjs/gui": "^8.7.0",
+    "@babylonjs/loaders": "^8.7.0",
     "axios": "^1.9.0",
-    "babylonjs": "^8.5.0",
+    "babylonjs": "^8.7.0",
     "cors": "^2.8.5",
     "dotenv": "^16.5.0",
     "express": "^4.21.2",
