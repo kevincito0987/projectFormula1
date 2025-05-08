@@ -7,12 +7,12 @@ const eliminarPilotosKevinAngarita = async () => {
   try {
       await connectDB(); // ✅ Asegura que la BD esté conectada
 
-      const resultado = await Piloto.deleteMany({ nombre: "Jhon", apellido: "Macklein" }); // 🔥 Eliminar todos los que coincidan
+      const resultado = await Piloto.deleteMany({ nombre: "Jhon", apellido: "MacKlein" }); // 🔥 Eliminar todos los que coincidan
 
       if (resultado.deletedCount === 0) {
-          console.warn("⚠️ No se encontraron pilotos con el nombre 'Jhon' y apellido 'Macklein'.");
+          console.warn("⚠️ No se encontraron pilotos con el nombre 'Jhon' y apellido 'MacKlein'.");
       } else {
-          console.log(`✅ Se eliminaron ${resultado.deletedCount} pilotos llamados 'Jhon Macklein'.`);
+          console.log(`✅ Se eliminaron ${resultado.deletedCount} pilotos llamados 'Jhon MacKlein'.`);
       }
   } catch (error) {
       console.error("❌ Error eliminando pilotos 'Kevin Angarita':", error);

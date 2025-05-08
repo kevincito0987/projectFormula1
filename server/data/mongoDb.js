@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 import mongoose from "mongoose";
 
 // 📌 Configurar dotenv para cargar variables de entorno
-dotenv.config({ path: "./server/.env" }); // ✅ Ajusta la ruta si es necesario
+dotenv.config({ path: "./.env" }); // ✅ Ajusta la ruta si es necesario
 
 // 🔗 Función para conectar a la base de datos MongoDB
 async function connectDB() {
