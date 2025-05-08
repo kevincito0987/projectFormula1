@@ -202,19 +202,22 @@ class TeamCardComponent extends HTMLElement {
             );
     
             if (teamDrivers.length > 0) {
-                driversSection.innerHTML = `<h4 class="text-lg font-bold mt-4 text-white">🚀 Pilotos</h4>`;
+                // ✅ **Aplicamos Grid para organizar las tarjetas**
+                driversSection.classList.add("grid", "grid-cols-2", "md:grid-cols-3", "lg:grid-cols-4", "gap-4");
+
                 teamDrivers.forEach(driver => {
                     const driverCard = document.createElement("div");
-                    driverCard.classList.add("driver", "text-center");
-    
+                    driverCard.classList.add("driver", "bg-gray-800", "text-center", "p-4", "rounded-lg", "shadow-md");
+
                     driverCard.innerHTML = `
-                        <img src="${driver.url || "https://www.formula1.com/default_driver.jpg"}" alt="${driver.nombre}" class="w-16 h-16 object-cover rounded-full border-2 border-gray-300">
+                        <img src="${driver.url || "https://www.formula1.com/default_driver.jpg"}" alt="${driver.nombre}" class="w-20 h-20 object-cover rounded-full border-2 border-gray-300 mx-auto">
                         <p class="text-white font-semibold mt-2">${driver.nombre} ${driver.apellido}</p>
                         <p class="text-sm text-gray-400">🏎️ Número: ${driver.numero}</p>
                     `;
-    
+
                     driversSection.appendChild(driverCard);
                 });
+
             } else {
                 driversSection.innerHTML = `<p class="text-gray-500 mt-4">❌ No hay pilotos registrados para este equipo.</p>`;
             }
