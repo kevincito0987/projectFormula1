@@ -3,27 +3,25 @@ import { connectDB } from "./data/mongoDb.js";
 import Piloto from "./models/piloto.js"; // Importa el modelo de MongoDB
 
 connectDB();
-// 🏎️ **Obtener todos los pilotos y asignarles un ID secuencial y guardar en MongoDB**
-const asignarDriverId = async () => {
-    try {
-      const pilotos = await Piloto.find(); // Obtener todos los pilotos
-      
-      for (let piloto of pilotos) {
-        piloto.driverId = generarDriverId(piloto); // Asignar driverId
-        await piloto.save(); // Guardar cambios
+const eliminarPilotosKevinAngarita = async () => {
+  try {
+      await connectDB(); // ✅ Asegura que la BD esté conectada
+
+      const resultado = await Piloto.deleteMany({ nombre: "Kevin", apellido: "Angarita" }); // 🔥 Eliminar todos los que coincidan
+
+      if (resultado.deletedCount === 0) {
+          console.warn("⚠️ No se encontraron pilotos con el nombre 'Kevin' y apellido 'Angarita'.");
+      } else {
+          console.log(`✅ Se eliminaron ${resultado.deletedCount} pilotos llamados 'Kevin Angarita'.`);
       }
-  
-      console.log("Driver ID asignado correctamente a todos los pilotos.");
-    } catch (error) {
-      console.error("Error asignando Driver ID:", error);
-    }
-  };
-  
-  // Función para generar un driverId único (puedes modificarla)
-  const generarDriverId = (piloto) => {
-    return `DRV-${piloto._id.toString().slice(-6)}`;
-  };
-  
-  // Llamar a la función
-  asignarDriverId();
+  } catch (error) {
+      console.error("❌ Error eliminando pilotos 'Kevin Angarita':", error);
+  }
+};
+
+// 🔥 **Ejecutar la función**
+eliminarPilotosKevinAngarita();
+
+
+
   
