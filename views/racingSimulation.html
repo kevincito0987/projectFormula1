@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Simulación F1</title>
     <link rel="shortcut icon" href="../assets/icons/formula1Icon2.svg" type="image/x-icon">
-    <script type="module" src="../server//f1-simulator-app/simulatorCanvas.js" defer></script>
+    <script type="module" src="../server/f1-simulator-app/simulatorCanvas.js" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script> <!-- 📌 Asegurando Tailwind -->
     <link rel="stylesheet" href="../styles/racingSimulation.css">
@@ -29,7 +29,9 @@
     </div>
 
     <!-- 🏁 Canvas para la carrera -->
-    <canvas id="renderCanvas" class="hidden w-full h-screen"></canvas>
+    <div id="canvas-container" class="mt-6 hidden">
+        <canvas id="raceCanvas" class="w-full h-96 border rounded-lg"></canvas>
+    </div>
     </main>
         <!-- 🏁 Footer -->
         <footer class="flex justify-between items-center p-4 bg-gray-800 relative">

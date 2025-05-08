@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 
 // 🏁 Esquema de Piloto - Define la estructura de los datos de cada piloto en la base de datos
 const pilotoSchema = new mongoose.Schema({
+    idDriver: Number,
     driverId: String, // 🔢 Identificador único del piloto
     nombre: String, // 🏆 Nombre del piloto
     apellido: String, // 🏎️ Apellido del piloto

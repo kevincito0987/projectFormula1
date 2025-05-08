@@ -13,24 +13,50 @@
     <link rel="stylesheet" href="../styles/homePageUser.css">
     <script type="module" src="../src/components/events/footer.js"></script>
     <script type="module" src="../src/events/toogleTheme.js" defer></script>
+    <style>
+        #canvas-container {
+        display: none; /* Oculto inicialmente */
+        text-align: center;
+        }
+
+    </style>
 </head>
 <body class="bg-gray-900 text-white flex flex-col items-center justify-center min-h-screen">
     <main>
         <!-- 🏎️ Pantalla de inicio -->
-    <div id="start-screen" class="text-center space-y-6">
-        <h1 class="text-4xl font-bold">Simulación de Carrera F1</h1>
-        <p class="text-lg">Selecciona tu auto y empieza la carrera</p>
+        <div id="start-screen" class="text-center space-y-6">
+            <h1 class="text-4xl font-bold">Simulación de Carrera F1</h1>
+            <p class="text-lg">Selecciona tu auto y pista antes de iniciar</p>
         
-        <div class="flex gap-4 justify-center">
-            <button class="car-option bg-red-500 px-4 py-2 rounded hover:bg-red-600" data-car="red">Auto Rojo</button>
-            <button class="car-option bg-blue-500 px-4 py-2 rounded hover:bg-blue-600" data-car="blue">Auto Azul</button>
-            <button class="car-option bg-green-500 px-4 py-2 rounded hover:bg-green-600" data-car="green">Auto Verde</button>
+            <!-- 🚗 Selección de Auto -->
+            <div class="flex flex-col items-center">
+                <label for="car-select" class="text-lg font-semibold mb-2">Selecciona tu auto:</label>
+                <select id="car-select" class="p-3 bg-gray-800 text-white rounded w-64"></select>
+            </div>
+        
+            <!-- 🏁 Selección de Pista -->
+            <div class="flex flex-col items-center mt-4">
+                <label for="track-select" class="text-lg font-semibold mb-2">Selecciona la pista:</label>
+                <select id="track-select" class="p-3 bg-gray-800 text-white rounded w-64"></select>
+            </div>
+        
+            <!-- 🚀 Botón para iniciar -->
+            <button id="start-btn" class="bg-yellow-500 px-6 py-3 rounded-lg text-lg mt-6 hover:bg-yellow-600">
+                🏁 Iniciar Simulación 🏁
+            </button>
         </div>
-        <button id="start-btn" class="bg-yellow-500 px-6 py-3 rounded-lg text-lg mt-4 hover:bg-yellow-600">🏁 Iniciar Simulación 🏁</button>
-    </div>
+        
+        <!-- 🏎️ Canvas colocado debajo de las opciones -->
+        <div id="canvas-container" class="mt-6 hidden">
+            <canvas id="raceCanvas" class="w-full h-96 border rounded-lg"></canvas>
+        </div>
+        
 
     <!-- 🏁 Canvas para la carrera -->
-    <canvas id="raceCanvas" class="w-full h-screen"></canvas>
+    <!-- 🏎️ Canvas colocado debajo del botón -->
+    <div id="canvas-container" class="mt-6 hidden">
+        <canvas id="raceCanvas" class="w-full h-96 border rounded-lg"></canvas>
+    </div>
     </main>
         <!-- 🏁 Footer -->
         <footer class="flex justify-between items-center p-4 bg-gray-800 relative">

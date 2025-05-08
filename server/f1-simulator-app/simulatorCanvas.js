@@ -15,51 +15,61 @@ camera.attachControl(canvas, true);
 // 🌞 Luz Ambiental
 const light = new BABYLON.HemisphericLight("light", new BABYLON.Vector3(0, 1, 0), scene);
 
-// 🚗 Obtener datos de autos desde la API con `mode: cors` y Headers
+// 🚗 Obtener datos de autos desde la API con formato correcto
 async function fetchCarData() {
     try {
-        const response = await fetch("https://projectformula1-production.up.railway.app/api/cars", {
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
-        });
+        const response = await fetch("https://projectformula1-production.up.railway.app/api/cars");
         const data = await response.json();
-        return data.flatMap(team => team.autos);
+        return data.flatMap(team => team.autos); // 🔄 Extraer los autos de cada equipo
     } catch (error) {
-        console.error("❌ Error al obtener datos de la API:", error);
+        console.error("❌ Error al obtener datos de los autos:", error);
         return [];
     }
 }
 
+// 🏁 Obtener datos de circuitos desde la API
 async function fetchCircuitData() {
     try {
-        const response = await fetch("https://projectformula1-production.up.railway.app/api/circuits", {
-            mode: "cors",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json",
-                "Access-Control-Allow-Origin": "*"
-            }
-        });
+        const response = await fetch("https://projectformula1-production.up.railway.app/api/circuits");
         const circuits = await response.json();
-        return circuits || [];
+        return circuits;
     } catch (error) {
         console.error("❌ Error al obtener los datos de la API:", error);
         return [];
     }
 }
 
+// 🏎️ Cargar opciones dinámicas en los select
+async function loadOptions() {
+    const carSelect = document.getElementById("car-select");
+    const trackSelect = document.getElementById("track-select");
 
-// 🏁 Cargar el circuito como pista
-async function loadCircuit() {
-    const circuits = await fetchCircuitData();
-    if (circuits.length === 0) return;
+    if (!carSelect || !trackSelect) return console.error("❌ No se encontraron los elementos de selección.");
 
-    const circuit = circuits[0]; // Tomamos el primer circuito
-    const texture = new BABYLON.Texture(circuit.urlImagen, scene);
+    // 🚗 Cargar autos en el select respetando la estructura de la API
+    const cars = await fetchCarData();
+    cars.forEach(car => {
+        const option = document.createElement("option");
+        option.value = car.imagen; // 🔄 Usamos la imagen para la simulación
+        option.textContent = `${car.modelo} - ${car.motor}`;
+        carSelect.appendChild(option);
+    });
+
+    // 🏁 Cargar circuitos en el select
+    const tracks = await fetchCircuitData();
+    tracks.forEach(track => {
+        const option = document.createElement("option");
+        option.value = track.urlImagen;
+        option.textContent = track.nombre;
+        trackSelect.appendChild(option);
+    });
+
+    console.log("✅ Opciones de autos y pistas cargadas correctamente.");
+}
+
+// 🏁 Cargar el circuito como pista seleccionada
+async function loadCircuit(trackImage) {
+    const texture = new BABYLON.Texture(trackImage, scene);
     const track = BABYLON.MeshBuilder.CreateGround("track", { width: 50, height: 30 }, scene);
     const material = new BABYLON.StandardMaterial("trackMaterial", scene);
     material.diffuseTexture = texture;
@@ -69,41 +79,64 @@ async function loadCircuit() {
     return track;
 }
 
-// 🏎️ Cargar autos y simular la carrera sobre la pista
-async function loadAndAnimateCars() {
-    const cars = await fetchCarData();
-    if (cars.length === 0) return;
-
+// 🏎️ Cargar autos y simular la carrera con el auto seleccionado
+async function loadAndAnimateCars(carImage) {
     const carMeshes = [];
+    const texture = new BABYLON.Texture(carImage, scene);
+    const plane = BABYLON.MeshBuilder.CreatePlane("selectedCar", { width: 2.5, height: 1.2 }, scene);
+    const material = new BABYLON.StandardMaterial("carMaterial", scene);
+    material.diffuseTexture = texture;
+    material.specularColor = new BABYLON.Color3(0, 0, 0);
+    plane.material = material;
+    plane.position.set(-20, 2, -10);
+    carMeshes.push(plane);
 
-    cars.forEach((car, index) => {
-        const texture = new BABYLON.Texture(car.imagen, scene);
-        const plane = BABYLON.MeshBuilder.CreatePlane(`car_${index}`, { width: 2.5, height: 1.2 }, scene);
-        const material = new BABYLON.StandardMaterial(`carMaterial_${index}`, scene);
-        material.diffuseTexture = texture;
-        material.specularColor = new BABYLON.Color3(0, 0, 0);
-        plane.material = material;
-        plane.position.set(-20 + index * 5, 2, -10);
-        carMeshes.push(plane);
-    });
+    console.log("✅ Auto seleccionado cargado.");
 
-    console.log("✅ Autos cargados.");
-
-    // 🏎️ Simular movimiento en la pista
+    // 🏎️ Simulación de movimiento
     scene.registerBeforeRender(() => {
-        carMeshes.forEach((car, index) => {
+        carMeshes.forEach(car => {
             car.position.x += Math.random() * 0.2;
-            car.position.z += Math.sin(Date.now() * 0.002 + index) * 0.05;
+            car.position.z += Math.sin(Date.now() * 0.002) * 0.05;
         });
     });
 }
 
-// 🔄 **Inicializar la carrera**
-async function initializeRace() {
+// 🏁 **Control de inicio**
+document.addEventListener("DOMContentLoaded", async () => {
+    const startButton = document.getElementById("start-btn");
+    const carSelect = document.getElementById("car-select");
+    const trackSelect = document.getElementById("track-select");
+    const canvasContainer = document.getElementById("canvas-container");
+
+    if (canvasContainer) canvasContainer.style.display = "none";
+
+    await loadOptions();
+
+    if (startButton) {
+        startButton.addEventListener("click", () => {
+            console.log("🏁 Simulación iniciada!");
+
+            const selectedCar = carSelect.value;
+            const selectedTrack = trackSelect.value;
+            console.log(`🚗 Auto seleccionado: ${selectedCar}, 🏁 Pista seleccionada: ${selectedTrack}`);
+
+            // 🟢 Mostrar el canvas
+            canvasContainer.style.display = "block";
+
+            // 🏎️ Iniciar la simulación con el auto y la pista seleccionados
+            initializeRace(selectedCar, selectedTrack);
+        });
+    }
+});
+
+// 🔄 **Inicializar la carrera con selección de auto y pista**
+async function initializeRace(carImage, trackImage) {
     try {
-        console.log("🚀 Iniciando carrera...");
-        await loadCircuit();
-        await loadAndAnimateCars();
+        console.log(`🚀 Iniciando carrera con ${carImage} en ${trackImage}...`);
+
+        await loadCircuit(trackImage);
+        await loadAndAnimateCars(carImage);
 
         console.log("🎬 Simulación en progreso...");
         engine.runRenderLoop(() => {
@@ -118,6 +151,3 @@ async function initializeRace() {
         console.error("❌ Error durante la simulación:", error);
     }
 }
-
-// 🏁 **Iniciar la carrera**
-initializeRace();

@@ -34,6 +34,8 @@ class CardComponent extends HTMLElement {
         for (let i = 0; i < 20; i++) {
             const card = document.createElement("div");
             card.classList.add("card");
+            card.setAttribute("data-id", i); // ✅ Asignar ID único para cada tarjeta
+
             card.innerHTML = `
                 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
                 <style>
@@ -112,12 +114,12 @@ class CardComponent extends HTMLElement {
                         <h3 class="text-xl font-bold text-center">Cargando...</h3>
                         <p class="text-sm mt-2 text-center">...</p>
                         <a class="button" href="#" target="_blank">
-                            <img src="../assets/icons/icon2Formula1.svg" alt="Formula 1 Icon" class="w-8 h-8 ml-4">
+                            <img src="../assets/icons/icon2Formula1.svg" alt="Formula 1 Icon">
                             <p class="text-lg font-semibold text-center w-full">Learn More...</p>
                         </a>
                         <div class="actions">
-                            <button class="edit-btn" onclick="showUpdateDriverModal('${i}')">📝 Editar</button>
-                            <button class="delete-btn" onclick="deleteDriver('${i}')">❌ Eliminar</button>
+                            <button class="edit-btn">📝 Editar</button>
+                            <button class="delete-btn">❌ Eliminar</button>
                         </div>
                     </div>
                 </div>
@@ -128,30 +130,169 @@ class CardComponent extends HTMLElement {
 
         this.shadowRoot.appendChild(container);
 
-        // 📌 **Llamar a la API y actualizar las tarjetas**
         const data = await this.fetchFilteredData();
         this.replaceCardsForDrivers(cards, data);
-    }
 
+        this.shadowRoot.addEventListener("click", (event) => {
+            const path = event.composedPath();
+            const card = path.find(el => el.classList?.contains("card"));
+            if (!card) return;
+
+            const driverId = card.getAttribute("data-id");
+
+            if (event.target.classList.contains("delete-btn")) {
+                this.deleteDriver(driverId);
+            }
+
+            if (event.target.classList.contains("edit-btn")) {
+                this.showEditDriverModal(driverId);
+            }
+        });
+    }
     async fetchFilteredData() {
         try {
-            console.log("🔄 Obteniendo datos actualizados desde la API...");
+            console.log("🔄 Solicitando datos actualizados desde la API...");
+            
             const response = await fetch("https://projectformula1-production.up.railway.app/api/drivers");
     
             if (!response.ok) {
                 throw new Error(`❌ Error ${response.status}: No se pudo obtener la data de pilotos`);
             }
     
-            return await response.json();
+            const data = await response.json();
+    
+            if (!Array.isArray(data) || data.length === 0) {
+                console.warn("⚠️ La API devolvió una respuesta vacía o no válida.");
+                return [];
+            }
+    
+            console.log("✅ Datos obtenidos correctamente:", data);
+            return data;
+            
         } catch (error) {
             console.error(`❌ Error al obtener datos de pilotos:`, error.message);
             return [];
         }
     }
+    showEditDriverModal = async (driverId) => {
+        try {
+            if (!driverId) {
+                console.error("❌ ID del piloto no válido.");
+                return;
+            }
+    
+            const response = await fetch(`https://projectformula1-production.up.railway.app/api/drivers/${driverId}`);
+            if (!response.ok) throw new Error("❌ No se pudo obtener la información.");
+    
+            const driver = await response.json();
+    
+            const modalOverlay = document.createElement("div");
+            modalOverlay.id = "editDriverModal";
+            modalOverlay.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50");
+    
+            const modalContent = document.createElement("div");
+            modalContent.classList.add("bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96");
+    
+            modalContent.innerHTML = `
+                <h2 class="text-2xl font-bold mb-4 text-center">✏️ Editar Piloto</h2>
+                <form id="editDriverForm">
+                    <input type="text" id="editNombre" value="${driver.nombre}" class="w-full p-3 bg-gray-800 text-white">
+                    <input type="text" id="editApellido" value="${driver.apellido}" class="w-full p-3 bg-gray-800 text-white">
+                    <input type="text" id="editTeam" value="${driver.team}" class="w-full p-3 bg-gray-800 text-white">
+                    <input type="number" id="editNumero" value="${driver.numero}" class="w-full p-3 bg-gray-800 text-white">
+                    <input type="text" id="editNacionalidad" value="${driver.nacionalidad}" class="w-full p-3 bg-gray-800 text-white">
+                    <input type="url" id="editUrlImagen" value="${driver.url}" class="w-full p-3 bg-gray-800 text-white">
+                    <div class="flex justify-between mt-4">
+                        <button type="button" id="cancelEditButton" class="px-4 py-2 bg-red-600 text-white">❌ Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white">💾 Guardar Cambios</button>
+                    </div>
+                </form>
+            `;
+    
+            modalOverlay.appendChild(modalContent);
+            document.body.appendChild(modalOverlay);
+    
+            document.getElementById("editDriverForm").addEventListener("submit", async (event) => {
+                event.preventDefault();
+    
+                const updatedDriver = {
+                    nombre: document.getElementById("editNombre").value.trim(),
+                    apellido: document.getElementById("editApellido").value.trim(),
+                    team: document.getElementById("editTeam").value.trim(),
+                    numero: document.getElementById("editNumero").value.trim(),
+                    nacionalidad: document.getElementById("editNacionalidad").value.trim(),
+                    url: document.getElementById("editUrlImagen").value.trim()
+                };
+    
+                try {
+                    const response = await fetch(`https://projectformula1-production.up.railway.app/api/drivers/${driverId}`, {
+                        method: "PUT",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(updatedDriver)
+                    });
+    
+                    if (!response.ok) throw new Error("❌ Error al actualizar.");
+    
+                    const card = document.querySelector(`.card[data-id="${driverId}"]`);
+                    if (card) {
+                        card.querySelector("img").src = updatedDriver.url;
+                        card.querySelector("h3").textContent = `🏎️ ${updatedDriver.nombre} ${updatedDriver.apellido} - ${updatedDriver.team}`;
+                        card.querySelector("p").textContent = `📆 Número: ${updatedDriver.numero} | 🇬🇧 Nacionalidad: ${updatedDriver.nacionalidad}`;
+                    }
+    
+                    console.log("✅ Piloto actualizado correctamente.");
+                    document.getElementById("editDriverModal").remove();
+                } catch (error) {
+                    console.error(error.message);
+                }
+            });
+    
+            document.getElementById("cancelEditButton").addEventListener("click", () => {
+                document.getElementById("editDriverModal").remove();
+            });
+    
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+       
 
+    deleteDriver = async (driverId) => {
+        try {
+            if (!driverId) {
+                console.error("❌ ID del piloto no válido.");
+                return;
+            }
+    
+            const card = document.querySelector(`.card[data-id="${driverId}"]`);
+            if (!card) {
+                console.error("❌ No se pudo encontrar la tarjeta.");
+                return;
+            }
+    
+            const response = await fetch(`https://projectformula1-production.up.railway.app/api/drivers/${driverId}`, {
+                method: "DELETE"
+            });
+    
+            if (!response.ok) throw new Error("❌ No se pudo eliminar.");
+    
+            console.log(`✅ Piloto eliminado correctamente.`);
+            card.remove(); // 🗑️ **Elimina la tarjeta de la UI**
+    
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+        
+    
     replaceCardsForDrivers(cards, data) {
-        if (cards.length < 20) {
-            console.error("❌ Error: No hay suficientes tarjetas en el HTML.");
+        if (!Array.isArray(cards) || !Array.isArray(data)) {
+            console.error("❌ Error: Datos inválidos, no es un array.");
+            return;
+        }
+    
+        if (cards.length === 0 || data.length === 0) {
+            console.warn("⚠️ No hay suficientes datos para actualizar las tarjetas.");
             return;
         }
     
@@ -161,30 +302,44 @@ class CardComponent extends HTMLElement {
             if (index >= data.length) return;
             const item = data[index];
     
-            // 📌 Asegurar que la imagen se carga correctamente
+            // 📌 **Asignar el `_id` de la API correctamente SIN mostrarlo en la UI**
+            card.setAttribute("data-id", item._id || `temp-${index}`);
+    
             const imageUrl = item.url && item.url.trim() !== "" ? item.url : "https://www.formula1.com/default_image.jpg";
     
-            card.querySelector("img").src = imageUrl;
-            card.querySelector("h3").textContent = `🏎️ ${item.nombre ?? "Desconocido"} ${item.apellido ?? ""} - ${item.team ?? "Sin equipo"}`;
-            card.querySelector("p").textContent = `📆 Nacimiento: ${item.fechaNacimiento ?? "N/A"} | 🇬🇧 Nacionalidad: ${item.nacionalidad ?? "N/A"}`;
-            card.querySelector("a").href = item.driverId ? `https://www.formula1.com/en/drivers/${item.driverId}.html` : "#";
+            const imgElement = card.querySelector("img");
+            if (imgElement) imgElement.src = imageUrl;
+    
+            const titleElement = card.querySelector("h3");
+            if (titleElement) {
+                titleElement.textContent = `🏎️ ${item.nombre ?? "Desconocido"} ${item.apellido ?? ""} - ${item.team ?? "Sin equipo"}`;
+            }
+    
+            const descriptionElement = card.querySelector("p");
+            if (descriptionElement) {
+                descriptionElement.textContent = `📆 Nacimiento: ${item.fechaNacimiento ?? "N/A"} | 🇬🇧 Nacionalidad: ${item.nacionalidad ?? "N/A"}`;
+            }
+    
+            const linkElement = card.querySelector("a");
+            if (linkElement) {
+                linkElement.href = item._id ? `https://www.formula1.com/en/drivers/${item._id}.html` : "#";
+            }
         });
     
         console.log("✅ Tarjetas de pilotos actualizadas correctamente.");
     }
+      
     
     
     showCreateDriverModal() {
         const modalOverlay = document.createElement("div");
-        modalOverlay.id = "createDriverModal"; // ✅ ID único para el modal
+        modalOverlay.id = "createDriverModal";
         modalOverlay.classList.add(
             "fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50", "overflow-y-auto"
         );
     
         const modalContent = document.createElement("div");
-        modalContent.classList.add(
-            "bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96", "max-w-sm"
-        );
+        modalContent.classList.add("bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96", "max-w-sm");
     
         modalContent.innerHTML = `
             <h2 class="text-2xl font-bold mb-4 text-center">➕ Agregar Piloto</h2>
@@ -204,6 +359,7 @@ class CardComponent extends HTMLElement {
     
         modalOverlay.appendChild(modalContent);
         document.body.appendChild(modalOverlay);
+    
         function closeModalPilot() {
             const modal = document.getElementById("createDriverModal");
             if (modal) modal.remove();
@@ -234,30 +390,9 @@ class CardComponent extends HTMLElement {
                 });
     
                 if (!response.ok) throw new Error("❌ Error al agregar piloto.");
+    
                 const createdDriver = await response.json();
-                function updateDriverList(createdDriver) {
-                    const driverList = document.querySelector("card-component");
-                    if (!driverList) {
-                        console.error("❌ No se encontró el contenedor de la lista de pilotos.");
-                        return;
-                    }
-                
-                    const newCard = document.createElement("div");
-                    newCard.classList.add("driver-card", "p-4", "bg-gray-800", "text-white", "rounded-lg", "shadow-md");
-                
-                    newCard.innerHTML = `
-                        <img src="${createdDriver.url || 'https://www.formula1.com/default_image.jpg'}" class="w-16 h-16 rounded-full object-cover mb-2">
-                        <h3 class="text-lg font-bold">🏎️ ${createdDriver.nombre} ${createdDriver.apellido} - ${createdDriver.team}</h3>
-                        <p class="text-sm">📆 Nacimiento: ${createdDriver.numero} | 🇬🇧 Nacionalidad: ${createdDriver.nacionalidad}</p>
-                        <button class="bg-blue-500 text-white px-3 py-1 rounded-md">Editar</button>
-                        <button class="bg-red-500 text-white px-3 py-1 rounded-md" onclick="deleteDriver('${createdDriver.driverId}')">Eliminar</button>
-                    `;
-                
-                    driverList.prepend(newCard); // 📌 Agregarlo en la primera posición
-                
-                    console.log("✅ Piloto agregado correctamente.");
-                }
-                updateDriverList(createdDriver);
+                this.updateDriverList(createdDriver);
                 closeModalPilot();
             } catch (error) {
                 console.error(error.message);
@@ -266,18 +401,42 @@ class CardComponent extends HTMLElement {
     
         document.getElementById("cancelButton").addEventListener("click", closeModalPilot);
     }
-
-    
-    async deleteDriver(driverId) {
-        try {
-            const response = await fetch(`https://projectformula1-production.up.railway.app/api/drivers/${driverId}`, { method: "DELETE" });
-            if (!response.ok) throw new Error("❌ No se pudo eliminar el piloto.");
-            console.log(`✅ Piloto eliminado correctamente.`);
-            this.connectedCallback();
-        } catch (error) {
-            console.error(error.message);
+    updateDriverList(driver) {
+        const driverList = this.shadowRoot.querySelector("div");
+        if (!driverList) {
+            console.error("❌ No se encontró el contenedor de la lista de pilotos.");
+            return;
         }
-    }
+    
+        const assignedId = driver._id ? driver._id : `temp-${Date.now()}`;
+    
+        const newCard = document.createElement("div");
+        newCard.classList.add("p-4", "bg-gray-800", "text-white", "rounded-lg", "shadow-md", "mt-9", "card");
+        newCard.setAttribute("data-id", assignedId);
+    
+        newCard.innerHTML = `
+            <img src="${driver.url}" class="w-16 h-16 rounded-full object-cover mb-2">
+            <h3 class="text-lg font-bold">🏎️ ${driver.nombre} ${driver.apellido} - ${driver.team}</h3>
+            <p class="text-sm">📆 Número: ${driver.numero} | 🇬🇧 Nacionalidad: ${driver.nacionalidad}</p>
+            <div class="flex gap-2 mt-2">
+                <button class="bg-blue-500 text-white px-3 py-1 rounded-md edit-btn">✏️ Editar</button>
+                <button class="bg-red-500 text-white px-3 py-1 rounded-md delete-btn">❌ Eliminar</button>
+            </div>
+        `;
+    
+        // 📌 **Asignar eventos a los botones de la nueva tarjeta**
+        newCard.querySelector(".edit-btn").addEventListener("click", () => {
+            this.showEditDriverModal(assignedId);
+        });
+    
+        newCard.querySelector(".delete-btn").addEventListener("click", () => {
+            this.deleteDriver(assignedId);
+        });
+    
+        driverList.prepend(newCard);
+        console.log("✅ Piloto agregado correctamente con ID:", assignedId);
+    }    
+    
     
 }
 

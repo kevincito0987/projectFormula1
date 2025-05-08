@@ -27,6 +27,7 @@
     "three": "^0.176.0"
   },
   "scripts": {
-    "start": "node ./server/server.js"
+    "start": "node ./server/server.js",
+    "dev": "npx vite"
   }
 }
