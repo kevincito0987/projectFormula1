@@ -7,34 +7,34 @@ class CardComponent extends HTMLElement {
     async connectedCallback() {
         const filter = this.getAttribute("filter");
 
-        if (filter !== "All Drivers") {
-            console.error("❌ Este componente solo maneja pilotos.");
-            return;
-        }
+    if (filter !== "All Drivers") {
+        console.error("❌ Este componente solo maneja pilotos.");
+        return;
+    }
 
-        // 📌 **Incluir GSAP directamente**
-        const script = document.createElement("script");
-        script.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js";
-        this.shadowRoot.appendChild(script);
+    const script = document.createElement("script");
+    script.src = "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js";
+    this.shadowRoot.appendChild(script);
 
-        // 📌 **Crear botón para agregar pilotos**
-        const addButton = document.createElement("button");
-        addButton.classList.add("add-driver-btn");
-        addButton.innerHTML = "➕ Agregar Piloto";
-        addButton.onclick = () => this.showCreateDriverModal();
-        this.shadowRoot.appendChild(addButton);
+    const addButton = document.createElement("button");
+    addButton.classList.add("add-driver-btn");
+    addButton.innerHTML = "➕ Agregar Piloto";
+    addButton.onclick = () => this.showCreateDriverModal();
+    this.shadowRoot.appendChild(addButton);
 
-        // 📌 **Crear 20 tarjetas vacías**
-        const container = document.createElement("div");
-        container.style.display = "grid";
-        container.style.gridTemplateColumns = "repeat(auto-fit, minmax(300px, 1fr))";
-        container.style.gap = "1rem";
+    const container = document.createElement("div");
+    container.style.display = "grid";
+    container.style.gridTemplateColumns = "repeat(auto-fit, minmax(300px, 1fr))";
+    container.style.gap = "1rem";
+    this.shadowRoot.appendChild(container);
 
-        const cards = [];
-        for (let i = 0; i < 20; i++) {
-            const card = document.createElement("div");
-            card.classList.add("card");
-            card.setAttribute("data-id", i); // ✅ Asignar ID único para cada tarjeta
+    const cards = [];
+
+    // ✅ **Crear 20 tarjetas vacías con IDs temporales**
+    for (let i = 0; i < 20; i++) {
+        const card = document.createElement("div");
+        card.classList.add("card");
+        card.setAttribute("data-id", `temp-${i}`); // 🔥 ID temporal hasta obtener datos reales
 
             card.innerHTML = `
                 <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
@@ -71,6 +71,7 @@ class CardComponent extends HTMLElement {
                         transition: background-color 0.3s ease;
                         text-decoration: none;
                         color: #fff;
+                        flex-direction: row;
                     }
                     a img {
                         margin-right: 0.5rem;
@@ -136,128 +137,119 @@ class CardComponent extends HTMLElement {
                             <img src="../assets/icons/icon2Formula1.svg" alt="Formula 1 Icon">
                             <p class="text-lg font-semibold text-center w-full">Learn More...</p>
                         </a>
-                        <div class="actions">
-                            <a class="edit-btn">📝 Editar</a>
-                            <a class="delete-btn">❌ Eliminar</a>
-                        </div>
                     </div>
                 </div>
             `;
             cards.push(card);
             container.appendChild(card);
         }
+        console.log("⚠️ Tarjetas vacías creadas. Esperando datos de la API...");
 
-    this.shadowRoot.appendChild(container);
+        // ✅ **Obtener datos de la API y reemplazar tarjetas con datos reales**
+        const data = await this.fetchFilteredData();
+        this.replaceCardsForDrivers(cards, data);
 
-    const data = await this.fetchFilteredData();
-    this.replaceCardsForDrivers(cards, data);
+        // ✅ **Delegación de eventos dentro del `shadowRoot`**
+        this.shadowRoot.addEventListener("click", (event) => {
+            const card = event.target.closest(".card");
+            if (!card) return;
 
-    // ✅ Delegación de eventos asegurando que funcione dentro del Shadow DOM
-    this.shadowRoot.addEventListener("click", (event) => {
-        const path = event.composedPath();
-        const card = path.find(el => el.classList?.contains("card"));
+            const pilotName = card.querySelector("h3")?.textContent.split(" - ")[0]?.replace("🏎️", "").trim();
+            if (!pilotName) {
+                console.error("❌ No se pudo obtener el nombre del piloto desde la tarjeta.");
+                return;
+            }
 
-        if (!card) return;
+            if (event.target.classList.contains("edit-btn")) {
+                this.showEditDriverModal(); // ✅ Ahora pasamos el **nombre del piloto**, no `driverId`
+            }
 
-        if (card.querySelector(".edit-btn")) {
-            this.editDriver(card);
-        } else if (card.querySelector(".delete-btn")) {
-            this.deleteDriver(card);
-        }
+            if (event.target.classList.contains("delete-btn")) {
+                this.deleteDriver(pilotName); // ✅ Misma lógica para eliminación basada en nombre
+            }
         });
 
     }
-    editDriver = async (driverId) => {
-        try {
-            if (!driverId) {
-                console.error("❌ ID del piloto no válido.");
-                return;
-            }
+    showEditDriverModal() {
+        const modalOverlay = document.createElement("div");
+        modalOverlay.id = "editDriverModal";
+        modalOverlay.classList.add(
+            "fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50", "overflow-y-auto"
+        );
     
-            // ✅ Obtener información del piloto desde la API
-            const response = await fetch(`https://projectformula1-production.up.railway.app/api/drivers/${driverId}`);
-            if (!response.ok) throw new Error("❌ No se pudo obtener la información del piloto.");
+        const modalContent = document.createElement("div");
+        modalContent.classList.add(
+            "bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96", "max-w-sm"
+        );
     
-            const driver = await response.json();
-            if (!driver || !driver.nombre) throw new Error("❌ No se encontró el piloto.");
+        modalContent.innerHTML = `
+            <h2 class="text-2xl font-bold mb-4 text-center">✏️ Editar Piloto</h2>
+            <form id="editDriverForm" class="space-y-4">
+                <input type="text" id="editNombre" placeholder="Nombre" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editApellido" placeholder="Apellido" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editTeam" placeholder="Equipo" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="number" id="editNumero" placeholder="Número" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editNacionalidad" placeholder="Nacionalidad" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="url" id="editUrlImagen" placeholder="URL de imagen" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <div class="flex justify-between mt-4 g-3">
+                    <button type="button" id="cancelEditButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">❌ Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white">✅ Guardar</button>
+                </div>
+            </form>
+        `;
     
-            console.log("🔹 Datos del piloto obtenidos:", driver);
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
     
-            // ✅ Crear el modal con los datos del piloto
-            const modalOverlay = document.createElement("div");
-            modalOverlay.id = "editDriverModal";
-            modalOverlay.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50");
-    
-            const modalContent = document.createElement("div");
-            modalContent.classList.add("bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96", "max-w-sm");
-    
-            modalContent.innerHTML = `
-                <h2 class="text-2xl font-bold mb-4 text-center">✏️ Editar Piloto</h2>
-                <form id="editDriverForm" class="space-y-4">
-                    <input type="text" id="editNombre" value="${driver.nombre}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                    <input type="text" id="editApellido" value="${driver.apellido}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                    <input type="text" id="editTeam" value="${driver.team}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                    <input type="number" id="editNumero" value="${driver.numero}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                    <input type="text" id="editNacionalidad" value="${driver.nacionalidad}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                    <input type="url" id="editUrlImagen" value="${driver.url}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
-                    <div class="flex justify-between mt-4 g-3">
-                        <button type="button" id="cancelEditButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">❌ Cancelar</button>
-                        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white">💾 Guardar Cambios</button>
-                    </div>
-                </form>
-            `;
-    
-            modalOverlay.appendChild(modalContent);
-            document.body.appendChild(modalOverlay);
-    
-            // ✅ Cerrar modal
-            document.getElementById("cancelEditButton").addEventListener("click", () => {
-                document.getElementById("editDriverModal").remove();
-            });
-    
-            // ✅ Guardar cambios y actualizar en la API
-            document.getElementById("editDriverForm").addEventListener("submit", async (event) => {
-                event.preventDefault();
-    
-                const updatedDriver = {
-                    nombre: document.getElementById("editNombre").value.trim(),
-                    apellido: document.getElementById("editApellido").value.trim(),
-                    team: document.getElementById("editTeam").value.trim(),
-                    numero: document.getElementById("editNumero").value.trim(),
-                    nacionalidad: document.getElementById("editNacionalidad").value.trim(),
-                    url: document.getElementById("editUrlImagen").value.trim()
-                };
-    
-                try {
-                    const response = await fetch(`https://projectformula1-production.up.railway.app/api/drivers/${driverId}`, {
-                        method: "PATCH",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify(updatedDriver)
-                    });
-    
-                    if (!response.ok) throw new Error("❌ Error al actualizar piloto.");
-    
-                    console.log(`✅ Piloto actualizado correctamente:`, updatedDriver);
-    
-                    // ✅ Actualizar la tarjeta en el `shadowRoot`
-                    const card = this.shadowRoot.querySelector(`.card[data-id="${driverId}"]`);
-                    if (card) {
-                        card.querySelector("h3").textContent = `🏎️ ${updatedDriver.nombre} ${updatedDriver.apellido} - ${updatedDriver.team}`;
-                        card.querySelector("p").textContent = `📆 Número: ${updatedDriver.numero} | 🇬🇧 Nacionalidad: ${updatedDriver.nacionalidad}`;
-                        card.querySelector("img").src = updatedDriver.url;
-                    }
-    
-                    document.getElementById("editDriverModal").remove(); // ✅ Cerrar modal al guardar cambios
-                } catch (error) {
-                    console.error(error.message);
-                }
-            });
-    
-        } catch (error) {
-            console.error(error.message);
+        function closeModalEditPilot() {
+            const modal = document.getElementById("editDriverModal");
+            if (modal) modal.remove();
         }
-    };
     
+        document.getElementById("cancelEditButton").addEventListener("click", closeModalEditPilot);
+    
+        // ✅ Verificar métodos permitidos antes de hacer `PATCH`
+        document.getElementById("editDriverForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+        
+            const updatedDriver = {
+                nombre: document.getElementById("editNombre").value.trim(),
+                apellido: document.getElementById("editApellido").value.trim(),
+                team: document.getElementById("editTeam").value.trim(),
+                numero: document.getElementById("editNumero").value.trim(),
+                nacionalidad: document.getElementById("editNacionalidad").value.trim(),
+                url: document.getElementById("editUrlImagen").value.trim()
+            };
+        
+            try {
+                // ✅ **Verificar si la API responde con encabezados correctos**
+                const optionsResponse = await fetch("https://projectformula1-production.up.railway.app/api/drivers", {
+                    method: "OPTIONS",
+                });
+        
+                const allowMethods = optionsResponse.headers.get("Access-Control-Allow-Methods") || "";
+                console.log("✅ Métodos permitidos:", allowMethods);
+        
+                // ✅ **Si no hay encabezados válidos, asumir `PUT`**
+                const methodToUse = allowMethods.includes("PATCH") ? "PATCH" : "PUT";
+        
+                const response = await fetch("https://projectformula1-production.up.railway.app/api/drivers", {
+                    method: methodToUse,
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(updatedDriver)
+                });
+        
+                if (!response.ok) throw new Error(`❌ Error al actualizar piloto con ${methodToUse}.`);
+        
+                console.log(`✅ Piloto actualizado correctamente con ${methodToUse}:`, updatedDriver);
+                closeModalEditPilot();
+            } catch (error) {
+                console.error("🚨 Error de CORS o solicitud inválida:", error.message);
+            }
+        });
+    }
+    
+       
     async fetchFilteredData() {
         try {
             console.log("🔄 Solicitando datos actualizados desde la API...");
@@ -387,24 +379,34 @@ class CardComponent extends HTMLElement {
             return;
         }
     
-        localStorage.setItem("activeFilter", "All Drivers");
-    
         cards.forEach((card, index) => {
-            if (index >= data.length) return;
+            if (index >= data.length) return; // Asegura que haya datos suficientes
+    
             const item = data[index];
     
-            // ✅ Ahora usamos `driverId`
-            card.setAttribute("data-id", item.driverId || `temp-${index}`);
+            if (!item.driverId) {
+                console.error(`🚨 Error: El piloto ${item.nombre} no tiene driverId.`);
+                return;
+            }
+    
+            // ✅ Asigna `driverId` correctamente dentro del `shadowRoot`
+            const shadowCard = this.shadowRoot.querySelector(`.card[data-id="${card.getAttribute("data-id")}"]`);
+            if (!shadowCard) {
+                console.warn(`⚠️ No se encontró la tarjeta dentro del shadowRoot con ID: ${card.getAttribute("data-id")}`);
+                return;
+            }
+    
+            shadowCard.setAttribute("data-id", item.driverId);
     
             const imageUrl = item.url?.trim() !== "" ? item.url : "https://www.formula1.com/default_image.jpg";
-            card.querySelector("img").src = imageUrl;
+            shadowCard.querySelector("img").src = imageUrl;
     
-            card.querySelector("h3").textContent = `🏎️ ${item.nombre ?? "Desconocido"} ${item.apellido ?? ""} - ${item.team ?? "Sin equipo"}`;
-            card.querySelector("p").textContent = `📆 Nacimiento: ${item.fechaNacimiento ?? "N/A"} | 🇬🇧 Nacionalidad: ${item.nacionalidad ?? "N/A"}`;
-            card.querySelector("a").href = item.driverId ? `https://www.formula1.com/en/drivers/${item.driverId}.html` : "#";
+            shadowCard.querySelector("h3").textContent = `🏎️ ${item.nombre ?? "Desconocido"} ${item.apellido ?? ""} - ${item.team ?? "Sin equipo"}`;
+            shadowCard.querySelector("p").textContent = `📆 Nacimiento: ${item.fechaNacimiento ?? "N/A"} | 🇬🇧 Nacionalidad: ${item.nacionalidad ?? "N/A"}`;
+            shadowCard.querySelector("a").href = item.driverId ? `https://www.formula1.com/en/drivers/${item.driverId}.html` : "#";
         });
     
-        console.log("✅ Tarjetas actualizadas correctamente.");
+        console.log("✅ Tarjetas de pilotos actualizadas correctamente en el shadowRoot.");
     }
     
     

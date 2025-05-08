@@ -17,11 +17,17 @@ app.use(express.json());
 
 // 🔄 **Configuración avanzada de CORS**
 const corsOptions = {
-    origin: "*", // 🚀 Permitir cualquier origen
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"], // 🏁 Métodos permitidos
-    allowedHeaders: ["Content-Type", "Authorization", "Access-Control-Allow-Origin"],
+    origin: "*",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"], // ✅ Añadir PATCH aquí
+    allowedHeaders: [
+        "Content-Type", 
+        "Authorization", 
+        "Access-Control-Allow-Origin",
+        "Access-Control-Allow-Methods"
+    ],
     exposedHeaders: ["Content-Length"],
 };
+
 
 app.use(cors(corsOptions)); // ✅ Aplicar configuración de CORS
 
