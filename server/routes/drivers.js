@@ -62,7 +62,7 @@ router.post("/", async (req, res) => {
 });
 
 // 🔄 Actualizar un piloto por `id` o `driverId` (PUT)
-router.put("/:identifier", async (req, res) => {
+router.put("/driverId", async (req, res) => {
     try {
         const { identifier } = req.params;
 

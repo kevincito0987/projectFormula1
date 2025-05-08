@@ -147,7 +147,7 @@ class CardComponent extends HTMLElement {
             container.appendChild(card);
         }
 
-        this.shadowRoot.appendChild(container);
+    this.shadowRoot.appendChild(container);
 
     const data = await this.fetchFilteredData();
     this.replaceCardsForDrivers(cards, data);
@@ -167,6 +167,97 @@ class CardComponent extends HTMLElement {
         });
 
     }
+    editDriver = async (driverId) => {
+        try {
+            if (!driverId) {
+                console.error("❌ ID del piloto no válido.");
+                return;
+            }
+    
+            // ✅ Obtener información del piloto desde la API
+            const response = await fetch(`https://projectformula1-production.up.railway.app/api/drivers/${driverId}`);
+            if (!response.ok) throw new Error("❌ No se pudo obtener la información del piloto.");
+    
+            const driver = await response.json();
+            if (!driver || !driver.nombre) throw new Error("❌ No se encontró el piloto.");
+    
+            console.log("🔹 Datos del piloto obtenidos:", driver);
+    
+            // ✅ Crear el modal con los datos del piloto
+            const modalOverlay = document.createElement("div");
+            modalOverlay.id = "editDriverModal";
+            modalOverlay.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50");
+    
+            const modalContent = document.createElement("div");
+            modalContent.classList.add("bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96", "max-w-sm");
+    
+            modalContent.innerHTML = `
+                <h2 class="text-2xl font-bold mb-4 text-center">✏️ Editar Piloto</h2>
+                <form id="editDriverForm" class="space-y-4">
+                    <input type="text" id="editNombre" value="${driver.nombre}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                    <input type="text" id="editApellido" value="${driver.apellido}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                    <input type="text" id="editTeam" value="${driver.team}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                    <input type="number" id="editNumero" value="${driver.numero}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                    <input type="text" id="editNacionalidad" value="${driver.nacionalidad}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                    <input type="url" id="editUrlImagen" value="${driver.url}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                    <div class="flex justify-between mt-4 g-3">
+                        <button type="button" id="cancelEditButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">❌ Cancelar</button>
+                        <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-md text-white">💾 Guardar Cambios</button>
+                    </div>
+                </form>
+            `;
+    
+            modalOverlay.appendChild(modalContent);
+            document.body.appendChild(modalOverlay);
+    
+            // ✅ Cerrar modal
+            document.getElementById("cancelEditButton").addEventListener("click", () => {
+                document.getElementById("editDriverModal").remove();
+            });
+    
+            // ✅ Guardar cambios y actualizar en la API
+            document.getElementById("editDriverForm").addEventListener("submit", async (event) => {
+                event.preventDefault();
+    
+                const updatedDriver = {
+                    nombre: document.getElementById("editNombre").value.trim(),
+                    apellido: document.getElementById("editApellido").value.trim(),
+                    team: document.getElementById("editTeam").value.trim(),
+                    numero: document.getElementById("editNumero").value.trim(),
+                    nacionalidad: document.getElementById("editNacionalidad").value.trim(),
+                    url: document.getElementById("editUrlImagen").value.trim()
+                };
+    
+                try {
+                    const response = await fetch(`https://projectformula1-production.up.railway.app/api/drivers/${driverId}`, {
+                        method: "PATCH",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify(updatedDriver)
+                    });
+    
+                    if (!response.ok) throw new Error("❌ Error al actualizar piloto.");
+    
+                    console.log(`✅ Piloto actualizado correctamente:`, updatedDriver);
+    
+                    // ✅ Actualizar la tarjeta en el `shadowRoot`
+                    const card = this.shadowRoot.querySelector(`.card[data-id="${driverId}"]`);
+                    if (card) {
+                        card.querySelector("h3").textContent = `🏎️ ${updatedDriver.nombre} ${updatedDriver.apellido} - ${updatedDriver.team}`;
+                        card.querySelector("p").textContent = `📆 Número: ${updatedDriver.numero} | 🇬🇧 Nacionalidad: ${updatedDriver.nacionalidad}`;
+                        card.querySelector("img").src = updatedDriver.url;
+                    }
+    
+                    document.getElementById("editDriverModal").remove(); // ✅ Cerrar modal al guardar cambios
+                } catch (error) {
+                    console.error(error.message);
+                }
+            });
+    
+        } catch (error) {
+            console.error(error.message);
+        }
+    };
+    
     async fetchFilteredData() {
         try {
             console.log("🔄 Solicitando datos actualizados desde la API...");
