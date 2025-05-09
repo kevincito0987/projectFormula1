@@ -10,9 +10,9 @@
 
 @keyframes changeBg {
     0% { background-image: url("../assets/images/bgScreenPage.png"); }
-    33% { background-image: url("../assets/images/bgScreenPage2.jpeg"); }
+    33% { background-image: url("../assets/images/bgScreenPage2.png"); }
     66% { background-image: url("../assets/images/bgSceenPage3.png"); }
-    100% { background-image: url("../assets/images/imageCardNews3.jpeg"); }
+    100% { background-image: url("../assets/images/imageCardNews3.png"); }
 }
 
 /* Aplicamos la animación al body */

@@ -39,15 +39,23 @@
                 <label for="track-select" class="text-lg font-semibold mb-2">Selecciona la pista:</label>
                 <select id="track-select" class="p-3 bg-gray-800 text-white rounded w-64"></select>
             </div>
-        
+            <!-- ☁️ Selección de Clima -->
+            <div class="flex flex-col items-center mt-4">
+                <label for="weather-select" class="text-lg font-semibold mb-2">Selecciona el clima:</label>
+                <select id="weather-select" class="p-3 bg-gray-800 text-white rounded w-64">
+                    <option value="">Cargando opciones...</option>
+                </select>
+            </div>
+
             <!-- 🚀 Botón para iniciar -->
             <button id="start-btn" class="bg-yellow-500 px-6 py-3 rounded-lg text-lg mt-6 hover:bg-yellow-600">
                 🏁 Iniciar Simulación 🏁
             </button>
         </div>
+        <div id="selection-container" class="mt-4"></div>
         
         <!-- 🏎️ Canvas colocado debajo de las opciones -->
-        <div id="canvas-container" class="mt-6 hidden">
+        <div id="canvas-container" class="mt-6 hidden mb-20">
             <canvas id="raceCanvas" class="w-full h-96 border rounded-lg"></canvas>
         </div>
         
@@ -66,7 +74,7 @@
             </div>
             <div class="flex gap-60 mr-20">
                 <a href="#" id="heart-icon"><img src="../assets/icons/simulationRacingIcon.svg" alt="Simulation" class="w-10"></a>
-                <a href="../views/homePageUser.html" id="profile-icon"><img src="../assets/icons/userIcon.svg" alt="Profile" class="w-10"></a>
+                <a href="../views/homePageUser.html" id="profile-icon"><img src="../assets/icons/userIcon2.svg" alt="Profile" class="w-10"></a>
             </div>
             <a href="#" id="light-mode-toggle"></a> <!-- 🌞 Botón interactivo -->
             <div id="moving-bar" class="moving-bar"></div>

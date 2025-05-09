@@ -121,6 +121,8 @@ class TeamCardComponent extends HTMLElement {
                         background-color: #2563eb;
                         color: white;
                         padding: 20px;
+                        margin-bottom: 20px;
+                        border-radius: 20px;
                     }
                     .edit-btn:hover {
                         background-color: #1e40af;
@@ -129,6 +131,8 @@ class TeamCardComponent extends HTMLElement {
                         background-color: #dc2626;
                         color: white;
                         padding: 20px;
+                        margin-bottom: 20px;
+                        border-radius: 20px;
                     }
                     .delete-btn:hover {
                         background-color: #b91c1c;
@@ -162,7 +166,7 @@ class TeamCardComponent extends HTMLElement {
             }
 
             if (event.target.classList.contains("delete-btn")) {
-                this.deleteDriver(card); // ✅ Mismo enfoque para eliminar la tarjeta correctamente
+                this.deleteTeam(card); // ✅ Mismo enfoque para eliminar la tarjeta correctamente
             }
         });
 
@@ -442,7 +446,41 @@ class TeamCardComponent extends HTMLElement {
             closeModalEditTeam();
         });
     };
+    deleteTeam(targetCard) {
+        if (!targetCard) {
+            console.error("❌ No se encontró la tarjeta para eliminar.");
+            return;
+        }
     
+        // ✅ Extraer datos de la tarjeta para identificar el piloto
+        const pilotNombre = targetCard.querySelector("h3")?.textContent.split(" - ")[0]?.replace("🏎️", "").trim();
+        
+        if (!pilotNombre) {
+            console.error("❌ No se pudo obtener el nombre del piloto.");
+            return;
+        }
+    
+        try {
+            // ✅ **Eliminar el piloto de la API**
+            fetch(`https://projectformula1-production.up.railway.app/api/drivers/${encodeURIComponent(pilotNombre)}`, {
+                method: "DELETE",
+                headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+                mode: "cors"
+            })
+            .then(response => {
+                if (!response.ok) throw new Error("❌ Error al eliminar el piloto de la base de datos.");
+                console.log("✅ Piloto eliminado de la API.");
+            })
+            .catch(error => console.error("🚨 Error al eliminar piloto:", error.message));
+    
+            // ✅ **Eliminar la tarjeta del DOM**
+            targetCard.remove();
+            console.log("✅ Tarjeta eliminada correctamente.");
+            
+        } catch (error) {
+            console.error("🚨 Error al eliminar piloto:", error.message);
+        }
+    }
     showCreateTeamModal = () => {
         const modalOverlay = document.createElement("div");
         modalOverlay.id = "createTeamModal";
