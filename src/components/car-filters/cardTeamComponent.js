@@ -24,6 +24,11 @@ class TeamCardComponent extends HTMLElement {
             console.error("❌ Este componente solo maneja equipos.");
             return;
         }
+        const addButton = document.createElement("button");
+        addButton.classList.add("add-driver-btn");
+        addButton.innerHTML = "➕ Agregar Equipo";
+        addButton.onclick = () => this.showCreateTeamModal();
+        this.shadowRoot.appendChild(addButton);
 
         const container = document.createElement("div");
         container.style.display = "grid";
@@ -112,6 +117,22 @@ class TeamCardComponent extends HTMLElement {
                     {
                         color: var(--color-1);
                     }
+                        .edit-btn {
+                        background-color: #2563eb;
+                        color: white;
+                        padding: 20px;
+                    }
+                    .edit-btn:hover {
+                        background-color: #1e40af;
+                    }
+                    .delete-btn {
+                        background-color: #dc2626;
+                        color: white;
+                        padding: 20px;
+                    }
+                    .delete-btn:hover {
+                        background-color: #b91c1c;
+                    }
                 </style>
                 <div class="card">
                     <img src="https://www.formula1.com/default_team.jpg" alt="Cargando...">
@@ -132,6 +153,18 @@ class TeamCardComponent extends HTMLElement {
         }
 
         this.shadowRoot.appendChild(container);
+        this.shadowRoot.addEventListener("click", (event) => {
+            const card = event.target.closest(".card");
+            if (!card) return;
+
+            if (event.target.classList.contains("edit-btn")) {
+                this.showEditTeamModal(card); // ✅ Ahora pasamos la tarjeta completa, no el nombre
+            }
+
+            if (event.target.classList.contains("delete-btn")) {
+                this.deleteDriver(card); // ✅ Mismo enfoque para eliminar la tarjeta correctamente
+            }
+        });
 
         const [teamsData, driversData, carsData] = await Promise.all([
             this.fetchFilteredData(),
@@ -175,7 +208,88 @@ class TeamCardComponent extends HTMLElement {
             return [];
         }
     }
-
+    showEditTeamModal = (targetCard) => {
+        if (!targetCard) {
+            console.error("❌ No se encontró la tarjeta del equipo para editar.");
+            return;
+        }
+    
+        const currentNombre = targetCard.querySelector("h3")?.textContent.split(" - ")[0]?.replace("🏎️", "").trim();
+        const currentNacionalidad = targetCard.querySelector("h3")?.textContent.split(" - ")[1]?.trim();
+        const currentFundacion = targetCard.querySelector("p")?.textContent.split("|")[0]?.replace("📆 Fundado:", "").trim();
+        const currentCiudad = targetCard.querySelector("p")?.textContent.split("|")[1]?.replace("📍 Sede:", "").trim();
+        const currentUrl = targetCard.querySelector("a")?.href || "#";
+        const currentImage = targetCard.querySelector("img")?.src || "https://www.formula1.com/default_team.jpg";
+    
+        const modalOverlay = document.createElement("div");
+        modalOverlay.id = "editTeamModal";
+        modalOverlay.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50", "overflow-y-auto");
+    
+        const modalContent = document.createElement("div");
+        modalContent.classList.add("bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96", "max-w-sm");
+    
+        modalContent.innerHTML = `
+            <h2 class="text-2xl font-bold mb-4 text-center">✏️ Editar Equipo</h2>
+            <form id="editTeamForm" class="space-y-4">
+                <input type="url" id="editTeamImage" value="${currentImage}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editTeamNombre" value="${currentNombre}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editTeamNacionalidad" value="${currentNacionalidad}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="number" id="editTeamFundacion" value="${currentFundacion}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editTeamCiudad" value="${currentCiudad}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="url" id="editTeamUrl" value="${currentUrl}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <h3 class="text-lg font-semibold mt-4">🚗 Autos</h3>
+                <div id="editAutosContainer"></div>
+                <div class="flex justify-between mt-4 g-3">
+                    <button type="button" id="cancelEditTeamButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">❌ Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white">✅ Guardar cambios</button>
+                </div>
+            </form>
+        `;
+    
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+    
+        function closeModalEditTeam() {
+            modalOverlay.remove();
+        }
+    
+        document.getElementById("cancelEditTeamButton").addEventListener("click", closeModalEditTeam);
+    
+        document.getElementById("editTeamForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+    
+            const updatedTeam = {
+                imagen: document.getElementById("editTeamImage").value.trim(),
+                nombre: document.getElementById("editTeamNombre").value.trim(),
+                nacionalidad: document.getElementById("editTeamNacionalidad").value.trim(),
+                primeraAparicion: document.getElementById("editTeamFundacion").value.trim(),
+                ciudad: document.getElementById("editTeamCiudad").value.trim(),
+                url: document.getElementById("editTeamUrl").value.trim()
+            };
+    
+            try {
+                const response = await fetch(`https://projectformula1-production.up.railway.app/api/teams/${encodeURIComponent(updatedTeam.nombre)}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+                    body: JSON.stringify(updatedTeam),
+                    mode: "cors"
+                });
+    
+                if (!response.ok) throw new Error("❌ Error al actualizar el equipo.");
+                console.log("✅ Equipo actualizado en la API.");
+            } catch (error) {
+                console.error("🚨 Error:", error.message);
+            }
+    
+            targetCard.querySelector("img").src = updatedTeam.imagen;
+            targetCard.querySelector("h3").textContent = `🏎️ ${updatedTeam.nombre} - ${updatedTeam.nacionalidad}`;
+            targetCard.querySelector("p").textContent = `📆 Fundado: ${updatedTeam.primeraAparicion} | 📍 Sede: ${updatedTeam.ciudad}`;
+            targetCard.querySelector("a").href = updatedTeam.url;
+    
+            closeModalEditTeam();
+        });
+    };
+    
     replaceCardsForTeams(cards, teamsData, driversData, carsData) {
         if (cards.length < 10) {
             console.error("❌ Error: No hay suficientes tarjetas en el HTML.");
@@ -200,10 +314,10 @@ class TeamCardComponent extends HTMLElement {
             const teamDrivers = driversData.filter(driver => 
                 driver.team.toLowerCase() === team.teamId.toLowerCase()
             );
-    
             if (teamDrivers.length > 0) {
                 // ✅ **Aplicamos Grid para organizar las tarjetas**
-                driversSection.classList.add("grid", "grid-cols-2", "md:grid-cols-3", "lg:grid-cols-4", "gap-4");
+                driversSection.innerHTML = "<p class='text-gray-500 mt-4'>🏎️ Pilotos:</p>";
+                driversSection.classList.add("grid", "grid-cols-1", "md:grid-cols-2", "lg:grid-cols-4", "gap-4");
 
                 teamDrivers.forEach(driver => {
                     const driverCard = document.createElement("div");
@@ -246,6 +360,244 @@ class TeamCardComponent extends HTMLElement {
     
         console.log(`✅ Tarjetas de equipos actualizadas con pilotos y autos correctamente filtrados.`);
     }
+    showEditTeamModal = (targetCard) => {
+        if (!targetCard) {
+            console.error("❌ No se encontró la tarjeta del equipo para editar.");
+            return;
+        }
+    
+        const currentImage = targetCard.querySelector("img")?.src || "";
+        const currentNombre = targetCard.querySelector("h3")?.textContent.split(" - ")[0]?.replace("🏎️", "").trim() || "";
+        const currentNacionalidad = targetCard.querySelector("h3")?.textContent.split(" - ")[1]?.trim() || "";
+        const currentFundacion = targetCard.querySelector("p")?.textContent.split("|")[0]?.replace("📆 Fundado:", "").trim() || "";
+        const currentCiudad = targetCard.querySelector("p")?.textContent.split("|")[1]?.replace("📍 Sede:", "").trim() || "";
+        const currentUrl = targetCard.querySelector("a")?.href || "#";
+    
+        const modalOverlay = document.createElement("div");
+        modalOverlay.id = "editTeamModal";
+        modalOverlay.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50", "overflow-y-auto");
+    
+        const modalContent = document.createElement("div");
+        modalContent.classList.add("bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96", "max-w-sm");
+    
+        modalContent.innerHTML = `
+            <h2 class="text-2xl font-bold mb-4 text-center">✏️ Editar Equipo</h2>
+            <form id="editTeamForm" class="space-y-4">
+                <input type="url" id="editTeamImage" value="${currentImage}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editTeamNombre" value="${currentNombre}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editTeamNacionalidad" value="${currentNacionalidad}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="number" id="editTeamFundacion" value="${currentFundacion}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="editTeamCiudad" value="${currentCiudad}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="url" id="editTeamUrl" value="${currentUrl}" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <h3 class="text-lg font-semibold mt-4">🚗 Autos</h3>
+                <input type="number" id="numEditAutos" placeholder="Cantidad de autos a modificar" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <div id="editAutosContainer"></div>
+                <div class="flex justify-between mt-4 g-3">
+                    <button type="button" id="cancelEditTeamButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">❌ Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white">✅ Guardar cambios</button>
+                </div>
+            </form>
+        `;
+    
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+    
+        function closeModalEditTeam() {
+            modalOverlay.remove();
+        }
+    
+        document.getElementById("cancelEditTeamButton").addEventListener("click", closeModalEditTeam);
+    
+        document.getElementById("editTeamForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+    
+            const updatedTeam = {
+                imagen: document.getElementById("editTeamImage").value.trim(),
+                nombre: document.getElementById("editTeamNombre").value.trim(),
+                nacionalidad: document.getElementById("editTeamNacionalidad").value.trim(),
+                primeraAparicion: document.getElementById("editTeamFundacion").value.trim(),
+                ciudad: document.getElementById("editTeamCiudad").value.trim(),
+                url: document.getElementById("editTeamUrl").value.trim()
+            };
+    
+            try {
+                const response = await fetch(`https://projectformula1-production.up.railway.app/api/teams/${encodeURIComponent(updatedTeam.nombre)}`, {
+                    method: "PATCH",
+                    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+                    body: JSON.stringify(updatedTeam),
+                    mode: "cors"
+                });
+    
+                if (!response.ok) throw new Error("❌ Error al actualizar el equipo.");
+                console.log("✅ Equipo actualizado en la API.");
+            } catch (error) {
+                console.error("🚨 Error:", error.message);
+            }
+    
+            targetCard.querySelector("img").src = updatedTeam.imagen;
+            targetCard.querySelector("h3").textContent = `🏎️ ${updatedTeam.nombre} - ${updatedTeam.nacionalidad}`;
+            targetCard.querySelector("p").textContent = `📆 Fundado: ${updatedTeam.primeraAparicion} | 📍 Sede: ${updatedTeam.ciudad}`;
+            targetCard.querySelector("a").href = updatedTeam.url;
+    
+            closeModalEditTeam();
+        });
+    };
+    
+    showCreateTeamModal = () => {
+        const modalOverlay = document.createElement("div");
+        modalOverlay.id = "createTeamModal";
+        modalOverlay.classList.add("fixed", "top-0", "left-0", "w-full", "h-full", "bg-black", "bg-opacity-50", "flex", "items-center", "justify-center", "z-50", "overflow-y-auto");
+    
+        const modalContent = document.createElement("div");
+        modalContent.classList.add("bg-gray-900", "text-white", "p-6", "rounded-xl", "shadow-lg", "w-96", "max-w-sm");
+    
+        modalContent.innerHTML = `
+            <h2 class="text-2xl font-bold mb-4 text-center">➕ Agregar Equipo</h2>
+            <form id="teamForm" class="space-y-4">
+                <input type="url" id="teamImage" placeholder="URL Imagen del equipo" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="teamNombre" placeholder="Nombre del equipo" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="teamNacionalidad" placeholder="Nacionalidad" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="number" id="teamFundacion" placeholder="Año de fundación" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="text" id="teamCiudad" placeholder="Ciudad sede" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="url" id="teamUrl" placeholder="URL del sitio web" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <h3 class="text-lg font-semibold mt-4">🏎️ Piloto del equipo</h3>
+                <input type="text" id="pilotNombre" placeholder="Nombre del piloto" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="number" id="pilotNumero" placeholder="Número del piloto" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <input type="url" id="pilotUrl" placeholder="URL imagen del piloto" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <h3 class="text-lg font-semibold mt-4">🚗 Autos</h3>
+                <input type="number" id="numAutos" placeholder="Cantidad de autos" class="w-full p-3 bg-gray-800 rounded-lg border border-gray-700 text-white">
+                <div id="autosContainer"></div>
+                <div class="flex justify-between mt-4 g-3">
+                    <button type="button" id="cancelTeamButton" class="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-md text-white">❌ Cancelar</button>
+                    <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded-md text-white">✅ Guardar</button>
+                </div>
+            </form>
+        `;
+    
+        modalOverlay.appendChild(modalContent);
+        document.body.appendChild(modalOverlay);
+    
+        document.getElementById("numAutos").addEventListener("change", function () {
+            const autosContainer = document.getElementById("autosContainer");
+            autosContainer.innerHTML = "";
+            const cantidad = parseInt(this.value, 10);
+    
+            for (let i = 0; i < cantidad; i++) {
+                const autoFields = document.createElement("div");
+                autoFields.classList.add("mt-4", "p-3", "bg-gray-800", "rounded-lg", "border", "border-gray-700", "gap-20");
+                autoFields.innerHTML = `
+                    <h4 class="text-lg font-semibold">🚗 Auto ${i + 1}</h4>
+                    <input type="text" placeholder="Nombre del auto" class="w-full p-3 bg-gray-700 rounded-lg text-white auto-modelo">
+                    <input type="url" placeholder="URL imagen del auto" class="w-full p-3 bg-gray-700 rounded-lg text-white auto-url">
+                    <input type="text" placeholder="Modelo del auto" class="w-full p-3 bg-gray-700 rounded-lg text-white auto-modelo">
+                    <input type="number" placeholder="Velocidad máxima (km/h)" class="w-full p-3 bg-gray-700 rounded-lg text-white auto-velocidad">
+                    <input type="number" placeholder="Aceleración 0-100 km/h (segundos)" class="w-full p-3 bg-gray-700 rounded-lg text-white auto-aceleracion">
+                `;
+                autosContainer.appendChild(autoFields);
+            }
+        });
+    
+        document.getElementById("teamForm").addEventListener("submit", async (event) => {
+            event.preventDefault();
+    
+            const autos = Array.from(document.querySelectorAll("#autosContainer div")).map(auto => ({
+                imagen: auto.querySelector(".auto-url").value.trim(),
+                modelo: auto.querySelector(".auto-modelo").value.trim(),
+                velocidad_maxima_kmh: auto.querySelector(".auto-velocidad").value.trim(),
+                aceleracion_0_100: auto.querySelector(".auto-aceleracion").value.trim()
+            }));
+    
+            const newTeam = {
+                imagen: document.getElementById("teamImage").value.trim(),
+                nombre: document.getElementById("teamNombre").value.trim(),
+                nacionalidad: document.getElementById("teamNacionalidad").value.trim(),
+                primeraAparicion: document.getElementById("teamFundacion").value.trim(),
+                ciudad: document.getElementById("teamCiudad").value.trim(),
+                url: document.getElementById("teamUrl").value.trim(),
+                pilotos: [{
+                    nombre: document.getElementById("pilotNombre").value.trim(),
+                    numero: document.getElementById("pilotNumero").value.trim(),
+                    url: document.getElementById("pilotUrl").value.trim()
+                }],
+                autos: autos
+            };
+    
+            try {
+                const response = await fetch("https://projectformula1-production.up.railway.app/api/teams", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json", "Access-Control-Allow-Origin": "*" },
+                    body: JSON.stringify(newTeam),
+                    mode: "cors"
+                });
+    
+                if (response.ok) {
+                    console.log("✅ Equipo agregado en la API.");
+                
+                    // ✅ **Crear la tarjeta del equipo en el DOM**
+                    const teamCard = document.createElement("div");
+                    teamCard.classList.add("card", "bg-gray-800", "text-white", "p-4", "rounded-lg", "shadow-md");
+                
+                    teamCard.innerHTML = `
+                        <img src="${newTeam.imagen}" class="w-full h-32 object-cover rounded-lg">
+                        <h3 class="text-xl font-bold text-center mt-2">🏎️ ${newTeam.nombre} - ${newTeam.nacionalidad}</h3>
+                        <p class="text-sm text-gray-400">📆 Fundado: ${newTeam.primeraAparicion} | 📍 Sede: ${newTeam.ciudad}</p>
+                        <a class="button mt-3" href="${newTeam.url}" target="_blank">🌐 Sitio Web</a>
+                        <h4 class="text-lg font-bold mt-4 text-white">🚗 Autos</h4>
+                        <div class="cars-section"></div>
+                    `;
+                
+                    const driversSection = document.createElement("div");
+                    driversSection.classList.add("drivers-section", "grid", "grid-cols-2", "md:grid-cols-3", "lg:grid-cols-4", "gap-4");
+                
+                    newTeam.pilotos.forEach(pilot => {
+                        const driverCard = document.createElement("div");
+                        driverCard.classList.add("driver", "bg-gray-700", "text-center", "p-4", "rounded-lg", "shadow-md");
+                
+                        driverCard.innerHTML = `
+                            <img src="${pilot.url}" class="w-16 h-16 rounded-full object-cover mb-2">
+                            <p class="text-white font-semibold">${pilot.nombre}</p>
+                            <p class="text-sm text-gray-400">🏎️ Número: ${pilot.numero}</p>
+                            <a class="bg-blue-500 text-white px-3 py-1 rounded-md edit-btn ">✏️ Editar</a>
+                            <a class="bg-red-500 text-white px-3 py-1 rounded-md delete-btn" onclick="deleteDriver()">❌ Eliminar</a>
+                        `;
+                
+                        driversSection.appendChild(driverCard);
+                    });
+                
+                    teamCard.appendChild(driversSection);
+                
+                    const carsSection = teamCard.querySelector(".cars-section");
+                    newTeam.autos.forEach(car => {
+                        const carBox = document.createElement("div");
+                        carBox.classList.add("car-box", "bg-gray-900", "p-3", "rounded-lg", "shadow-md");
+                
+                        carBox.innerHTML = `
+                            <img src="${car.imagen}" class="w-full h-24 object-cover rounded-lg mb-2">
+                            <h5 class="text-white font-bold">${car.nombre}</h5>
+                            <p class="text-gray-400 text-sm">Velocidad Máx: ${car.velocidad_maxima_kmh} km/h</p>
+                            <p class="text-gray-400 text-sm">Aceleración: ${car.aceleracion_0_100}s</p>
+                        `;
+                
+                        carsSection.appendChild(carBox);
+                    });
+                
+                    // ✅ **Agregar la tarjeta al contenedor de equipos**
+                    document.querySelector("team-card-component").shadowRoot.appendChild(teamCard);
+                
+                    console.log("✅ Tarjeta de equipo agregada correctamente.");
+                }
+            } catch (error) {
+                console.error("🚨 Error:", error.message);
+            }
+    
+            document.getElementById("createTeamModal").remove();
+        });
+    
+        document.getElementById("cancelTeamButton").addEventListener("click", () => {
+            document.getElementById("createTeamModal").remove();
+        });
+    };
+    
     
 
     animateButtons() {
@@ -260,5 +612,3 @@ class TeamCardComponent extends HTMLElement {
 
 // 🚀 **Registrar el Web Component**
 customElements.define("team-card-component", TeamCardComponent);
-
-
